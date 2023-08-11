@@ -1,12 +1,4 @@
-const path = require('path');
-
-module.exports = {
-  entry: './src/index.js',
-  output: {
-    filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist'),
-  },
-  module: {
+module: {
     rules: [
       {
         test: /\.(js|jsx)$/,
@@ -18,9 +10,17 @@ module.exports = {
           },
         },
       },
+      {
+        test: /\.(png|jpg|gif|svg)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              outputPath: 'images',
+            },
+          },
+        ],
+      },
     ],
-  },
-  resolve: {
-    extensions: ['.js', '.jsx'],
-  },
-};
+  }
+  
