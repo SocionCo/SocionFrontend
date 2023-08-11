@@ -1,25 +1,67 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import Cookies from "js-cookie";
+import AdminDashboard from "./pages/AdminDashboard";
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Login from './authProcess/auth/login/Login';
+import Auth from './authProcess/auth/Auth';
+import ProtectedRoute from './util/ProtectedRoute';
+import Campaigns from "./pages/Campaigns";
+import Team from "./pages/Team";
+import TalentDashboard from "./pages/TalentDashboard";
+
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    
 
+
+    const checkUserToken = async () => {
+        console.log("Checking");
+        const userToken = localStorage.getItem('user-token');
+        if (!userToken || userToken === 'undefined') {
+            setIsLoggedIn(false);
+            return
+        }
+        setIsLoggedIn(true);
+    }
+    
+    useEffect(() => {
+        checkUserToken();
+    }, [isLoggedIn]);
+ 
+    return (
+        <BrowserRouter basename={''}>
+        <Routes>
+            <Route path='*' element={<Auth />}>
+                <Route path='login' element={<Login/>} />
+            </Route>
+            <Route path='campaigns' element={
+                <ProtectedRoute>
+                    <Campaigns/>
+                </ProtectedRoute>
+            } />
+            <Route path='home' element={
+                <ProtectedRoute>
+                    <AdminDashboard/>
+                </ProtectedRoute>
+            } />
+            <Route path='team' element={
+                <ProtectedRoute>
+                    <Team></Team>
+                </ProtectedRoute>
+            } />
+            <Route path='talent' element={
+                <ProtectedRoute>
+                    <TalentDashboard/>
+                </ProtectedRoute>
+            } />
+            <Route path='' element={
+                <ProtectedRoute>
+                    <Login/>
+                </ProtectedRoute>
+            } />
+    </Routes>
+    </BrowserRouter>
+    );
+}
 export default App;

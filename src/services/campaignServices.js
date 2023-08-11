@@ -1,0 +1,228 @@
+import api from "./api";
+import axios from "axios";
+
+export async function createNewContract({ userDTO, contractDTO }) {
+    const wrapper = {
+        userDTO: userDTO,
+        contractDTO: contractDTO
+    }
+    try {
+        const token = localStorage.getItem('user-token');
+        const headers = { 'Authorization': 'Bearer ' + token };
+        const response = await api.post('/api/createNewContractForInfluencers', wrapper, { headers });
+    } catch (error) {
+        console.log(error);
+        return [];
+    }
+}
+
+export async function editContract({contractDTO, userDTO}) { 
+    const wrapper = {
+        userDTO: userDTO,
+        contractDTO: contractDTO
+    }
+    try {
+        const token = localStorage.getItem('user-token');
+        const headers = { 'Authorization': 'Bearer ' + token };
+        const response = await api.post('/api/editContract', wrapper, { headers });
+        console.log("Respy",response);
+    } catch (error) {
+        console.log(error);
+        return [];
+    }
+}
+
+export async function deleteContractWithId(contractId) {
+    const contractDTO = {
+        id: contractId
+    }
+    try {
+        const token = localStorage.getItem('user-token');
+        const headers = { 'Authorization': 'Bearer ' + token };
+        const response = await api.post('/api/deleteContract', contractDTO, { headers });
+        console.log(response);
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+
+
+}
+
+export async function getContractDetailsWithId(contractId) {
+    try {
+        const token = localStorage.getItem('user-token');
+        const headers = { 'Authorization': 'Bearer ' + token };
+        const response = await api.get('/api/getContractDetails/' + contractId, { headers });
+        return response.data;
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+
+}
+
+export async function updateInfluencers(influencers, contractId) {
+
+    const newUsers = (influencers) => {
+       return influencers.map(influencer => {
+            return {email: influencer.email};
+        });
+    }
+
+    const contractWrapper = {
+        contractDTO: {
+            id: contractId
+        },
+        userDTO: newUsers(influencers)
+    }
+
+    try {
+        console.log("Wrapper",contractWrapper);
+        const token = localStorage.getItem('user-token');
+        const headers = { 'Authorization': 'Bearer ' + token };
+        const response = await api.post('/api/updateInfluencersForContract', contractWrapper, { headers });
+        return response.data;
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+}
+
+export async function removeInfluencersFromContract(influencers, contractId) { 
+
+    const newUsers = (influencers) => {
+        return influencers.map(influencer => {
+             return {email: influencer.email};
+         });
+     }
+
+     const contractWrapper = {
+         contractDTO: {
+             id: contractId
+         },
+         userDTO: newUsers(influencers)
+     }
+ 
+     try {
+         console.log("Wrapper",contractWrapper);
+         const token = localStorage.getItem('user-token');
+         const headers = { 'Authorization': 'Bearer ' + token };
+         const response = await api.post('/api/removeInfluencersFromContract', contractWrapper, { headers });
+         return response.data;
+     } catch (error) {
+         console.log(error);
+         return;
+     }
+}
+
+export async function addDraftToCampaign(draftDTO) { 
+ 
+     try {
+         const token = localStorage.getItem('user-token');
+         const headers = { 'Authorization': 'Bearer ' + token };
+         const response = await api.post('/api/addDraftToContract', draftDTO, { headers });
+         console.log("Response time", response);
+         return response.data;
+     } catch (error) {
+         console.log(error);
+         return;
+     }
+}
+
+
+export async function reviewDraft(oldDraftDTO, approvalStatus, comments) { 
+    const draftDTO= { 
+        ...oldDraftDTO,
+        approvalStatus: approvalStatus,
+        approvalNotes: comments.toUpperCase()
+    }
+
+    console.log("DTO",draftDTO);
+
+ 
+     try {
+         const token = localStorage.getItem('user-token');
+         const headers = { 'Authorization': 'Bearer ' + token };
+         const response = await api.post('/api/reviewDraft', draftDTO, { headers });
+         return response.data;
+     } catch (error) {
+         console.log(error);
+         return;
+     }
+}
+
+export async function addAttachmentToCampaign(attachmentDTO) { 
+
+    console.log("DTO",attachmentDTO);
+
+     try {
+         const token = localStorage.getItem('user-token');
+         const headers = { 'Authorization': 'Bearer ' + token };
+         const response = await api.post('/api/addAttachmentToContract', attachmentDTO, { headers });
+         console.log("Response time", response);
+         return response.data;
+     } catch (error) {
+         console.log(error);
+         return;
+     }
+
+}
+
+export async function markContractAsComplete(contractDTO) { 
+    try {
+        const token = localStorage.getItem('user-token');
+        const headers = { 'Authorization': 'Bearer ' + token };
+        const response = await api.post('/api/markContractAsComplete', contractDTO, { headers });
+        console.log("Response time", response);
+        return response.data;
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+}
+
+export async function markContractAsIncomplete(contractDTO) { 
+    try {
+        const token = localStorage.getItem('user-token');
+        const headers = { 'Authorization': 'Bearer ' + token };
+        const response = await api.post('/api/markContractAsIncomplete', contractDTO, { headers });
+        console.log("Response time", response);
+        return response.data;
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+}
+
+
+export function uploadAttachment(file,name) {
+
+  return new Promise(async (resolve, reject) => {
+    if (!file) {
+      reject('No file provided');
+      return;
+    }
+
+    const token = localStorage.getItem('user-token');
+    const headers = { 'Authorization': 'Bearer ' + token };
+    const fileName = name;
+    // First, retrieve the presigned URL from the backend
+    const response = await api.get('/api/getPresignedUrl/' + fileName,  {headers});
+    const presignedUrl = response.data;
+
+    // Then upload the file to S3 using the presigned URL
+    await axios.put(presignedUrl, file, {
+      headers: {
+        'Content-Type': file.type,
+      },
+    });
+
+    // Set the file URL after the file has been uploaded
+    const fileUrl = `https://socion-draft-bucket.s3.us-east-2.amazonaws.com/${fileName}`;
+
+    resolve(fileUrl);
+  });
+}
+
+

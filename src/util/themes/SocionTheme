@@ -1,0 +1,12 @@
+import { createTheme } from "@mui/material";
+
+const SocionTheme = createTheme({
+  palette: {
+    secondary: {
+      main: 'rgb(236, 233, 233)',
+      contrastText: '#000',
+    },
+  },
+});
+
+export default SocionTheme;
