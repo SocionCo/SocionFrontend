@@ -1,5 +1,6 @@
 import axios from 'axios';
 
-const apiString = 'http://socion.herokuapp.com';
+// const apiString = 'https://localhost:8080';
+const apiString = 'https://socion.herokuapp.com';
 
 export default apiString;
