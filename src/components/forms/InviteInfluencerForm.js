@@ -3,6 +3,7 @@ import { useFormik } from "formik";
 import * as React from 'react';
 import * as Yup from "yup";
 import EmailSentPopup from "../modals/EmailSentPopup";
+import { inviteInfluencerToAgency } from "../../services/agencyServices";
 
 const InviteInfluencerForm = () => {
     const [open, setOpen] = React.useState(false);
@@ -27,6 +28,7 @@ const InviteInfluencerForm = () => {
         validateOnChange: true,
         validateOnBlur: true,
         onSubmit: async (values) => {
+            inviteInfluencerToAgency(values.email);
             handleClickOpen();
 
         }

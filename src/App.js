@@ -8,11 +8,13 @@ import ProtectedRoute from './util/ProtectedRoute';
 import Campaigns from "./pages/Campaigns";
 import Team from "./pages/Team";
 import TalentDashboard from "./pages/TalentDashboard";
+import Register from "./authProcess/auth/login/Register";
 
 
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     
+
 
 
     const checkUserToken = async () => {
@@ -24,44 +26,48 @@ function App() {
         }
         setIsLoggedIn(true);
     }
-    
+
     useEffect(() => {
         checkUserToken();
     }, [isLoggedIn]);
- 
+
     return (
         <BrowserRouter basename={''}>
-        <Routes>
-            <Route path='*' element={<Auth />}>
-                <Route path='login' element={<Login/>} />
-            </Route>
-            <Route path='campaigns' element={
-                <ProtectedRoute>
-                    <Campaigns/>
-                </ProtectedRoute>
-            } />
-            <Route path='home' element={
-                <ProtectedRoute>
-                    <AdminDashboard/>
-                </ProtectedRoute>
-            } />
-            <Route path='team' element={
-                <ProtectedRoute>
-                    <Team></Team>
-                </ProtectedRoute>
-            } />
-            <Route path='talent' element={
-                <ProtectedRoute>
-                    <TalentDashboard/>
-                </ProtectedRoute>
-            } />
-            <Route path='' element={
-                <ProtectedRoute>
-                    <Login/>
-                </ProtectedRoute>
-            } />
-    </Routes>
-    </BrowserRouter>
+            <Routes>
+                <Route path='campaigns' element={
+                    <ProtectedRoute>
+                        <Campaigns />
+                    </ProtectedRoute>
+                } />
+                <Route path='home' element={
+                    <ProtectedRoute>
+                        <AdminDashboard />
+                    </ProtectedRoute>
+                } />
+                <Route path='team' element={
+                    <ProtectedRoute>
+                        <Team></Team>
+                    </ProtectedRoute>
+                } />
+                <Route path='talent' element={
+                    <ProtectedRoute>
+                        <TalentDashboard />
+                    </ProtectedRoute>
+                } />
+                <Route path='' element={
+                    <ProtectedRoute>
+                        <Login />
+                    </ProtectedRoute>
+                } />
+                <Route path='*' element={<Auth />}>
+                    <Route path='login' element={<Login />} />
+                </Route>
+                <Route path='register' element={
+                    <Register />}
+                >
+                </Route>
+            </Routes>
+        </BrowserRouter>
     );
 }
 export default App;

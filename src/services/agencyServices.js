@@ -155,3 +155,29 @@ export async function updateTalentManagersForUser(talentManagers, userEmail) {
         console.log(error);
     }
 }
+
+export async function registerNewAgencyAndAccount({ firstName, lastName, email, agencyName, confirmPassword, password}) { 
+    const registerWrapper = { 
+        userDTO: { 
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            confirmPassword: confirmPassword,
+            password: password
+        }, 
+        agencyDTO : { 
+            name: agencyName
+        }
+    }
+    console.log("Wrapper",registerWrapper);
+
+    try {
+        const response = await api.post('/api/register', registerWrapper);
+        return response.data;
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+
+
+}

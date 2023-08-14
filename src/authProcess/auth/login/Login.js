@@ -14,35 +14,42 @@ import { getUserType } from "../../../services/influencerServices.js";
 
 
 export default function Login() {
-    const [error,setError] = useState(false);
-    const navigate = useNavigate();
-    console.log("Entered Login");
+  const [error, setError] = useState(false);
+  const navigate = useNavigate();
+  console.log("Enetered login userToken", localStorage.getItem('user-token'));
 
-    const handleLogin = async (event) => {
-      try {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-    
-        const userDTO = {
-          email: data.get('email'),
-          password: data.get('password'),
-        };
+  const navigateRegister = (event) => {
+    event.preventDefault();
+    setTimeout(() => {
+      navigate('/register');
+    }, 500)
+  }
 
-        console.log(userDTO.email)
-        console.log(userDTO.password)
-        const response = await api.post('/api/login', userDTO);
-        localStorage.clear();
-        localStorage.setItem('user-token', response.data);
-        const userType = await getUserType();
-        localStorage.setItem("user-type",userType);
-        console.log("LOGINTOKENEEN", localStorage.getItem('user-token'));
-        setTimeout(() => {
-          navigate('/home');
+  const handleLogin = async (event) => {
+    try {
+      event.preventDefault();
+      const data = new FormData(event.currentTarget);
+
+      const userDTO = {
+        email: data.get('email'),
+        password: data.get('password'),
+      };
+
+      console.log(userDTO.email)
+      console.log(userDTO.password)
+      const response = await api.post('/api/login', userDTO);
+      localStorage.clear();
+      localStorage.setItem('user-token', response.data);
+      const userType = await getUserType();
+      localStorage.setItem("user-type", userType);
+      console.log("LOGINTOKENEEN", localStorage.getItem('user-token'));
+      setTimeout(() => {
+        navigate('/home');
       }, 500);
-      } catch (error) {
-        setError(true)
-      }
+    } catch (error) {
+      setError(true)
     }
+  }
 
   return (
     <Container component="main" maxWidth="sm">
@@ -102,7 +109,7 @@ export default function Login() {
               </Link>
             </Grid>
             <Grid>
-              <Link href="#" variant="body2">
+              <Link href="#" variant="body2" onClick={(e) => navigateRegister(e)}>
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
