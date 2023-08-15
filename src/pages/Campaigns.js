@@ -89,7 +89,7 @@ const Campaigns = () => {
                 <Grid item xs={9}>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
-                            <Typography variant='h3' component='h3'>Talent</Typography>
+                            <Typography variant='h3' component='h3'>Campaigns</Typography>
                         </Grid>
                         <Grid item xs={12}>
 
