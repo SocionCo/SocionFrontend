@@ -9,6 +9,7 @@ import InfluencerSidebar from "../components/navigation/InfluencerSidebar.js";
 import Sidebar from "../components/navigation/Sidebar";
 import { getAllAgencyContractsForCurrentUser } from "../services/agencyServices";
 import { getUserInformation } from "../services/influencerServices";
+import InfluencerContractDetailView from "../components/modals/InfluencerContractDetailView";
 
 const Campaigns = () => {
     const [searchInput, setSearchInput] = useState('');
@@ -20,15 +21,15 @@ const Campaigns = () => {
 
 
     const userType = localStorage.getItem("user-type");
-    
-    
+
+
     useEffect(() => {
         const fetchData = async () => {
             const result = await getUserInformation();
             setProps(result);
         }
         fetchData();
-        
+
     }, []);
 
     const handleDetailClose = () => {
@@ -43,7 +44,7 @@ const Campaigns = () => {
         setOpen(true);
     }
 
-    const refreshRows = () => { 
+    const refreshRows = () => {
         window.location.reload();
     }
 
@@ -69,22 +70,30 @@ const Campaigns = () => {
 
     return (
         <Box sx={{ m: 1, p: 1 }}>
-            <NewCampaignModal 
-            open={open} 
-            handleClose={handleClose} 
-            agencyId={props ? props.agencyId : null} 
-            refresh={refreshRows}/>
-            <ContractDetailView
-                open={detailView}
-                handleClose={handleDetailClose}
-                contractId={currentContractId}
-            ></ContractDetailView>
+            <NewCampaignModal
+                open={open}
+                handleClose={handleClose}
+                agencyId={props ? props.agencyId : null}
+                refresh={refreshRows} />
+
+            {userType === "Admin" ?
+                (<ContractDetailView
+                    open={detailView}
+                    handleClose={handleDetailClose}
+                    contractId={currentContractId}
+                ></ContractDetailView>) : (<InfluencerContractDetailView
+                    open={detailView}
+                    handleClose={handleDetailClose}
+                    contractId={currentContractId}
+                />)
+            }
+            
             <SocionHeader showButton={false}></SocionHeader>
             <Grid container spacing={2}>
                 <Grid item xs={3}>
-                {userType === "Admin" ?
-                    (<Sidebar index={1}></Sidebar>) : (<InfluencerSidebar index={1}/>)
-                    }  
+                    {userType === "Admin" ?
+                        (<Sidebar index={1}></Sidebar>) : (<InfluencerSidebar index={1} />)
+                    }
                 </Grid>
                 <Grid item xs={9}>
                     <Grid container spacing={2}>
@@ -108,7 +117,7 @@ const Campaigns = () => {
                                         <Button onClick={() => {
                                             setCurrentContractId(contract.id);
                                             setDetailView(true);
-                                            }}>
+                                        }}>
                                             <ContractSticker contract={contract} />
                                         </Button>
                                     </Box>
