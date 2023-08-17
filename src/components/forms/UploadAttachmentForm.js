@@ -1,4 +1,4 @@
-import { Button, CircularProgress, Container, Grid, Paper, TextField, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Container, Grid, Paper, TextField, Typography } from "@mui/material";
 import { styled } from '@mui/system';
 import { useFormik } from "formik";
 import * as React from 'react';
@@ -10,7 +10,7 @@ const Input = styled('input')({
     display: 'none',
 });
 
-export default function UploadAttachmentForm({contractId}) {
+export default function UploadAttachmentForm({ contractId, handleClose }) {
     const [fileLink, setFileLink] = React.useState(null)
     const uploadInputRef = React.useRef(null);
     const [loading, setLoading] = React.useState(false);
@@ -28,12 +28,13 @@ export default function UploadAttachmentForm({contractId}) {
         validateOnChange: true,
         validateOnBlur: true,
         onSubmit: async (values) => {
-            const attachmentDTO = { 
-                attachmentName : values.attachmentName,
+            const attachmentDTO = {
+                attachmentName: values.attachmentName,
                 contractId: contractId,
                 reference: fileLink
             }
             addAttachmentToCampaign(attachmentDTO);
+            handleClose();
         }
     });
 
@@ -56,34 +57,36 @@ export default function UploadAttachmentForm({contractId}) {
                     </Grid>
 
                     <Grid item xs={12}>
-                        <Input
-                            ref={uploadInputRef}
-                            type="file"
-                            accept="*"
-                            id="upload-file"
-                            onChange={async (event) => {
-                                setLoading(true);
-                                const unique_id = uuid();
-                                const file = event.target.files[0];
-                                const ref = await uploadAttachment(file, unique_id);
-                                setLoading(false);
-                                setFileLink(ref);
-                            }}
-                        />
+                        <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
+                            <Input
+                                ref={uploadInputRef}
+                                type="file"
+                                accept="*"
+                                id="upload-file"
+                                onChange={async (event) => {
+                                    setLoading(true);
+                                    const unique_id = uuid();
+                                    const file = event.target.files[0];
+                                    const ref = await uploadAttachment(file, unique_id);
+                                    setLoading(false);
+                                    setFileLink(ref);
+                                }}
+                            />
 
-                        {loading ? <CircularProgress /> :
-                            (<label htmlFor="upload-file">
-                                <Button variant="outlined" color="primary" component="span">
-                                    Upload File
-                                </Button>
-                            </label>)
+                            {loading ? <CircularProgress /> :
+                                (<label htmlFor="upload-file">
+                                    <Button variant="outlined" color="primary" component="span">
+                                        Upload File
+                                    </Button>
+                                </label>)
 
-                        }
+                            }
 
 
-                        {fileLink &&
-                            <a href={fileLink}>Click Here To Open File</a>
-                        }
+                            {fileLink &&
+                                <Button href={fileLink} target="_blank">Preview Upload</Button>
+                            }
+                        </Box>
                     </Grid>
 
                     <Grid item xs={12}>

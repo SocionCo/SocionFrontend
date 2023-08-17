@@ -19,7 +19,6 @@ import { markContractAsComplete } from "../services/campaignServices";
 import { getUserInformation } from "../services/influencerServices";
 
 
-
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
     ...theme.typography.body2,
@@ -27,6 +26,8 @@ const Item = styled(Paper)(({ theme }) => ({
     textAlign: 'center',
     color: theme.palette.text.secondary,
 }));
+
+
 
 async function getRows() {
     try {
@@ -79,6 +80,7 @@ function mapApiResponseToJSONArray(response) {
 
 
 const Subheading = ({ userName }) => {
+    const userType = localStorage.getItem("user-type");
 
     return (
         <Paper sx={{
@@ -89,7 +91,10 @@ const Subheading = ({ userName }) => {
             {userName ? <Typography component="h4" variant="h4" sx={{
                 fontWeight: 500
             }} >Welcome back, {userName}!</Typography> : <Typography component="h4" variant="h4" >Welcome back!</Typography>}
-            <Typography color="grey" variant="subtitle1" component="p">Let's see how your company is doing today.</Typography>
+
+            { userType === "Admin" ? 
+                (<Typography color="grey" variant="subtitle1" component="p">Let's see how your company is doing today.</Typography>) : (<Typography color="grey" variant="subtitle1" component="p">Let’s see your campaigns for this week.</Typography>)
+            }
         </Paper>
 
     )
@@ -104,6 +109,7 @@ const AdminDashboard = () => {
     const [detailView, setDetailView] = React.useState(false);
     const [currentContractId, setCurrentContractId] = React.useState(null);
     const [testModalOpen, setTestModalOpen] = React.useState(false);
+    const [refresh, setRefresh] = React.useState(false);
 
     const userType = localStorage.getItem("user-type");
 
@@ -162,11 +168,10 @@ const AdminDashboard = () => {
 
 
     const handleDetailClose = () => {
-
-        setDetailView(false);
+        window.location.reload();
         console.log("Detail closing");
     }
-    
+
     const handleClose = () => setOpen(false);
 
     useEffect(() => {
@@ -176,13 +181,9 @@ const AdminDashboard = () => {
             setIsLoading(false);
         }
         createRows();
-    }, []);
+    }, [detailView]);
 
 
-    const logout = () => {
-        localStorage.setItem('user-token', undefined);
-        window.location.reload();
-    }
     const [color] = useState("#fff3e0");
 
 
@@ -240,8 +241,6 @@ const AdminDashboard = () => {
                         />}
                 </Grid>
             </Grid>
-            <Button onClick={handleTestOpen}>Open Upload</Button>
-            <button onClick={logout}>Logout!</button>
         </div>
     )
 

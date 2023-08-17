@@ -8,17 +8,18 @@ import * as React from 'react';
 import * as Yup from "yup";
 import { editContract, getContractDetailsWithId } from "../../services/campaignServices";
 import { getInfluencersManagedBy } from "../../services/influencerServices";
+import styled from "@emotion/styled";
 
 
 
 
 
 
-export default function EditCampaign({ agencyId, contractId, refresh }) {
+export default function InfluencerEditCampaign({ agencyId, contractId, refresh }) {
 
 
     const [isFormValid, setIsFormValid] = React.useState(false);
-    const [influencers,setInfluencers] = React.useState([]);
+    const [influencers, setInfluencers] = React.useState([]);
     const [contract, setContract] = React.useState(null);
 
 
@@ -40,7 +41,7 @@ export default function EditCampaign({ agencyId, contractId, refresh }) {
             setInfluencers(result);
         }
         createRows();
-    },[]);
+    }, []);
 
 
 
@@ -53,7 +54,6 @@ export default function EditCampaign({ agencyId, contractId, refresh }) {
     });
 
 
-   
 
     const myForm = useFormik({
         initialValues: {
@@ -61,9 +61,6 @@ export default function EditCampaign({ agencyId, contractId, refresh }) {
             description: contract ? contract.description : "",
             companyName: contract ? contract.companyName : "",
             date: contract ? contract.date : null,
-            rate: contract ? contract.rate : 0,
-            agencyCommission: contract ? contract.rate : 0,
-            creatorRate: contract ? contract.rate : 0
 
         },
         validationSchema: formValidation,
@@ -81,10 +78,7 @@ export default function EditCampaign({ agencyId, contractId, refresh }) {
                     },
                     name: values.campaignName,
                     description: values.description,
-                    rate: values.rate,
                     dueDate: values.date,
-                    companyName: values.companyName,
-                    creatorRate: values.creatorRate,
                     agencyCommission: values.agencyCommission
                 },
 
@@ -104,9 +98,6 @@ export default function EditCampaign({ agencyId, contractId, refresh }) {
                 description: contract.description || myForm.values.description,
                 companyName: contract.companyName || myForm.values.companyName,
                 date: dayjs(contract.dueDate) || myForm.values.date,
-                rate: contract.rate || myForm.values.rate,
-                agencyCommission: contract.agencyCommission,
-                creatorRate: contract.creatorRate
             });
         }
     }, [contract]);
@@ -125,6 +116,7 @@ export default function EditCampaign({ agencyId, contractId, refresh }) {
                 <TextField
                     sx={{ width: '100%', m: 1 }}
                     required
+                    disabled
                     label="Campaign Name"
                     margin="dense"
                     name="campaignName"
@@ -139,6 +131,7 @@ export default function EditCampaign({ agencyId, contractId, refresh }) {
                 <TextField
                     sx={{ width: '100%', m: 1 }}
                     required
+                    disabled
                     label="Company Name"
                     margin="dense"
                     name="companyName"
@@ -157,6 +150,7 @@ export default function EditCampaign({ agencyId, contractId, refresh }) {
                         m: 1
                     }}
                         required
+                        disabled
                         margin='dense'
                         name="date"
                         label="Due Date *"
@@ -168,78 +162,16 @@ export default function EditCampaign({ agencyId, contractId, refresh }) {
                 </LocalizationProvider>
             </Grid>
 
-            <Grid item xs={4} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <TextField
-
-                    InputProps={{
-                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                    }}
-                    margin="dense"
-                    name="rate"
-                    label="Booking Rate"
-                    type="number"
-                    value={myForm.values.rate}
-                    onChange={myForm.handleChange}
-                    error={!!myForm.errors.rate}
-                    helperText={myForm.errors.rate}
-                    sx={{
-                        marginBottom: 1,
-                        width: '100%',
-                        m: 1
-                    }}
-                />
-            </Grid>
-
-
-
-            <Grid item xs={4} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <TextField
-                    InputProps={{
-                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                    }}
-                    margin="dense"
-                    name="agencyCommission"
-                    label="Agency Comission"
-                    type="number"
-                    value={myForm.values.agencyCommission}
-                    onChange={myForm.handleChange}
-                    error={!!myForm.errors.agencyCommission}
-                    helperText={myForm.errors.agencyCommission}
-                    sx={{
-                        marginBottom: 1,
-                        width: '100%',
-                        m: 1
-                    }}
-                />
-            </Grid>
-
-            <Grid item xs={4} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <TextField
-                    InputProps={{
-                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                    }}
-                    margin="dense"
-                    name="creatorRate"
-                    label="Creator Rate"
-                    type="number"
-                    value={myForm.values.creatorRate}
-                    onChange={myForm.handleChange}
-                    error={!!myForm.errors.creatorRate}
-                    helperText={myForm.errors.creatorRate}
-                    sx={{
-                        marginBottom: 1,
-                        width: '100%',
-                        m: 1
-                    }}
-                />
-            </Grid>
 
 
             <Grid item xs={12} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'start' }}>
                 <TextField
-                    sx={{ width: '100%',m: 1 }}
+                    sx={{
+                        width: '100%', m: 1
+                    }}
                     multiline
                     fullWidth
+                    disabled
                     label="Description"
                     margin="dense"
                     name="description"
@@ -251,14 +183,6 @@ export default function EditCampaign({ agencyId, contractId, refresh }) {
             </Grid>
 
 
-            <Button
-                disabled={!myForm.isValid || !isFormValid}
-                onClick={myForm.submitForm}
-                variant="contained"
-                sx={{m:1}}
-            >
-                Save Changes
-            </Button>
 
         </Grid>
     );

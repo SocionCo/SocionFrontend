@@ -25,7 +25,7 @@ const InviteTalentManagerModal = ( {open, handleClose } ) => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <InviteTalentManagerForm/>
+          <InviteTalentManagerForm onClose={handleClose}/>
         </Box>
       </Modal>
     );

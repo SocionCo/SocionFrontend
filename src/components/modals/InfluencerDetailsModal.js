@@ -14,6 +14,7 @@ import BasicTableNoHeader from '../tables/BasicTableNoHeader';
 import SocialTable from '../tables/SocialTable';
 import AddTalentManagerModal from './AddTalentManagerModal';
 import ConfirmActionDialogue from './ConfirmActionDialogue';
+import { useState } from 'react';
 
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -31,13 +32,21 @@ export default function InfluencerDetailsModal({ open, handleClose, user }) {
     const [formattedTalentManagers, setFormattedTalentManagers] = React.useState([]);
     const [talentManagers, setTalentManagers] = React.useState([]);
     const [addTalentManagerOpen, setAddTalentManagerOpen] = React.useState(false);
+    const [refresh, setRefresh] = useState(false);
+
+    const handleRefresh = () => {
+        setTimeout(() => {
+            setRefresh(!refresh);
+        }, 500);
+    }
 
 
-    const handleOpenAddTalentManager = () => { 
+    const handleOpenAddTalentManager = () => {
         setAddTalentManagerOpen(true);
     }
 
-    const handleCloseAddTalentManager = () => { 
+    const handleCloseAddTalentManager = () => {
+        handleRefresh();
         setAddTalentManagerOpen(false);
     }
 
@@ -91,7 +100,7 @@ export default function InfluencerDetailsModal({ open, handleClose, user }) {
         }
         getTalentManagers({ user });
 
-    }, [])
+    }, [refresh])
 
     React.useEffect(() => {
         const getContracts = async ({ user }) => {
@@ -121,13 +130,13 @@ export default function InfluencerDetailsModal({ open, handleClose, user }) {
             closeAfterTransition
         >
             {addTalentManagerOpen &&
-            <AddTalentManagerModal 
-                open={addTalentManagerOpen}
-                handleClose={handleCloseAddTalentManager}
-                currentTalentManagers={talentManagers}
-                userEmail={user.email}
+                <AddTalentManagerModal
+                    open={addTalentManagerOpen}
+                    handleClose={handleCloseAddTalentManager}
+                    currentTalentManagers={talentManagers}
+                    userEmail={user.email}
 
-            />}
+                />}
             <ConfirmActionDialogue label={label} description={description} setOpen={handleDialogueOpen} open={dialogueOpen} handleClose={handleDialogueClose} onClick={deleteUser} />
             <SocionHeader showButton={false} showX={true} onX={handleClose} />
             <Grid container spacing={2}>
@@ -168,7 +177,7 @@ export default function InfluencerDetailsModal({ open, handleClose, user }) {
                             </Stack>
                         </Paper>
                     </Box>
-                    <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         <Button onClick={handleOpenAddTalentManager}>Manage</Button>
                     </Box>
                 </Grid>

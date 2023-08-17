@@ -56,7 +56,6 @@ const DraftList = ({ contract, dashboardOpen }) => {
 const DraftsSidebar = ({ contract, dashboardOpen }) => {
     return (
         <Paper sx={{
-            backgroundColor: 'lightGrey',
             width: '100%',
             height: '100%'
         }}>

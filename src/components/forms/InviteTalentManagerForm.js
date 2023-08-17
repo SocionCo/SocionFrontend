@@ -5,7 +5,7 @@ import * as Yup from "yup";
 import EmailSentPopup from "../modals/EmailSentPopup";
 import { inviteTalentManagerToAgency } from "../../services/agencyServices";
 
-const InviteTalentManagerForm = () => { 
+const InviteTalentManagerForm = ({onClose}) => { 
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
@@ -13,6 +13,7 @@ const InviteTalentManagerForm = () => {
     };
 
     const handleClose = () => {
+        onClose();
         setOpen(false);
     };
 

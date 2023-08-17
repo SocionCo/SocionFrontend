@@ -32,6 +32,7 @@ const UploadAttachmentModal = ( {open, handleClose, influencer, contractId, refr
         <Box sx={style}>
           <UploadAttachmentForm
             contractId={contractId}
+            handleClose={handleClose}
           />
         </Box>
       </Modal>

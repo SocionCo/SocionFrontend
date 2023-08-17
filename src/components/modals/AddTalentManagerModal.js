@@ -26,7 +26,7 @@ const AddTalentManagerModal = ({ open, handleClose, userEmail, currentTalentMana
 
     const onSubmit = () => { 
         updateTalentManagersForUser(selectedTalentManagers, userEmail);
-        window.location.reload();
+        handleClose();
     }
 
     

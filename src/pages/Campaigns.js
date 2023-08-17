@@ -87,7 +87,7 @@ const Campaigns = () => {
                     contractId={currentContractId}
                 />)
             }
-            
+
             <SocionHeader showButton={false}></SocionHeader>
             <Grid container spacing={2}>
                 <Grid item xs={3}>
@@ -109,19 +109,20 @@ const Campaigns = () => {
 
                             filteredContracts.map(contract => {
                                 return (
-
-                                    <Box key={contract.id} sx={{
-                                        m: 1,
-                                        p: 1,
-                                    }}>
-                                        <Button onClick={() => {
-                                            setCurrentContractId(contract.id);
-                                            setDetailView(true);
+                                    <Grid item key={contract.id}
+                                    >
+                                        <Box key={contract.id} sx={{
+                                            m: 1,
+                                            p: 1,
                                         }}>
-                                            <ContractSticker contract={contract} />
-                                        </Button>
-                                    </Box>
-
+                                            <Button onClick={() => {
+                                                setCurrentContractId(contract.id);
+                                                setDetailView(true);
+                                            }}>
+                                                <ContractSticker contract={contract} />
+                                            </Button>
+                                        </Box>
+                                    </Grid>
                                 )
                             })
 

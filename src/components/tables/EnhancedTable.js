@@ -318,6 +318,7 @@ export default function EnhancedTable({ rows, refresh, openDetailView, handleCom
             {visibleRows.map((row, index) => {
               const isItemSelected = isSelected(row.id);
               const labelId = `enhanced-table-checkbox-${index}`;
+              const trimmedName = row.name.length > 20 ? row.name.substring(0, 15) + "..." : row.name;
 
               return (
                 <TableRow
@@ -346,7 +347,7 @@ export default function EnhancedTable({ rows, refresh, openDetailView, handleCom
                     padding="none"
                     align="left"
                   >
-                    {row.name}
+                    {trimmedName}
                   </TableCell>
                   <TableCell align="left">{row.influencer}</TableCell>
                   <TableCell align="left">{row.companyName}</TableCell>

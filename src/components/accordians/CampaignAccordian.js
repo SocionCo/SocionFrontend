@@ -7,9 +7,17 @@ import * as React from 'react';
 import AttachmentBlock from '../campaignDetails/AttachmentBlock';
 import EditCampaign from '../forms/EditCampaign';
 import VerticalLinearStepper from '../steppers/VerticalLinearStepper';
+import InfluencerEditCampaign from '../forms/influencerEditCampaign';
+import TaskSticker from '../campaignDetails/taskSticker';
+import AddTaskIcon from '@mui/icons-material/AddTask';
+import { Button } from '@mui/base';
+import { IconButton } from '@mui/material';
 
-export default function CampaignAccordian({ contract }) {
+export default function CampaignAccordian({ contract, refresh }) {
   const { attachments, tasks } = contract;
+  const userType = localStorage.getItem("user-type");
+  const [showNextTask, setShowNextTask] = React.useState(false);
+
 
   return (
     <div>
@@ -18,7 +26,7 @@ export default function CampaignAccordian({ contract }) {
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
           id="panel1a-header"
-          sx={{ 
+          sx={{
             margin: '0',
           }}
 
@@ -26,9 +34,35 @@ export default function CampaignAccordian({ contract }) {
           <Typography>Details</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <EditCampaign
-            contractId={contract.id}
-          />
+          {userType === "Admin" ?
+            (<EditCampaign
+              refresh={refresh}
+              contractId={contract.id}
+            />) : (<InfluencerEditCampaign
+              refresh={refresh}
+              contractId={contract.id}
+            />)
+          }
+        </AccordionDetails>
+      </Accordion>
+
+      <Accordion defaultExpanded={true}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel2a-content"
+          id="panel2a-header"
+        >
+          <Typography>Tasks</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          {tasks.map((element) => {
+            return <TaskSticker refresh={refresh} task={element}/>
+          })}
+          {showNextTask && <TaskSticker refresh={refresh} isInputTask={true} contractId={contract.id} handleClose={() => setShowNextTask(false)}/>}
+
+          <IconButton sx={{color:'green', m: 0, p: 0, marginTop: 1}} onClick={() => setShowNextTask(true)} >
+            <AddTaskIcon/>
+            </IconButton>
         </AccordionDetails>
       </Accordion>
 
@@ -42,25 +76,14 @@ export default function CampaignAccordian({ contract }) {
         </AccordionSummary>
         <AccordionDetails>
           {
-          attachments.map(element => {
-            return <AttachmentBlock attachment={element} key={element.id}/>
-          })
+            attachments.map(element => {
+              return <AttachmentBlock refresh={refresh} attachment={element} key={element.id} />
+            })
           }
         </AccordionDetails>
       </Accordion>
 
-      {/* <Accordion defaultExpanded={true}>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel2a-content"
-          id="panel2a-header"
-        >
-          <Typography>Tasks</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <VerticalLinearStepper tasks={tasks}/> 
-        </AccordionDetails>
-      </Accordion> */}
+
     </div>
   );
 }

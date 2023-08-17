@@ -13,22 +13,29 @@ import InfluencerUserProfile from '../campaignDetails/InfluencerUserProfile';
 import SocionHeader from '../headers/SocionHeader';
 import UploadAttachmentModal from './UploadAttachmentModal';
 import UploadDraftModal from './UploadDraftModal';
+import InfluencerCampaignSummary from '../influencerCampaignDetails/influencerCampaignSummar';
 
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function InfluencerContractDetailView({ influencer,contractId, open, handleClose }) {
+export default function InfluencerContractDetailView({ influencer, contractId, open, handleClose }) {
     const [contract, setContract] = useState(null);
     const [openDraftDashboard, setOpenDraftDashboard] = useState(false);
     const [openAttachmentUpload, setOpenAttachmentUpload] = useState(false);
+    const [refresh, setRefresh] = useState(false);
+
+    const handleRefresh = () => {
+        setTimeout(() => {setRefresh(!refresh)},500)
+    }
 
     const handleOpenAttachment = () => {
         setOpenAttachmentUpload(true);
     }
 
     const handleCloseAttachment = () => {
+        handleRefresh();
         setOpenAttachmentUpload(false);
     }
 
@@ -64,7 +71,7 @@ export default function InfluencerContractDetailView({ influencer,contractId, op
                     console.error(error);
                 });
         }
-    }, [contractId, open]);
+    }, [contractId, open, refresh]);
 
     if (!contract) {
         return null;
@@ -85,20 +92,21 @@ export default function InfluencerContractDetailView({ influencer,contractId, op
             />
 
             <UploadDraftModal
-            open={openDraftDashboard}
-            handleClose={handleCloseDashboard}
-            contractId={contract.id}
+                open={openDraftDashboard}
+                handleClose={handleCloseDashboard}
+                contractId={contract.id}
 
-            
+
             />
             <Box sx={{ paddingX: 1 }}>
                 <SocionHeader showButton={false} showX={true} onX={handleClose} />
                 <Grid container spacing={2} >
                     <Grid xs={9}>
                         <Box sx={{ marginBottom: 1 }}>
-                            <CampaignSummary contract={contract} />
+                            <InfluencerCampaignSummary
+                            contract={contract} />
                         </Box>
-                        <CampaignAccordian contract={contract} />
+                        <CampaignAccordian refresh={() => {setTimeout(() => {setRefresh(!refresh)},500)}} contract={contract} />
                     </Grid>
                     <Grid xs={3}>
                         <Grid container spacing={2} direction='column' sx={{
@@ -108,21 +116,23 @@ export default function InfluencerContractDetailView({ influencer,contractId, op
                             <Grid sx={{ width: '100%' }}><InfluencerUserProfile contract={contract} /></Grid>
                             <Grid sx={{ width: '100%' }} >
                                 <InfluencerDraftsSidebar
-                                dashboardOpen={handleOpenDashboard}
-                                contract={contract} /></Grid>
+                                    dashboardOpen={handleOpenDashboard}
+                                    contract={contract} /></Grid>
                             <Grid sx={{ width: '100%' }}>
-                                { !contract.completed ? 
-                                (<AddAttachmentAndMarkComplete 
-                                    addAttachmentAction={handleOpenAttachment}
-                                    markCompleteAction={completeContract}
-                                />) : (
-                                    <AddAttachmentAndMarkComplete 
-                                    addAttachmentAction={handleOpenAttachment}
-                                    markCompleteAction={incompleteContract}
-                                    completed={contract.completed}
-                                    />
+                                {!contract.completed ?
+                                    (<AddAttachmentAndMarkComplete
+                                        addAttachmentAction={handleOpenAttachment}
+                                        markCompleteAction={completeContract}
+                                        refresh={() => {setTimeout(() => {setRefresh(!refresh)},500)}}
+                                    />) : (
+                                        <AddAttachmentAndMarkComplete
+                                            addAttachmentAction={handleOpenAttachment}
+                                            markCompleteAction={incompleteContract}
+                                            completed={contract.completed}
+                                            refresh={() => {setTimeout(() => {setRefresh(!refresh)},500)}}
+                                        />
                                     )
-                                
+
                                 }
                             </Grid>
                         </Grid>

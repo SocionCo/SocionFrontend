@@ -4,10 +4,16 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
+import Button from '@mui/material/Button/Button';
 
 
-export default function SelectedListItem( {index = 1} ) {
+export default function SelectedListItem({ index = 1 }) {
   const [selectedIndex, setSelectedIndex] = React.useState(index);
+
+  const logout = () => {
+        localStorage.clear();
+        window.location.reload();
+    }
 
   const handleListItemClick = (event, index) => {
     setSelectedIndex(index);
@@ -15,8 +21,8 @@ export default function SelectedListItem( {index = 1} ) {
 
   let navigate = useNavigate();
 
-  const handleClick = (event, number, path) => { 
-    handleListItemClick(event,number);
+  const handleClick = (event, number, path) => {
+    handleListItemClick(event, number);
     navigate(path);
   }
 
@@ -25,7 +31,7 @@ export default function SelectedListItem( {index = 1} ) {
       <List component="nav" aria-label="main mailbox folders">
         <ListItemButton
           selected={selectedIndex === 0}
-          onClick={(event) => handleClick(event, 0, "/home" )}
+          onClick={(event) => handleClick(event, 0, "/home")}
         >
           <ListItemText primary="Dashboard" />
         </ListItemButton>
@@ -48,7 +54,14 @@ export default function SelectedListItem( {index = 1} ) {
         >
           <ListItemText primary="Team" />
         </ListItemButton>
-        </List>
+        <Button
+          variant="text"
+          sx={{ color: 'red' }}
+          onClick={logout}
+        >
+          Logout
+        </Button>
+      </List>
     </Box>
   );
 }

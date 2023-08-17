@@ -4,6 +4,7 @@ import InviteInfluencerForm from "../forms/InviteInfluencerForm";
 
 const InviteInfluencerModal = ( {open, handleClose } ) => { 
 
+  console.log("This is the close function",handleClose);
   const style = {
     position: 'absolute',
     top: '50%',
@@ -25,7 +26,7 @@ const InviteInfluencerModal = ( {open, handleClose } ) => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <InviteInfluencerForm/>
+          <InviteInfluencerForm onClose={handleClose}/>
         </Box>
       </Modal>
     );

@@ -5,14 +5,15 @@ import * as Yup from "yup";
 import EmailSentPopup from "../modals/EmailSentPopup";
 import { inviteInfluencerToAgency } from "../../services/agencyServices";
 
-const InviteInfluencerForm = () => {
+const InviteInfluencerForm = ({onClose}) => {
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
         setOpen(true);
     };
 
-    const handleClose = () => {
+    const handlePopupClose = () => {
+        onClose();
         setOpen(false);
     };
 
@@ -42,7 +43,7 @@ const InviteInfluencerForm = () => {
                 description={"The influencer has 24 hours to accept the invite and register an account."}
                 open={open}
                 handleClickOpen={handleClickOpen}
-                handleClose={handleClose}
+                handleClose={handlePopupClose}
             />
             <TextField
                 required

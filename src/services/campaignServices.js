@@ -226,3 +226,76 @@ export function uploadAttachment(file,name) {
 }
 
 
+export async function deleteAttachment(attachmentDTO) { 
+    try {
+        const token = localStorage.getItem('user-token');
+        const headers = { 'Authorization': 'Bearer ' + token };
+        const response = await api.post('/api/deleteAttachment', attachmentDTO, { headers });
+        console.log("Delete attachment response", response);
+        return response.data;
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+}
+
+export async function addTaskToContract(taskName, contractId) { 
+
+    const taskWrapper = { 
+        taskDTO : { 
+            taskName : taskName,
+            taskDetails : "",
+            taskCompleted : false
+        }, 
+        contractDTO : { 
+            id : contractId
+        }
+    }
+
+    try {
+        const token = localStorage.getItem('user-token');
+        const headers = { 'Authorization': 'Bearer ' + token };
+        const response = await api.post('/api/addTaskToContract', taskWrapper, { headers });
+        return response.data;
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+}
+
+export async function checkOffTask(taskDTO) { 
+    try {
+        const token = localStorage.getItem('user-token');
+        const headers = { 'Authorization': 'Bearer ' + token };
+        const response = await api.post('/api/completeTask', taskDTO, { headers });
+        return response.data;
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+}
+
+export async function markTaskAsUnchecked(taskDTO) { 
+    try {
+        const token = localStorage.getItem('user-token');
+        const headers = { 'Authorization': 'Bearer ' + token };
+        const response = await api.post('/api/markTaskAsIncomplete', taskDTO, { headers });
+        return response.data;
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+}
+
+export async function deleteTask(taskDTO) { 
+    try {
+        const token = localStorage.getItem('user-token');
+        const headers = { 'Authorization': 'Bearer ' + token };
+        const response = await api.post('/api/deleteTask', taskDTO, { headers });
+        return response.data;
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+}
+

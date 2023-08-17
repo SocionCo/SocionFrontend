@@ -34,6 +34,7 @@ const UploadDraftModal = ( {open, handleClose, influencer, contractId, refresh} 
             influencer={influencer}
             contractId={contractId}
             refresh={window.location.refresh}
+            influencerEmail={influencer.email}
           />
         </Box>
       </Modal>

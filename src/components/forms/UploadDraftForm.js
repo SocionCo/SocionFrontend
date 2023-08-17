@@ -29,6 +29,7 @@ export default function UploadDraftForm({ influencerEmail, contractId, refresh }
         validateOnChange: true,
         validateOnBlur: true,
         onSubmit: async (values) => {
+
             const draftDTO = { 
                 draftName : values.draftName,
                 contractId: contractId,

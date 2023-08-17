@@ -8,7 +8,6 @@ const CampaignSummary = ({ contract }) => {
 
     return (
         <Paper sx={{
-            backgroundColor: 'lightGrey',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center'

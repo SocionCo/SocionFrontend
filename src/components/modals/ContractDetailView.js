@@ -13,6 +13,7 @@ import UserProfile from '../campaignDetails/UserProfile';
 import SocionHeader from '../headers/SocionHeader';
 import DraftDashboardModal from './DraftDashboardModal';
 import UploadAttachmentModal from './UploadAttachmentModal';
+import setRef from '@mui/utils/setRef';
 
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -23,12 +24,20 @@ export default function ContractDetailView({ contractId, open, handleClose }) {
     const [contract, setContract] = useState(null);
     const [openDraftDashboard, setOpenDraftDashboard] = useState(false);
     const [openAttachmentUpload, setOpenAttachmentUpload] = useState(false);
+    const [refresh, setRefresh] = useState(false);
+
+    const handleRefresh = () => {
+        setTimeout(() => {setRefresh(!refresh)},500)
+    }
+
+
 
     const handleOpenAttachment = () => {
         setOpenAttachmentUpload(true);
     }
 
     const handleCloseAttachment = () => {
+        handleRefresh();
         setOpenAttachmentUpload(false);
     }
 
@@ -58,13 +67,14 @@ export default function ContractDetailView({ contractId, open, handleClose }) {
         if (open) {
             getContractDetailsWithId(contractId)
                 .then((data) => {
+                    console.log("New data recieved",data);
                     setContract(data);
                 })
                 .catch((error) => {
                     console.error(error);
                 });
         }
-    }, [contractId, open]);
+    }, [contractId, open, refresh]);
 
     if (!contract) {
         return null;
@@ -95,7 +105,7 @@ export default function ContractDetailView({ contractId, open, handleClose }) {
                         <Box sx={{ marginBottom: 1 }}>
                             <CampaignSummary contract={contract} />
                         </Box>
-                        <CampaignAccordian contract={contract} />
+                        <CampaignAccordian contract={contract} refresh={() => {setTimeout(() => {setRefresh(!refresh)},500)}} />
                     </Grid>
                     <Grid xs={3}>
                         <Grid container spacing={2} direction='column' sx={{
