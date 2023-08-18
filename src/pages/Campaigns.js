@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Typography } from "@mui/material";
+import { Box, Button, Grid, Paper, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import ContractSticker from "../components/avatar/ContractSticker";
 import SocionHeader from "../components/headers/SocionHeader";
@@ -10,6 +10,8 @@ import Sidebar from "../components/navigation/Sidebar";
 import { getAllAgencyContractsForCurrentUser } from "../services/agencyServices";
 import { getUserInformation } from "../services/influencerServices";
 import InfluencerContractDetailView from "../components/modals/InfluencerContractDetailView";
+import styled from "@emotion/styled";
+
 
 const Campaigns = () => {
     const [searchInput, setSearchInput] = useState('');
@@ -89,15 +91,15 @@ const Campaigns = () => {
             }
 
             <SocionHeader showButton={false}></SocionHeader>
-            <Grid container spacing={2}>
-                <Grid item xs={3}>
+            <Grid container spacing={0}>
+                <Grid item xs={2}>
                     {userType === "Admin" ?
                         (<Sidebar index={1}></Sidebar>) : (<InfluencerSidebar index={1} />)
                     }
                 </Grid>
                 <Grid item xs={9}>
                     <Grid container spacing={2}>
-                        <Grid item xs={12}>
+                    <Grid item xs={12}>
                             <Typography variant='h3' component='h3'>Campaigns</Typography>
                         </Grid>
                         <Grid item xs={12}>
@@ -109,16 +111,22 @@ const Campaigns = () => {
 
                             filteredContracts.map(contract => {
                                 return (
-                                    <Grid item key={contract.id}
+                                    <Grid item xs={4} key={contract.id}
                                     >
+
+                                        
                                         <Box key={contract.id} sx={{
-                                            m: 1,
-                                            p: 1,
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
                                         }}>
                                             <Button onClick={() => {
                                                 setCurrentContractId(contract.id);
                                                 setDetailView(true);
-                                            }}>
+                                                
+                                            }}
+                                            fullWidth
+                                            >
                                                 <ContractSticker contract={contract} />
                                             </Button>
                                         </Box>

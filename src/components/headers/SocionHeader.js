@@ -28,6 +28,7 @@ const SocionHeader = ({ onClick, showButton = true, showX = false, onX}) => {
                 }} />
             {showButton ?
                 (<Button onClick={onClick} color="success" variant="contained" sx={{
+                    m:1,
                     height: 50
                 }}>Create Campaign!</Button>) : (<></>)
             }

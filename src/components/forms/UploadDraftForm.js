@@ -11,7 +11,7 @@ const Input = styled('input')({
     display: 'none',
 });
 
-export default function UploadDraftForm({ influencerEmail, contractId, refresh }) {
+export default function UploadDraftForm({ influencerEmail, contractId, refresh, handleClose }) {
     const [videoPreview, setVideoPreview] = React.useState(null)
     const uploadInputRef = React.useRef(null);
     const [loading, setLoading] = React.useState(false);
@@ -36,7 +36,13 @@ export default function UploadDraftForm({ influencerEmail, contractId, refresh }
                 submittedByEmail: influencerEmail,
                 reference: videoPreview
             }
-            addDraftToCampaign(draftDTO);
+            const response = await addDraftToCampaign(draftDTO);
+            console.log("RESPONSFA",response);
+            if (response) { 
+                refresh();
+                handleClose();
+            } 
+
         }
     });
 

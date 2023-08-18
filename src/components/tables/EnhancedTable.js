@@ -319,6 +319,7 @@ export default function EnhancedTable({ rows, refresh, openDetailView, handleCom
               const isItemSelected = isSelected(row.id);
               const labelId = `enhanced-table-checkbox-${index}`;
               const trimmedName = row.name.length > 20 ? row.name.substring(0, 15) + "..." : row.name;
+              const trimmedClientName = row.companyName.length > 20 ? row.companyName.substring(0, 15) + "..." : row.companyName;
 
               return (
                 <TableRow
@@ -350,7 +351,7 @@ export default function EnhancedTable({ rows, refresh, openDetailView, handleCom
                     {trimmedName}
                   </TableCell>
                   <TableCell align="left">{row.influencer}</TableCell>
-                  <TableCell align="left">{row.companyName}</TableCell>
+                  <TableCell align="left">{trimmedClientName}</TableCell>
                   <TableCell align="left">{row.status}</TableCell>
                   <TableCell align="left">{row.date}</TableCell>
                   <TableCell align="left">{row.rate}</TableCell>

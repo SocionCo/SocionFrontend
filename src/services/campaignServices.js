@@ -122,8 +122,7 @@ export async function addDraftToCampaign(draftDTO) {
          const token = localStorage.getItem('user-token');
          const headers = { 'Authorization': 'Bearer ' + token };
          const response = await api.post('/api/addDraftToContract', draftDTO, { headers });
-         console.log("Response time", response);
-         return response.data;
+         return response;
      } catch (error) {
          console.log(error);
          return;

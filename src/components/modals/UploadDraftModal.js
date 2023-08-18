@@ -33,7 +33,8 @@ const UploadDraftModal = ( {open, handleClose, influencer, contractId, refresh} 
           <UploadDraftForm
             influencer={influencer}
             contractId={contractId}
-            refresh={window.location.refresh}
+            refresh={refresh}
+            handleClose={handleClose}
             influencerEmail={influencer.email}
           />
         </Box>

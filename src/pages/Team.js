@@ -42,8 +42,8 @@ const TalentDashboard = () => {
         <Box sx={{ m: 1, p: 1 }}>
             <InviteTalentManagerModal open={open} handleClose={handleClose}/>
             <SocionHeader showButton={false}></SocionHeader>
-            <Grid container spacing={2}>
-                <Grid item xs={3}>
+            <Grid container spacing={0}>
+                <Grid item xs={2}>
                     <Sidebar index={3} />
                 </Grid>
                 <Grid item xs={9}>

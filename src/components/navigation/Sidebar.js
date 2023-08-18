@@ -54,6 +54,7 @@ export default function SelectedListItem({ index = 1 }) {
         >
           <ListItemText primary="Team" />
         </ListItemButton>
+        <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
         <Button
           variant="text"
           sx={{ color: 'red' }}
@@ -61,6 +62,7 @@ export default function SelectedListItem({ index = 1 }) {
         >
           Logout
         </Button>
+        </Box>
       </List>
     </Box>
   );

@@ -64,8 +64,8 @@ const TalentDashboard = () => {
 }
             <InviteInfluencerModal open={open} handleClose={handleClose}></InviteInfluencerModal>
             <SocionHeader showButton={false}></SocionHeader>
-            <Grid container spacing={2}>
-                <Grid item xs={3}>
+            <Grid container spacing={0}>
+                <Grid item xs={2}>
                     <Sidebar index={2} />
                 </Grid>
                 <Grid item xs={9}>
@@ -79,10 +79,14 @@ const TalentDashboard = () => {
                         {
                             filteredInfluencers.map(influencer => (
                                 <Grid item xs={4} key={influencer.email} >
-                                    <Box sx={{ m: 1, p: 1, width: '100%', aspectRatio: '1.5' }}>
+                                    <Box sx={{width: '100%', display: 'flex', justifyContent: 'center', alignItems : 'center' }}>
                                         <Button sx={{ height: '100%', width: '100%' }} onClick={() => {
                                             handleDetailViewOpen(influencer);
-                                            }}>
+                                            }}
+                                            fullWidth
+                                            
+                                            >
+
                                             <EmployeeSticker influencer={ influencer } />
                                         </Button>
                                     </Box>

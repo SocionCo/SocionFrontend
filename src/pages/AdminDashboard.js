@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -92,7 +92,7 @@ const Subheading = ({ userName }) => {
                 fontWeight: 500
             }} >Welcome back, {userName}!</Typography> : <Typography component="h4" variant="h4" >Welcome back!</Typography>}
 
-            { userType === "Admin" ? 
+            {userType === "Admin" ?
                 (<Typography color="grey" variant="subtitle1" component="p">Let's see how your company is doing today.</Typography>) : (<Typography color="grey" variant="subtitle1" component="p">Let’s see your campaigns for this week.</Typography>)
             }
         </Paper>
@@ -189,7 +189,7 @@ const AdminDashboard = () => {
 
 
     return (
-        <div>
+        <Box sx={{m: 1, p: 1}} >
             <UploadDraftModal
                 open={testModalOpen}
                 handleClose={handleTestClose}
@@ -223,25 +223,26 @@ const AdminDashboard = () => {
                 )
             }
             <SocionHeader onClick={handleOpen}></SocionHeader>
-            <Grid container spacing={1}>
+            <Grid container spacing={0}>
                 <Grid xs={2}>
-
-                    {userType === "Admin" ?
-                        (<Item><Sidebar index={0}></Sidebar></Item>) : (<Item><InfluencerSidebar index={0} /></Item>)
+                {userType === "Admin" ?
+                        (<Sidebar index={0}></Sidebar>) : (<InfluencerSidebar index={0} />)
                     }
                 </Grid>
                 <Grid xs={10}>
-                    <Subheading userName={props ? props.firstName : null}></Subheading>
-                    {!isLoading && rows.length > 0 &&
-                        <EnhancedTable
-                            rows={rows}
-                            refresh={refreshRows}
-                            openDetailView={handleDetailOpen}
-                            handleComplete={handleComplete}
-                        />}
+                    <Box sx={{ m: 1 }}>
+                        <Subheading userName={props ? props.firstName : null}></Subheading>
+                        {!isLoading && rows.length > 0 &&
+                            <EnhancedTable
+                                rows={rows}
+                                refresh={refreshRows}
+                                openDetailView={handleDetailOpen}
+                                handleComplete={handleComplete}
+                            />}
+                    </Box>
                 </Grid>
             </Grid>
-        </div>
+        </Box>
     )
 
 }

@@ -15,6 +15,7 @@ import SocialTable from '../tables/SocialTable';
 import AddTalentManagerModal from './AddTalentManagerModal';
 import ConfirmActionDialogue from './ConfirmActionDialogue';
 import { useState } from 'react';
+import ContractDetailView from './ContractDetailView';
 
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -34,12 +35,14 @@ export default function InfluencerDetailsModal({ open, handleClose, user }) {
     const [addTalentManagerOpen, setAddTalentManagerOpen] = React.useState(false);
     const [refresh, setRefresh] = useState(false);
 
+ 
     const handleRefresh = () => {
         setTimeout(() => {
             setRefresh(!refresh);
         }, 500);
     }
 
+   
 
     const handleOpenAddTalentManager = () => {
         setAddTalentManagerOpen(true);
@@ -129,6 +132,7 @@ export default function InfluencerDetailsModal({ open, handleClose, user }) {
             TransitionComponent={Transition}
             closeAfterTransition
         >
+            
             {addTalentManagerOpen &&
                 <AddTalentManagerModal
                     open={addTalentManagerOpen}

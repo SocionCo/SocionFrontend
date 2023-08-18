@@ -7,8 +7,7 @@ const ContractSticker = ({ contract, sx }) => {
     const trimmedName = name.length > 20 ? name.substring(0, 15) + "..." : name;
 
     return (
-            <Paper sx={{ backgroundColor: 'lightGrey'}}>
-                <Box sx={{ p: '2rem', m: '2rem', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Paper sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: 'lightGrey', height: '15vh', width: '100%' }}>
                     <StringAvatar name={name} />
                     <Stack sx={{ paddingLeft: '1rem' }}>
                         <Typography variant='body1' component='h6' sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{trimmedName} </Typography>
@@ -20,8 +19,7 @@ const ContractSticker = ({ contract, sx }) => {
                             })
                         }
                     </Stack>
-                </Box>
-            </Paper>
+                </Paper>
     );
 }
 
