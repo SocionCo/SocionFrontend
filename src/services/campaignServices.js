@@ -2,6 +2,7 @@ import api from "./api";
 import axios from "axios";
 
 export async function createNewContract({ userDTO, contractDTO }) {
+    console.log("Entered New Contract Call");
     const wrapper = {
         userDTO: userDTO,
         contractDTO: contractDTO
@@ -10,6 +11,7 @@ export async function createNewContract({ userDTO, contractDTO }) {
         const token = localStorage.getItem('user-token');
         const headers = { 'Authorization': 'Bearer ' + token };
         const response = await api.post('/api/createNewContractForInfluencers', wrapper, { headers });
+        console.log("Response:",response);
     } catch (error) {
         console.log(error);
         return [];
