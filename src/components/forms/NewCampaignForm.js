@@ -72,9 +72,8 @@ export default function App( { agencyId, refresh } ) {
 
                 userDTO: userDTOs
             }
-
+            console.log("Submitting new contract");
             createNewContract(props);
-            refresh();
             
         }
     });
