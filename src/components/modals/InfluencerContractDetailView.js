@@ -27,7 +27,7 @@ export default function InfluencerContractDetailView({ influencer, contractId, o
     const [refresh, setRefresh] = useState(false);
 
     const handleRefresh = () => {
-        setTimeout(() => {setRefresh(!refresh)},500)
+        setTimeout(() => { setRefresh(!refresh) }, 500)
     }
 
     const handleOpenAttachment = () => {
@@ -102,39 +102,40 @@ export default function InfluencerContractDetailView({ influencer, contractId, o
             />
             <Box sx={{ paddingX: 1 }}>
                 <SocionHeader showButton={false} showX={true} onX={handleClose} />
-                <Grid container spacing={2} >
-                    <Grid xs={9}>
+                <Grid container spacing={2}>
+                    <Grid item xs={12} md={9}>
                         <Box sx={{ marginBottom: 1 }}>
-                            <InfluencerCampaignSummary
-                            contract={contract} />
+                            <InfluencerCampaignSummary contract={contract} />
                         </Box>
-                        <CampaignAccordian refresh={() => {setTimeout(() => {setRefresh(!refresh)},500)}} contract={contract} />
+                        <CampaignAccordian contract={contract} refresh={() => { setTimeout(() => { setRefresh(!refresh) }, 500) }} />
                     </Grid>
-                    <Grid xs={3}>
+                    <Grid item xs={12} md={3}>
                         <Grid container spacing={2} direction='column' sx={{
                             alignItems: 'center',
                             justifyContent: 'center'
                         }}>
-                            <Grid sx={{ width: '100%' }}><InfluencerUserProfile contract={contract} /></Grid>
-                            <Grid sx={{ width: '100%' }} >
+                            <Grid item xs={12} sx={{ width: '100%' }}>
+                                <InfluencerUserProfile contract={contract} />
+                            </Grid>
+                            <Grid item xs={12} sx={{ width: '100%' }}>
                                 <InfluencerDraftsSidebar
                                     dashboardOpen={handleOpenDashboard}
-                                    contract={contract} /></Grid>
-                            <Grid sx={{ width: '100%' }}>
+                                    contract={contract} />
+                            </Grid>
+                            <Grid item xs={12} sx={{ width: '100%' }}>
                                 {!contract.completed ?
                                     (<AddAttachmentAndMarkComplete
                                         addAttachmentAction={handleOpenAttachment}
                                         markCompleteAction={completeContract}
-                                        refresh={() => {setTimeout(() => {setRefresh(!refresh)},500)}}
+                                        refresh={() => { setTimeout(() => { setRefresh(!refresh) }, 500) }}
                                     />) : (
                                         <AddAttachmentAndMarkComplete
                                             addAttachmentAction={handleOpenAttachment}
                                             markCompleteAction={incompleteContract}
                                             completed={contract.completed}
-                                            refresh={() => {setTimeout(() => {setRefresh(!refresh)},500)}}
+                                            refresh={() => { setTimeout(() => { setRefresh(!refresh) }, 500) }}
                                         />
                                     )
-
                                 }
                             </Grid>
                         </Grid>

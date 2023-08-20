@@ -27,7 +27,7 @@ export default function ContractDetailView({ contractId, open, handleClose }) {
     const [refresh, setRefresh] = useState(false);
 
     const handleRefresh = () => {
-        setTimeout(() => {setRefresh(!refresh)},500)
+        setTimeout(() => { setRefresh(!refresh) }, 500)
     }
 
 
@@ -50,15 +50,15 @@ export default function ContractDetailView({ contractId, open, handleClose }) {
     }
 
     const completeContract = async () => {
-        const contractDTO = { 
-            id : contractId
+        const contractDTO = {
+            id: contractId
         }
         const response = await markContractAsComplete(contractDTO);
     }
 
-    const incompleteContract = async () => { 
-        const contractDTO = { 
-            id : contractId
+    const incompleteContract = async () => {
+        const contractDTO = {
+            id: contractId
         }
         const response = await markContractAsIncomplete(contractDTO);
     }
@@ -67,7 +67,7 @@ export default function ContractDetailView({ contractId, open, handleClose }) {
         if (open) {
             getContractDetailsWithId(contractId)
                 .then((data) => {
-                    console.log("New data recieved",data);
+                    console.log("New data recieved", data);
                     setContract(data);
                 })
                 .catch((error) => {
@@ -100,35 +100,38 @@ export default function ContractDetailView({ contractId, open, handleClose }) {
             />
             <Box sx={{ paddingX: 1 }}>
                 <SocionHeader showButton={false} showX={true} onX={handleClose} />
-                <Grid container spacing={2} >
-                    <Grid xs={9}>
+                <Grid container spacing={2}>
+                    <Grid item xs={12} md={9}>
                         <Box sx={{ marginBottom: 1 }}>
                             <CampaignSummary contract={contract} />
                         </Box>
-                        <CampaignAccordian contract={contract} refresh={() => {setTimeout(() => {setRefresh(!refresh)},500)}} />
+                        <CampaignAccordian contract={contract} refresh={() => { setTimeout(() => { setRefresh(!refresh) }, 500) }} />
                     </Grid>
-                    <Grid xs={3}>
+                    <Grid item xs={12} md={3}>
                         <Grid container spacing={2} direction='column' sx={{
                             alignItems: 'center',
                             justifyContent: 'center'
                         }}>
-                            <Grid sx={{ width: '100%' }}><UserProfile contract={contract} /></Grid>
-                            <Grid sx={{ width: '100%' }} ><DraftsSidebar
-                                dashboardOpen={handleOpenDashboard}
-                                contract={contract} /></Grid>
-                            <Grid sx={{ width: '100%' }}>
-                                { !contract.completed ? 
-                                (<AddAttachmentAndMarkComplete 
-                                    addAttachmentAction={handleOpenAttachment}
-                                    markCompleteAction={completeContract}
-                                />) : (
-                                    <AddAttachmentAndMarkComplete 
-                                    addAttachmentAction={handleOpenAttachment}
-                                    markCompleteAction={incompleteContract}
-                                    completed={contract.completed}
-                                    />
+                            <Grid item xs={12} sx={{ width: '100%' }}>
+                                <UserProfile contract={contract} />
+                            </Grid>
+                            <Grid item xs={12} sx={{ width: '100%' }}>
+                                <DraftsSidebar
+                                    dashboardOpen={handleOpenDashboard}
+                                    contract={contract} />
+                            </Grid>
+                            <Grid item xs={12} sx={{ width: '100%' }}>
+                                {!contract.completed ?
+                                    (<AddAttachmentAndMarkComplete
+                                        addAttachmentAction={handleOpenAttachment}
+                                        markCompleteAction={completeContract}
+                                    />) : (
+                                        <AddAttachmentAndMarkComplete
+                                            addAttachmentAction={handleOpenAttachment}
+                                            markCompleteAction={incompleteContract}
+                                            completed={contract.completed}
+                                        />
                                     )
-                                
                                 }
                             </Grid>
                         </Grid>

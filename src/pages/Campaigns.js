@@ -92,40 +92,36 @@ const Campaigns = () => {
 
             <SocionHeader showButton={false}></SocionHeader>
             <Grid container spacing={0}>
-                <Grid item xs={2}>
+                <Grid item xs={12} md={2}>
+                    {/* Sidebar appears full width on mobile and 2/12ths on medium screens */}
                     {userType === "Admin" ?
                         (<Sidebar index={1}></Sidebar>) : (<InfluencerSidebar index={1} />)
                     }
                 </Grid>
-                <Grid item xs={9}>
+                <Grid item xs={12} md={10}>
                     <Grid container spacing={2}>
-                    <Grid item xs={12}>
+                        <Grid item xs={12}>
                             <Typography variant='h3' component='h3'>Campaigns</Typography>
                         </Grid>
                         <Grid item xs={12}>
-
                             <TalentSearchBar handleOpen={handleOpen} onChange={handleSearchChange} label="New Campaign" />
-
                         </Grid>
                         {
-
                             filteredContracts.map(contract => {
                                 return (
-                                    <Grid item xs={4} key={contract.id}
-                                    >
-
-                                        
+                                    <Grid item xs={12} sm={6} md={4} key={contract.id}>
+                                        {/* Single column on mobile, two on small screens, three on medium screens */}
                                         <Box key={contract.id} sx={{
                                             display: 'flex',
                                             alignItems: 'center',
                                             justifyContent: 'center',
                                         }}>
-                                            <Button onClick={() => {
-                                                setCurrentContractId(contract.id);
-                                                setDetailView(true);
-                                                
-                                            }}
-                                            fullWidth
+                                            <Button
+                                                onClick={() => {
+                                                    setCurrentContractId(contract.id);
+                                                    setDetailView(true);
+                                                }}
+                                                fullWidth
                                             >
                                                 <ContractSticker contract={contract} />
                                             </Button>
@@ -133,12 +129,11 @@ const Campaigns = () => {
                                     </Grid>
                                 )
                             })
-
                         }
                     </Grid>
                 </Grid>
             </Grid>
-        </Box >
+        </Box>
     );
 }
 

@@ -238,25 +238,7 @@ export default function EnhancedTable({ rows, refresh, openDetailView, handleCom
     setSelected([]);
   };
 
-  const handleClick = (event, id) => {
-    const selectedIndex = selected.indexOf(id);
-    let newSelected = [];
 
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, id);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
-    }
-
-    setSelected(newSelected);
-  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -324,7 +306,10 @@ export default function EnhancedTable({ rows, refresh, openDetailView, handleCom
               return (
                 <TableRow
                   hover
-                  onClick={(event) => handleClick(event, row.id)}
+                  onClick={(event) => { 
+                    event.stopPropagation();
+                    openDetailView(row.id);
+                  }}
                   role="checkbox"
                   aria-checked={isItemSelected}
                   tabIndex={-1}

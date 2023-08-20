@@ -12,23 +12,23 @@ const TalentDashboard = () => {
     const [open, setOpen] = useState(false);
     const [talentManagers, setTalentManagers] = useState([]);
 
-    const handleClose = () => { 
+    const handleClose = () => {
         setOpen(false);
     }
 
-    const handleOpen = () => { 
+    const handleOpen = () => {
         setOpen(true);
     }
 
-    React.useEffect(()  => {
-        async function getData() { 
+    React.useEffect(() => {
+        async function getData() {
             const returnedManagers = await getTalentManagersAtUsersAgency();
             setTalentManagers(returnedManagers);
         }
         getData();
-    },[]);
+    }, []);
 
-    const filteredManagers = talentManagers.filter(talentManager => 
+    const filteredManagers = talentManagers.filter(talentManager =>
         talentManager.fullName.toLowerCase().includes(searchInput.toLowerCase())
     );
 
@@ -40,27 +40,24 @@ const TalentDashboard = () => {
 
     return (
         <Box sx={{ m: 1, p: 1 }}>
-            <InviteTalentManagerModal open={open} handleClose={handleClose}/>
+            <InviteTalentManagerModal open={open} handleClose={handleClose} />
             <SocionHeader showButton={false}></SocionHeader>
             <Grid container spacing={0}>
-                <Grid item xs={2}>
+                <Grid item xs={12} md={2}>
                     <Sidebar index={3} />
                 </Grid>
-                <Grid item xs={9}>
+                <Grid item xs={12} md={10}>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
                             <Typography variant='h3' component='h3'>Team</Typography>
                         </Grid>
                         <Grid item xs={12}>
-                            <TalentSearchBar
-                            handleOpen={handleOpen} 
-                            onChange={handleSearchChange}
-                            label="Invite Talent Manager"/>
+                            <TalentSearchBar handleOpen={handleOpen} onChange={handleSearchChange} label="Invite Talent Manager" />
                         </Grid>
                         {
-                            filteredManagers.map(influencer => (
-                                <Grid item xs={4} key={influencer.email} >
-                                    <EmployeeSticker influencer={influencer} />
+                            filteredManagers.map(manager => (
+                                <Grid item xs={12} sm={6} md={4} key={manager.email}>
+                                    <EmployeeSticker influencer={manager} />
                                 </Grid>
                             ))
                         }

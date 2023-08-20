@@ -227,12 +227,12 @@ const AdminDashboard = () => {
             }
             <SocionHeader onClick={handleOpen}></SocionHeader>
             <Grid container spacing={0}>
-                <Grid xs={2}>
+                <Grid item xs={12} md={2}>
                     {userType === "Admin" ?
                         (<Sidebar index={0}></Sidebar>) : (<InfluencerSidebar index={0} />)
                     }
                 </Grid>
-                <Grid xs={10}>
+                <Grid item xs={12} md={10}>
                     <Box sx={{ m: 1 }}>
                         <Subheading userName={props ? props.firstName : null}></Subheading>
                         {!isLoading && rows.length > 0 &&

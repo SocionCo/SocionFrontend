@@ -56,19 +56,19 @@ const TalentDashboard = () => {
     return (
         <Box sx={{ m: 1, p: 1 }}>
             {detailViewOpen &&
-            <InfluencerDetailsModal
-                open={detailViewOpen}
-                handleClose={handleDetailViewClose}
-                user={selectedUser}
-            />
-}
+                <InfluencerDetailsModal
+                    open={detailViewOpen}
+                    handleClose={handleDetailViewClose}
+                    user={selectedUser}
+                />
+            }
             <InviteInfluencerModal open={open} handleClose={handleClose}></InviteInfluencerModal>
             <SocionHeader showButton={false}></SocionHeader>
             <Grid container spacing={0}>
-                <Grid item xs={2}>
+                <Grid item xs={12} md={2}>
                     <Sidebar index={2} />
                 </Grid>
-                <Grid item xs={9}>
+                <Grid item xs={12} md={10}>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
                             <Typography variant='h3' component='h3'>Talent</Typography>
@@ -78,15 +78,13 @@ const TalentDashboard = () => {
                         </Grid>
                         {
                             filteredInfluencers.map(influencer => (
-                                <Grid item xs={4} key={influencer.email} >
+                                <Grid item xs={12} sm={6} md={4} key={influencer.email}>
                                     <Box sx={{width: '100%', display: 'flex', justifyContent: 'center', alignItems : 'center' }}>
-                                        <Button sx={{ height: '100%', width: '100%' }} onClick={() => {
-                                            handleDetailViewOpen(influencer);
-                                            }}
+                                        <Button 
+                                            sx={{ height: '100%', width: '100%' }} 
+                                            onClick={() => { handleDetailViewOpen(influencer); }}
                                             fullWidth
-                                            
-                                            >
-
+                                        >
                                             <EmployeeSticker influencer={ influencer } />
                                         </Button>
                                     </Box>
