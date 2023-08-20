@@ -5,8 +5,9 @@ import UploadDraftForm from '../forms/UploadDraftForm';
 
 const UploadDraftModal = ( {open, handleClose, influencer, contractId, refresh} ) => { 
 
+
     influencer = { 
-        email: influencer.email
+        email: influencer
     }
 
   const style = {

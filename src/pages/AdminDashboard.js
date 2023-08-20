@@ -217,6 +217,7 @@ const AdminDashboard = () => {
                         open={detailView}
                         handleClose={handleDetailClose}
                         contractId={currentContractId}
+                        influencer={props.email}
                     />
 
 

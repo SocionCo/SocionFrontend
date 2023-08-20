@@ -96,6 +96,7 @@ export default function InfluencerContractDetailView({ influencer, contractId, o
                 handleClose={handleCloseDashboard}
                 contractId={contract.id}
                 refresh={handleRefresh}
+                influencer={influencer}
 
 
             />
