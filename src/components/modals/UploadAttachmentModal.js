@@ -6,7 +6,7 @@ import UploadAttachmentForm from '../forms/UploadAttachmentForm';
 const UploadAttachmentModal = ( {open, handleClose, influencer, contractId, refresh} ) => { 
 
     influencer = { 
-        email: "pee@gmail.com"
+        email: influencer.email
     }
 
   const style = {

@@ -16,7 +16,7 @@ import DropdownSelect from "./inputs/DropdownSelect";
 
 export default function App( { agencyId, refresh } ) {
 
-    let [currentDropdownSelection, setCurrentDropdownSelection] = React.useState(null);
+    let [currentDropdownSelection, setCurrentDropdownSelection] = React.useState([]);
 
     const [isFormValid, setIsFormValid] = React.useState(false);
     const [influencers, setInfluencers] = React.useState([]);
@@ -74,6 +74,7 @@ export default function App( { agencyId, refresh } ) {
             }
             console.log("Submitting new contract");
             createNewContract(props);
+            refresh();
             
         }
     });
@@ -83,7 +84,7 @@ export default function App( { agencyId, refresh } ) {
     };
 
     React.useEffect(() => {
-        setIsFormValid(myForm.isValid && currentDropdownSelection !== null && currentDropdownSelection.length !== 0);
+        setIsFormValid(myForm.isValid);
       }, [myForm.isValid, currentDropdownSelection]);
 
 
