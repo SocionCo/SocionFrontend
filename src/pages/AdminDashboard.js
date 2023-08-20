@@ -189,7 +189,7 @@ const AdminDashboard = () => {
 
 
     return (
-        <Box sx={{m: 1, p: 1}} >
+        <Box sx={{ m: 1, p: 1 }} >
             <UploadDraftModal
                 open={testModalOpen}
                 handleClose={handleTestClose}
@@ -207,7 +207,7 @@ const AdminDashboard = () => {
                 refresh={refreshRows}
                 contractId={currentContractId}
             />
-            {
+            {props && (
                 userType === "Admin" ? (<ContractDetailView
                     open={detailView}
                     handleClose={handleDetailClose}
@@ -222,11 +222,13 @@ const AdminDashboard = () => {
 
 
                 )
+            )
+
             }
             <SocionHeader onClick={handleOpen}></SocionHeader>
             <Grid container spacing={0}>
                 <Grid xs={2}>
-                {userType === "Admin" ?
+                    {userType === "Admin" ?
                         (<Sidebar index={0}></Sidebar>) : (<InfluencerSidebar index={0} />)
                     }
                 </Grid>
