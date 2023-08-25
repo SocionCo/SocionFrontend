@@ -54,7 +54,7 @@ export default function App( { agencyId, refresh } ) {
         validationSchema: formValidation,
         validateOnChange: true,
         validateOnBlur: true,
-        onSubmit: (values) => {
+        onSubmit: async (values) => {
             const userDTOs = currentDropdownSelection.map(influencer => ({
                 email: influencer.email
               }));
@@ -72,8 +72,8 @@ export default function App( { agencyId, refresh } ) {
 
                 userDTO: userDTOs
             }
-            console.log("Submitting new contract");
-            createNewContract(props);
+
+            const response = await createNewContract(props);
             refresh();
             
         }

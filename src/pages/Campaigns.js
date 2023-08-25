@@ -20,6 +20,8 @@ const Campaigns = () => {
     const [detailView, setDetailView] = useState(false);
     const [currentContractId, setCurrentContractId] = useState(null);
     const [props, setProps] = useState(null);
+    const [updateRefresh, setUpdateRefresh] = useState(false);
+
 
 
     const userType = localStorage.getItem("user-type");
@@ -32,7 +34,7 @@ const Campaigns = () => {
         }
         fetchData();
 
-    }, []);
+    }, [updateRefresh]);
 
     const handleDetailClose = () => {
         setDetailView(false);
@@ -47,7 +49,8 @@ const Campaigns = () => {
     }
 
     const refreshRows = () => {
-        window.location.reload();
+        setUpdateRefresh(!updateRefresh);
+        setOpen(false);
     }
 
     React.useEffect(() => {
@@ -57,7 +60,7 @@ const Campaigns = () => {
             console.log("Returned contracts", returnedContracts);
         }
         getData();
-    }, []);
+    }, [updateRefresh]);
 
     const filteredContracts = contracts.filter(contract =>
         contract.name.toLowerCase().includes(searchInput.toLowerCase()) || contract.companyName.toLowerCase().includes(searchInput.toLowerCase())
@@ -123,7 +126,10 @@ const Campaigns = () => {
                                                 }}
                                                 fullWidth
                                             >
-                                                <ContractSticker contract={contract} />
+                                                <ContractSticker 
+                                                contract={contract}
+                                                refresh={refreshRows}
+                                                 />
                                             </Button>
                                         </Box>
                                     </Grid>
