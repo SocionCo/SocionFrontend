@@ -81,7 +81,7 @@ const Campaigns = () => {
                 agencyId={props ? props.agencyId : null}
                 refresh={refreshRows} />
 
-            {userType === "Admin" ?
+            {(userType === "Admin" || userType === "TalentManager") ?
                 (<ContractDetailView
                     open={detailView}
                     handleClose={handleDetailClose}
@@ -97,7 +97,7 @@ const Campaigns = () => {
             <Grid container spacing={0}>
                 <Grid item xs={12} md={2}>
                     {/* Sidebar appears full width on mobile and 2/12ths on medium screens */}
-                    {userType === "Admin" ?
+                    {(userType === "Admin" || userType === "TalentManager") ?
                         (<Sidebar index={1}></Sidebar>) : (<InfluencerSidebar index={1} />)
                     }
                 </Grid>

@@ -4,7 +4,7 @@ import Dialog from '@mui/material/Dialog';
 import Paper from '@mui/material/Paper';
 import Slide from '@mui/material/Slide';
 import Typography from '@mui/material/Typography';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
 import { getAllActiveAgencyContractsForProvidedUser, getAllCompletedAgencyContractsForProvidedUser, removeInfluencerFromAgency } from '../../services/agencyServices';
 import { getTalentManagersForUser } from '../../services/influencerServices';

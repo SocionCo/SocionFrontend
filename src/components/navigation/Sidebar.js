@@ -10,6 +10,8 @@ import Button from '@mui/material/Button/Button';
 export default function SelectedListItem({ index = 1 }) {
   const [selectedIndex, setSelectedIndex] = React.useState(index);
 
+  const userType = localStorage.getItem('user-type');
+
   const logout = () => {
         localStorage.clear();
         window.location.reload();
@@ -48,12 +50,15 @@ export default function SelectedListItem({ index = 1 }) {
         >
           <ListItemText primary="Talent" />
         </ListItemButton>
-        <ListItemButton
+        
+        { userType === "Admin" && (<ListItemButton
           selected={selectedIndex === 3}
           onClick={(event) => handleClick(event, 3, "/team")}
         >
           <ListItemText primary="Team" />
-        </ListItemButton>
+        </ListItemButton>)}
+
+
         <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
         <Button
           variant="text"

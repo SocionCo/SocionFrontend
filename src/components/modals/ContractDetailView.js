@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import Dialog from '@mui/material/Dialog';
 import Slide from '@mui/material/Slide';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
 import { useState } from 'react';
 import { getContractDetailsWithId, markContractAsComplete, markContractAsIncomplete } from '../../services/campaignServices';

@@ -34,7 +34,7 @@ export default function CampaignAccordian({ contract, refresh }) {
           <Typography>Details</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          {userType === "Admin" ?
+          {(userType === "Admin" || userType === "TalentManager") ?
             (<EditCampaign
               refresh={refresh}
               contractId={contract.id}

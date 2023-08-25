@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import Paper from '@mui/material/Paper';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { useEffect, useState } from "react";
@@ -92,7 +92,7 @@ const Subheading = ({ userName }) => {
                 fontWeight: 500
             }} >Welcome back, {userName}!</Typography> : <Typography component="h4" variant="h4" >Welcome back!</Typography>}
 
-            {userType === "Admin" ?
+            { (userType === "Admin" || userType === "TalentManager")?
                 (<Typography color="grey" variant="subtitle1" component="p">Let's see how your company is doing today.</Typography>) : (<Typography color="grey" variant="subtitle1" component="p">Let’s see your campaigns for this week.</Typography>)
             }
         </Paper>
@@ -208,7 +208,7 @@ const AdminDashboard = () => {
                 contractId={currentContractId}
             />
             {props && (
-                userType === "Admin" ? (<ContractDetailView
+                (userType === "Admin" || userType === "TalentManager") ? (<ContractDetailView
                     open={detailView}
                     handleClose={handleDetailClose}
                     contractId={currentContractId}
@@ -228,7 +228,7 @@ const AdminDashboard = () => {
             <SocionHeader onClick={handleOpen}></SocionHeader>
             <Grid container spacing={0}>
                 <Grid item xs={12} md={2}>
-                    {userType === "Admin" ?
+                    {(userType === "Admin" || userType === "TalentManager") ?
                         (<Sidebar index={0}></Sidebar>) : (<InfluencerSidebar index={0} />)
                     }
                 </Grid>

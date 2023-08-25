@@ -41,7 +41,7 @@ export default function AttachmentBlock({ attachment, refresh }) {
                 </Box>
                 <Box>
                     {
-                        userType === "Admin" && (<IconButton
+                        (userType === "Admin" || userType === "TalentManager") && (<IconButton
 
                             onClick={() => {
                                 setOpen(true);
