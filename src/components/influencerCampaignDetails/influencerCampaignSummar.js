@@ -16,41 +16,42 @@ const InfluencerCampaignSummary = ({ contract }) => {
                 paddingLeft: 1
             }}>
                 <Typography component='h4' variant='h4' >{name}</Typography>
+                <Box sx={{
+                    display: 'flex',
+                    justifyContent: 'end',
+                    alignItems: 'center'
+                }}>
+                    {
+                        completed ?
+                            (<Chip label="Completed" variant="outlined"
+                                sx={{
+                                    color: 'green',
+                                    borderColor: 'green',
+                                    marginRight: 1
+
+                                }}
+                            />) :
+
+                            (<Chip label="Incomplete" variant="outlined"
+                                sx={{
+                                    color: 'red',
+                                    borderColor: 'red',
+                                    marginRight: 1
+                                }}
+                            />)
+                    }
+                    <Chip label={"Rate: $" + contract.creatorRate} variant="outlined"
+                        sx={{
+                            color: 'green',
+                            borderColor: 'green',
+                            marginRight: 1
+
+                        }}
+                    />
+                </Box>
                 <Typography component='p' variant='subtitle1' >{"Created " + stringDate}</Typography>
             </Box>
-            <Box sx={{
-                display: 'flex',
-                justifyContent: 'end',
-                alignItems: 'center'
-            }}>
-                {
-                    completed ?
-                        (<Chip label="Completed" variant="outlined"
-                            sx={{
-                                color: 'green',
-                                borderColor: 'green',
-                                marginRight: 1
 
-                            }}
-                        />) :
-
-                        (<Chip label="Incomplete" variant="outlined"
-                            sx={{
-                                color: 'red',
-                                borderColor: 'red',
-                                marginRight: 1
-                            }}
-                        />)
-                }
-                <Chip label={"Rate: $" + contract.creatorRate} variant="outlined"
-                    sx={{
-                        color: 'green',
-                        borderColor: 'green',
-                        marginRight: 1
-
-                    }}
-                />
-            </Box>
 
         </Paper>
     );

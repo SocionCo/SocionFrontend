@@ -10,80 +10,69 @@ import VerticalLinearStepper from '../steppers/VerticalLinearStepper';
 import InfluencerEditCampaign from '../forms/influencerEditCampaign';
 import TaskSticker from '../campaignDetails/taskSticker';
 import AddTaskIcon from '@mui/icons-material/AddTask';
-import { Button } from '@mui/base';
+import { Box } from '@mui/system';
+import Button from '@mui/material/Button';
 import { IconButton } from '@mui/material';
 
-export default function CampaignAccordian({ contract, refresh }) {
-  const { attachments, tasks } = contract;
-  const userType = localStorage.getItem("user-type");
-  const [showNextTask, setShowNextTask] = React.useState(false);
-
+export function AttachmentsTab({ contract, refresh, handleOpen }) {
+  const { attachments } = contract;
 
   return (
-    <div>
-      <Accordion defaultExpanded={true}>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
-          sx={{
-            margin: '0',
-          }}
-
-        >
-          <Typography>Details</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          {(userType === "Admin" || userType === "TalentManager") ?
-            (<EditCampaign
-              refresh={refresh}
-              contractId={contract.id}
-            />) : (<InfluencerEditCampaign
-              refresh={refresh}
-              contractId={contract.id}
-            />)
-          }
-        </AccordionDetails>
-      </Accordion>
-
-      <Accordion defaultExpanded={true}>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel2a-content"
-          id="panel2a-header"
-        >
-          <Typography>Tasks</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          {tasks.map((element) => {
-            return <TaskSticker refresh={refresh} task={element}/>
-          })}
-          {showNextTask && <TaskSticker refresh={refresh} isInputTask={true} contractId={contract.id} handleClose={() => setShowNextTask(false)}/>}
-
-          <IconButton sx={{color:'green', m: 0, p: 0, marginTop: 1}} onClick={() => setShowNextTask(true)} >
-            <AddTaskIcon/>
-            </IconButton>
-        </AccordionDetails>
-      </Accordion>
-
-      <Accordion defaultExpanded={true}>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel2a-content"
-          id="panel2a-header"
-        >
-          <Typography>Attachments</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          {
-            attachments.map(element => {
-              return <AttachmentBlock refresh={refresh} attachment={element} key={element.id} />
-            })
-          }
-        </AccordionDetails>
-      </Accordion>
+    <>
+      {attachments.map(element => {
+        return <AttachmentBlock refresh={refresh} attachment={element} key={element.id} />
+      })}
 
 
-    </div>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end' }} >
+        <Button sx={{ marginY: 1, paddingY: 1 }} variant='contained' color='grey' onClick={handleOpen}> Add Attachment
+        </Button >
+      </Box>
+    </>
+  );
+}
+
+export function TasksTab({ contract, refresh }) {
+  const { tasks } = contract;
+  const [showNextTask, setShowNextTask] = React.useState(false);
+
+  return (
+    <Box>
+      {tasks.map((element, index) => {
+        return <TaskSticker key={index} refresh={refresh} task={element} />;
+      })}
+
+      {showNextTask && (
+
+        <TaskSticker refresh={refresh} isInputTask={true} contractId={contract.id} handleClose={() => setShowNextTask(false)} />
+
+      )}
+
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <Button sx={{ marginY: 1, paddingY: 1 }} variant='contained' color='grey' onClick={() => setShowNextTask(true)} >
+          Add Task
+        </Button>
+      </Box>
+    </Box>
+  );
+}
+
+
+export function EditTab({ contract, refresh }) {
+
+  const userType = localStorage.getItem('user-type');
+
+  return (
+    userType === "Admin" || userType === "TalentManager" ? (
+      <EditCampaign
+        refresh={refresh}
+        contractId={contract.id}
+      />
+    ) : (
+      <InfluencerEditCampaign
+        refresh={refresh}
+        contractId={contract.id}
+      />
+    )
   );
 }

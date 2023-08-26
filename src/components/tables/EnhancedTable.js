@@ -1,5 +1,4 @@
 import CheckIcon from '@mui/icons-material/Check';
-import DeleteIcon from '@mui/icons-material/Delete';
 import ReadMoreIcon from '@mui/icons-material/ReadMore';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import Box from '@mui/material/Box';
@@ -21,8 +20,6 @@ import { visuallyHidden } from '@mui/utils';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { deleteContractWithId } from '../../services/campaignServices';
-import ConfirmActionDialogue from '../modals/ConfirmActionDialogue';
 
 
 function descendingComparator(a, b, orderBy) {
@@ -81,10 +78,10 @@ const headCells = [
     label: 'Client',
   },
   {
-    id: 'satus',
+    id: 'talentManagers',
     numeric: false,
     disablePadding: false,
-    label: 'Status',
+    label: 'Talent Manager(s)',
   },
   {
     id: 'date',
@@ -130,7 +127,7 @@ function EnhancedTableHead(props) {
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align="left"
+            align={headCell.id == "rate" ? "center" : "left"}
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
           >
@@ -208,19 +205,18 @@ function EnhancedTableToolbar(props) {
 }
 
 
-export default function EnhancedTable({ rows, refresh, openDetailView, handleComplete }) {
+export default function EnhancedTable({ rows, refresh, handleComplete }) {
   const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('calories');
+  const [orderBy, setOrderBy] = React.useState('date'); 
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [open, setOpen] = React.useState(false);
-  const [toDelete, setToDelete] = React.useState(null);
 
-  const deleteCampaign = (id) => {
-    deleteContractWithId(id);
-  }
+
+  React.useEffect(() => {
+    const sortedRows = stableSort(rows, getComparator(order, orderBy));
+  }, [rows, order, orderBy]);
 
 
   const handleRequestSort = (event, property) => {
@@ -272,12 +268,6 @@ export default function EnhancedTable({ rows, refresh, openDetailView, handleCom
 
   return (
     <Box sx={{ width: '100%' }}>
-      <ConfirmActionDialogue open={open} setOpen={setOpen} onClick={() => {
-        deleteCampaign(toDelete);
-        refresh();
-      }} 
-      handleClose={() => setOpen(false)}
-      label="Are you sure you want to delete this campaign?" description="This action cannot be reversed."> </ConfirmActionDialogue>
       <EnhancedTableToolbar
         selected={selected}
         refresh={refresh}
@@ -303,12 +293,14 @@ export default function EnhancedTable({ rows, refresh, openDetailView, handleCom
               const trimmedName = row.name.length > 20 ? row.name.substring(0, 15) + "..." : row.name;
               const trimmedClientName = row.companyName.length > 20 ? row.companyName.substring(0, 15) + "..." : row.companyName;
 
+              const trimmedTalentManagers = row.talentManagers.length > 20 ? row.talentManagers.substring(0, 15) + "..." : row.talentManagers;
+
               return (
                 <TableRow
                   hover
-                  onClick={(event) => { 
+                  onClick={(event) => {
                     event.stopPropagation();
-                    openDetailView(row.id);
+                    navigate("/campaign/" + row.id);
                   }}
                   role="checkbox"
                   aria-checked={isItemSelected}
@@ -337,13 +329,12 @@ export default function EnhancedTable({ rows, refresh, openDetailView, handleCom
                   </TableCell>
                   <TableCell align="left">{row.influencer}</TableCell>
                   <TableCell align="left">{trimmedClientName}</TableCell>
-                  <TableCell align="left">{row.status}</TableCell>
+                  <TableCell align="left">{row.talentManagers}</TableCell>
                   <TableCell align="left">{row.date}</TableCell>
-                  <TableCell align="left">{row.rate}</TableCell>
+                  <TableCell align="center">{row.rate}</TableCell>
                   <TableCell align="left">
                     <IconButton onClick={(event) => {
-                      console.log("Opening detail view for", row.id);
-                      openDetailView(row.id);
+                      navigate("/campaign/" + row.id);
                       event.stopPropagation();
                     }}>
                       <Tooltip title="Detail View">
@@ -351,20 +342,11 @@ export default function EnhancedTable({ rows, refresh, openDetailView, handleCom
                       </Tooltip>
                     </IconButton>
                     <IconButton onClick={(event) => {
-                      setToDelete(row.id);
-                      setOpen(true);
-                      event.stopPropagation();
-                    }}>
-                      <Tooltip title="Delete">
-                        <DeleteIcon></DeleteIcon>
-                      </Tooltip>
-                    </IconButton>
-                    <IconButton onClick={(event) => { 
                       handleComplete(row.id);
                       event.stopPropagation();
                     }}>
                       <Tooltip title="Mark Complete">
-                        <CheckIcon/>
+                        <CheckIcon />
                       </Tooltip>
                     </IconButton>
                   </TableCell>

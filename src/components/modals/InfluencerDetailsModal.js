@@ -15,7 +15,6 @@ import SocialTable from '../tables/SocialTable';
 import AddTalentManagerModal from './AddTalentManagerModal';
 import ConfirmActionDialogue from './ConfirmActionDialogue';
 import { useState } from 'react';
-import ContractDetailView from './ContractDetailView';
 
 
 const Transition = React.forwardRef(function Transition(props, ref) {

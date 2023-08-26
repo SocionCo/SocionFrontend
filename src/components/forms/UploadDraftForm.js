@@ -1,5 +1,5 @@
 import { Button, CircularProgress, Container, Grid, Paper, TextField, Typography } from "@mui/material";
-import { styled } from '@mui/system';
+import { Box, styled } from '@mui/system';
 import { useFormik } from "formik";
 import * as React from 'react';
 import { v4 as uuid } from 'uuid';
@@ -29,19 +29,20 @@ export default function UploadDraftForm({ influencerEmail, contractId, refresh, 
         validateOnChange: true,
         validateOnBlur: true,
         onSubmit: async (values) => {
+            console.log("Email", influencerEmail);
 
-            const draftDTO = { 
-                draftName : values.draftName,
+            const draftDTO = {
+                draftName: values.draftName,
                 contractId: contractId,
                 submittedByEmail: influencerEmail,
                 reference: videoPreview
             }
             const response = await addDraftToCampaign(draftDTO);
-            console.log("RESPONSFA",response);
-            if (response) { 
+            
+            if (response) {
                 refresh();
                 handleClose();
-            } 
+            }
 
         }
     });
@@ -80,7 +81,16 @@ export default function UploadDraftForm({ influencerEmail, contractId, refresh, 
                             }}
                         />
 
-                        {loading ? <CircularProgress /> :
+                        {loading ?
+
+                            (
+                                <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                    <CircularProgress />
+                                </Box>
+                            )
+
+
+                            :
                             (<label htmlFor="upload-video">
                                 <Button variant="outlined" color="primary" component="span">
                                     Upload Video

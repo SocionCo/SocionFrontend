@@ -8,26 +8,15 @@ import TableRow from '@mui/material/TableRow';
 import * as React from 'react';
 import apiString from '../../services/apiString';
 import { useState } from 'react';
-import ContractDetailView from '../modals/ContractDetailView';
+import { useNavigate } from 'react-router';
 
 
 export default function BasicTableNoHeader({ rows }) {
-  const [contractToOpen, setContractToOpen] = useState(null);
-  const [showContractDetailView, setShowContractDetailView] = useState(null);
-
-  const closeContractDetailView = () => {
-    setShowContractDetailView(false);
-  }
+  const navigate = useNavigate();
 
 
   return (
     <>
-      {contractToOpen && (<ContractDetailView
-        contractId={contractToOpen}
-        open={showContractDetailView}
-        handleClose={closeContractDetailView}
-
-      />)}
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableBody>
@@ -58,8 +47,7 @@ export default function BasicTableNoHeader({ rows }) {
                   >
                     {row.id ?
                       (<TableCell onClick={() => {
-                        setContractToOpen(row.id);
-                        setShowContractDetailView(true);
+                        navigate("campaigns/"+row.id);
                       }} component="th" scope="row" sx={{cursor: 'pointer'}}>
                         {row.name}
                       </TableCell>) : (<TableCell

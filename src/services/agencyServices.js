@@ -181,3 +181,15 @@ export async function registerNewAgencyAndAccount({ firstName, lastName, email, 
 
 
 }
+
+export async function getAgencySettings() { 
+    try {
+        const token = localStorage.getItem('user-token');
+        const headers = { 'Authorization': 'Bearer ' + token };
+        const response = await api.get('/api/getAgencySettings', { headers });
+        return response.data;
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}

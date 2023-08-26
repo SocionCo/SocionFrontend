@@ -57,7 +57,7 @@ export default function UploadAttachmentForm({ contractId, handleClose }) {
                     </Grid>
 
                     <Grid item xs={12}>
-                        <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                             <Input
                                 ref={uploadInputRef}
                                 type="file"
@@ -73,7 +73,16 @@ export default function UploadAttachmentForm({ contractId, handleClose }) {
                                 }}
                             />
 
-                            {loading ? <CircularProgress /> :
+                            {loading ?
+
+                                (
+                                    <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                        <CircularProgress />
+                                    </Box>
+                                )
+
+
+                                :
                                 (<label htmlFor="upload-file">
                                     <Button variant="outlined" color="primary" component="span">
                                         Upload File

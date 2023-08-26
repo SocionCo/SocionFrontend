@@ -1,10 +1,31 @@
 import CloseIcon from '@mui/icons-material/Close';
-import { Box, IconButton } from '@mui/material';
+import { Avatar, Box, IconButton, MenuItem } from '@mui/material';
 import Button from '@mui/material/Button';
 import logo from "../../assets/logos/socionLogo.png";
+import React from 'react';
+import Menu from '@mui/material/Menu/Menu';
+import { useNavigate } from 'react-router';
 
 
-const SocionHeader = ({ onClick, showButton = true, showX = false, onX}) => {
+const SocionHeader = ({ onClick, showButton = true, showX = false, onX }) => {
+
+    const [anchorElement, setAnchorElement] = React.useState(null);
+
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        localStorage.clear();
+        window.location.reload();
+    }
+
+    const handleMenuOpen = (event) => {
+        setAnchorElement(event.currentTarget);
+    }
+
+    const handleMenuClose = () => {
+        setAnchorElement(null);
+    }
+
     return (
         <Box sx={{
             display: 'flex',
@@ -14,7 +35,6 @@ const SocionHeader = ({ onClick, showButton = true, showX = false, onX}) => {
             paddingX: 0,
             marginY: 1,
             marginX: 0,
-            borderBottom: "5px solid green",
             width: '100%',
             height: 50,
         }} >
@@ -24,22 +44,56 @@ const SocionHeader = ({ onClick, showButton = true, showX = false, onX}) => {
                 alt="Logo"
                 sx={{
                     height: 50,
-                    width: 'auto'
-                }} />
-            {showButton ?
-                (<Button onClick={onClick} color="success" variant="contained" sx={{
-                    m:1,
-                    height: 50
-                }}>Create Campaign!</Button>) : (<></>)
-            }
+                    width: 'auto',
+                    cursor: 'pointer'
+                }}
+
+                onClick={() => {
+
+                    if (window.location.pathname == "/home") {
+                        window.location.reload();
+                    } else {
+                        navigate("/home");
+                    }
+
+
+                }}
+
+            />
+
 
             {showX ?
                 (
-                <IconButton onClick={onX}>
-                    <CloseIcon></CloseIcon>
-                </IconButton>
+                    <IconButton onClick={onX}>
+                        <CloseIcon></CloseIcon>
+                    </IconButton>
                 ) : (<></>)
             }
+
+            <Menu
+                anchorEl={anchorElement}
+                open={Boolean(anchorElement)}
+                onClose={handleMenuClose}
+            >
+                <MenuItem onClick={handleLogout} sx={{ color: 'red' }}>Logout</MenuItem>
+            </Menu>
+
+            {!showX && (<IconButton sx={{
+                color: 'white',
+                backgroundColor: 'green',
+                '&:hover': { backgroundColor: 'darkgreen' },
+                width: '48px',
+                height: '48px'
+            }}
+                onClick={handleMenuOpen}
+            >
+                <Avatar sx={{
+                    backgroundColor: 'green',
+                    color: 'white',
+                    width: '32px',
+                    height: '32px'
+                }} src="/broken-image.jpg" />
+            </IconButton>)}
 
 
         </Box>

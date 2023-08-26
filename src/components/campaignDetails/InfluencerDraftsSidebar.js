@@ -2,17 +2,12 @@ import { Box, Button, List, ListItem, ListItemAvatar, ListItemText, Typography }
 import Paper from '@mui/material/Paper';
 import StringAvatar from '../avatar/StringAvatar';
 
-
-const DraftList = ({ contract, dashboardOpen }) => {
+const InfluencerDraftsSidebar = ({ contract, dashboardOpen }) => {
     const { drafts } = contract;
-    console.log("drafts", drafts);
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
             <Box>
-                <Typography variant='h5' sx={{ textAlign: 'center', marginBottom: .5, paddingTop: 1 }}>
-                    Drafts
-                </Typography>
                 <List>
 
                     {drafts.map(draft => {
@@ -28,7 +23,7 @@ const DraftList = ({ contract, dashboardOpen }) => {
                                 secondary={
                                     <>
                                         <Typography variant='body2'>{"Submitted By: " + draft.fullName}</Typography>
-                                        <Typography variant='body2'>{"Status: " +draft.approvalStatus}</Typography>
+                                        <Typography variant='body2'>{"Status: " + draft.approvalStatus}</Typography>
                                     </>
                                 }
                             />
@@ -39,28 +34,17 @@ const DraftList = ({ contract, dashboardOpen }) => {
 
                 </List>
             </Box>
-            <Button variant='contained'
-                onClick={dashboardOpen}
-                sx={{
-                    color: 'grey',
-                    backgroundColor: 'white',
-                    width: '50%',
-                    alignSelf: 'center',
-                    borderRadius: 25,
-                    m: 1,
-                }}>Add Draft</Button>
-        </Box>
-    );
-}
+            <Box sx={{display: 'flex', justifyContent: 'flex-end'}}>
+                <Button variant='contained'
 
-const InfluencerDraftsSidebar = ({ contract, dashboardOpen }) => {
-    return (
-        <Paper sx={{
-            width: '100%',
-            height: '100%'
-        }}>
-            <DraftList contract={contract} dashboardOpen={dashboardOpen}></DraftList>
-        </Paper>
+                    onClick={dashboardOpen}
+                    sx={{
+                        color: 'grey',
+                        backgroundColor: 'white',
+                        alignSelf: 'center',
+                    }}>Add Draft</Button>
+            </Box>
+        </Box>
     );
 }
 

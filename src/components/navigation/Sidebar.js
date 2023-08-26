@@ -5,69 +5,102 @@ import ListItemText from '@mui/material/ListItemText';
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button/Button';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import { Typography } from '@mui/material';
+import CampaignIcon from '@mui/icons-material/Campaign';
+import GroupsIcon from '@mui/icons-material/Groups';
+import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 
 
 export default function SelectedListItem({ index = 1 }) {
   const [selectedIndex, setSelectedIndex] = React.useState(index);
-
   const userType = localStorage.getItem('user-type');
+  const navigate = useNavigate();
 
-  const logout = () => {
-        localStorage.clear();
-        window.location.reload();
-    }
+  const navItems = [
+    {
+      name: 'Dashboard',
+      icon: <DashboardIcon />,
+      path: '/home',
+      adminOnly: false,
+    },
+    {
+      name: 'Campaigns',
+      icon: <CampaignIcon />,
+      path: '/campaigns',
+      adminOnly: false,
+    },
+    {
+      name: 'Talent',
+      icon: <EmojiPeopleIcon />,
+      path: '/talent',
+      adminOnly: false,
+    },
+    {
+      name: 'Team',
+      icon: <GroupsIcon />,
+      path: '/team',
+      adminOnly: true,
+    },
+
+  ];
 
   const handleListItemClick = (event, index) => {
     setSelectedIndex(index);
   };
 
-  let navigate = useNavigate();
-
-  const handleClick = (event, number, path) => {
-    handleListItemClick(event, number);
+  const handleClick = (event, index, path) => {
+    handleListItemClick(event, index);
     navigate(path);
-  }
+  };
+
+  const logout = () => {
+    localStorage.clear();
+    window.location.reload();
+  };
+
 
   return (
     <Box sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
       <List component="nav" aria-label="main mailbox folders">
-        <ListItemButton
-          selected={selectedIndex === 0}
-          onClick={(event) => handleClick(event, 0, "/home")}
-        >
-          <ListItemText primary="Dashboard" />
-        </ListItemButton>
-        <ListItemButton
-          selected={selectedIndex === 1}
-          onClick={(event) => handleClick(event, 1, "/campaigns")}
-        >
-          <ListItemText primary="Campaigns" />
-        </ListItemButton>
-
-        <ListItemButton
-          selected={selectedIndex === 2}
-          onClick={(event) => handleClick(event, 2, "/talent")}
-        >
-          <ListItemText primary="Talent" />
-        </ListItemButton>
-        
-        { userType === "Admin" && (<ListItemButton
-          selected={selectedIndex === 3}
-          onClick={(event) => handleClick(event, 3, "/team")}
-        >
-          <ListItemText primary="Team" />
-        </ListItemButton>)}
-
-
-        <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-        <Button
-          variant="text"
-          sx={{ color: 'red' }}
-          onClick={logout}
-        >
-          Logout
-        </Button>
-        </Box>
+        {
+          navItems.map((item, index) => {
+            if (item.adminOnly && userType !== 'Admin') {
+              return null;
+            }
+            return (
+              <ListItemButton
+                key={index}
+                selected={selectedIndex === index}
+                onClick={(event) => handleClick(event, index, item.path)}
+                sx={{
+                  borderRadius: 10,
+                  "&.Mui-selected": {
+                    backgroundColor: "#2e8b57",
+                    color: 'white',
+                    "&:hover": {
+                      backgroundColor: "#2e8b57"
+                    }
+                  },
+                  "&.Mui-focusVisible": {
+                    backgroundColor: "#2e8b57"
+                  },
+                }}
+              >
+                <ListItemText
+                  primary={
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', width: '24px' }}>
+                        {item.icon}
+                      </Box>
+                      <Typography sx={{ marginLeft: 2 }}>{item.name}</Typography>
+                    </Box>
+                  }
+                />
+              </ListItemButton>
+            );
+          })
+        }
       </List>
     </Box>
   );

@@ -6,9 +6,7 @@ import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { useEffect, useState } from "react";
 import SocionHeader from "../components/headers/SocionHeader";
-import ContractDetailView from "../components/modals/ContractDetailView";
 import EditCampaignModal from "../components/modals/EditCampaingModal";
-import InfluencerContractDetailView from "../components/modals/InfluencerContractDetailView";
 import NewCampaignModal from "../components/modals/NewCampaignModal";
 import UploadDraftModal from "../components/modals/UploadDraftModal";
 import InfluencerSidebar from "../components/navigation/InfluencerSidebar.js";
@@ -17,6 +15,8 @@ import EnhancedTable from "../components/tables/EnhancedTable";
 import api from "../services/api";
 import { markContractAsComplete } from "../services/campaignServices";
 import { getUserInformation } from "../services/influencerServices";
+import { SettingsContext } from "../util/ProtectedRoute";
+
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -51,11 +51,11 @@ function getInfluencers(influencerArray) {
             finalString += influencerArray[i].fullName + ", "
         }
     }
-    return finalString;
+    if (finalString === '') {finalString = "N/A"}
+     return finalString;
 }
 
 function mapApiObjectToJson(apiResponse) {
-    console.log("apiResponse", apiResponse);
     return {
         id: apiResponse.id,
         name: apiResponse.name,
@@ -63,12 +63,12 @@ function mapApiObjectToJson(apiResponse) {
         companyName: apiResponse.companyName,
         status: apiResponse.completed ? 'Complete' : 'Incomplete',
         date: `${apiResponse.dueDate[1]}/${apiResponse.dueDate[2]}/${apiResponse.dueDate[0].toString().substr(-2)}`,
-        rate: apiResponse.rate
+        rate: apiResponse.rate,
+        talentManagers: getInfluencers(apiResponse.talentManagers)
     };
 }
 
 function mapApiResponseToJSONArray(response) {
-    console.log("Entered");
     let returnArray = [];
     response.forEach(element => {
         returnArray.push(mapApiObjectToJson(element));
@@ -83,7 +83,7 @@ const Subheading = ({ userName }) => {
     const userType = localStorage.getItem("user-type");
 
     return (
-        <Paper sx={{
+        <Box sx={{
             backgroundColor: 'white',
             p: 1,
             marginBottom: 1
@@ -95,7 +95,7 @@ const Subheading = ({ userName }) => {
             { (userType === "Admin" || userType === "TalentManager")?
                 (<Typography color="grey" variant="subtitle1" component="p">Let's see how your company is doing today.</Typography>) : (<Typography color="grey" variant="subtitle1" component="p">Let’s see your campaigns for this week.</Typography>)
             }
-        </Paper>
+        </Box>
 
     )
 }
@@ -112,6 +112,9 @@ const AdminDashboard = () => {
     const [refresh, setRefresh] = React.useState(false);
 
     const userType = localStorage.getItem("user-type");
+    const settingsContext = React.useContext(SettingsContext);
+
+    console.log("Settings Context: ", settingsContext);
 
 
     const handleTestOpen = () => {
@@ -207,24 +210,6 @@ const AdminDashboard = () => {
                 refresh={refreshRows}
                 contractId={currentContractId}
             />
-            {props && (
-                (userType === "Admin" || userType === "TalentManager") ? (<ContractDetailView
-                    open={detailView}
-                    handleClose={handleDetailClose}
-                    contractId={currentContractId}
-                ></ContractDetailView>) : (
-                    <InfluencerContractDetailView
-                        open={detailView}
-                        handleClose={handleDetailClose}
-                        contractId={currentContractId}
-                        influencer={props.email}
-                    />
-
-
-                )
-            )
-
-            }
             <SocionHeader onClick={handleOpen}></SocionHeader>
             <Grid container spacing={0}>
                 <Grid item xs={12} md={2}>
@@ -239,7 +224,6 @@ const AdminDashboard = () => {
                             <EnhancedTable
                                 rows={rows}
                                 refresh={refreshRows}
-                                openDetailView={handleDetailOpen}
                                 handleComplete={handleComplete}
                             />}
                     </Box>

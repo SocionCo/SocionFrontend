@@ -12,9 +12,11 @@ const label = "Label";
 
 const description = "Description";
 
-const ProfileAndText = ({ contract }) => {
 
-    
+
+const UserProfile = ({ contract }) => {
+
+
     const { influencers } = contract;
     const [open, setOpen] = useState(false);
     const [deleteInfluencerDialogue, setDeleteInfluencerDialogue] = useState(false);
@@ -69,9 +71,6 @@ const ProfileAndText = ({ contract }) => {
             />
             <AddInfluencerModal open={open} handleClose={handleClose} existingInfluencers={influencers} contractId={contract.id}></AddInfluencerModal>
             <Box>
-                <Typography variant='h5' sx={{ textAlign: 'center', marginBottom: .5, paddingTop: 1 }}>
-                    Influencers
-                </Typography>
                 <List>
 
                     {influencers.map(influencer => {
@@ -110,30 +109,18 @@ const ProfileAndText = ({ contract }) => {
 
                 </List>
             </Box>
-            <Button variant='contained' sx={{
-                color: 'grey',
-                backgroundColor: 'white',
-                width: '50%',
-                alignSelf: 'center',
-                borderRadius: 25,
-                m: 1,
-            }}
-                onClick={() => setOpen(true)}
-            >Manage Talent</Button>
+            <Box sx={{display: 'flex', justifyContent: 'flex-end'}}>
+                <Button variant='contained'
+                    sx={{
+                        color: 'grey',
+                        backgroundColor: 'white',
+                        alignSelf: 'center',
+                    }}
+                    onClick={() => setOpen(true)}
+                >Manage Talent</Button>
+            </Box>
         </Box>
     );
 }
-
-const UserProfile = ({ contract }) => {
-    return (
-        <Paper sx={{
-            width: '100%',
-            height: '100%'
-        }}>
-            <ProfileAndText contract={contract}></ProfileAndText>
-        </Paper>
-    );
-}
-
 
 export default UserProfile;

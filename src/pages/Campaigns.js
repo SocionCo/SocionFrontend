@@ -3,22 +3,20 @@ import React, { useEffect, useState } from "react";
 import ContractSticker from "../components/avatar/ContractSticker";
 import SocionHeader from "../components/headers/SocionHeader";
 import TalentSearchBar from "../components/headers/TalentSearchBar";
-import ContractDetailView from "../components/modals/ContractDetailView";
 import NewCampaignModal from "../components/modals/NewCampaignModal";
 import InfluencerSidebar from "../components/navigation/InfluencerSidebar.js";
 import Sidebar from "../components/navigation/Sidebar";
 import { getAllAgencyContractsForCurrentUser } from "../services/agencyServices";
 import { getUserInformation } from "../services/influencerServices";
-import InfluencerContractDetailView from "../components/modals/InfluencerContractDetailView";
 import styled from "@emotion/styled";
+import { useNavigate } from "react-router";
 
 
 const Campaigns = () => {
+    const navigate = useNavigate();
     const [searchInput, setSearchInput] = useState('');
     const [open, setOpen] = useState(false);
     const [contracts, setContracts] = useState([]);
-    const [detailView, setDetailView] = useState(false);
-    const [currentContractId, setCurrentContractId] = useState(null);
     const [props, setProps] = useState(null);
     const [updateRefresh, setUpdateRefresh] = useState(false);
 
@@ -35,10 +33,6 @@ const Campaigns = () => {
         fetchData();
 
     }, [updateRefresh]);
-
-    const handleDetailClose = () => {
-        setDetailView(false);
-    }
 
     const handleClose = () => {
         setOpen(false);
@@ -81,18 +75,6 @@ const Campaigns = () => {
                 agencyId={props ? props.agencyId : null}
                 refresh={refreshRows} />
 
-            {(userType === "Admin" || userType === "TalentManager") ?
-                (<ContractDetailView
-                    open={detailView}
-                    handleClose={handleDetailClose}
-                    contractId={currentContractId}
-                ></ContractDetailView>) : (<InfluencerContractDetailView
-                    open={detailView}
-                    handleClose={handleDetailClose}
-                    contractId={currentContractId}
-                />)
-            }
-
             <SocionHeader showButton={false}></SocionHeader>
             <Grid container spacing={0}>
                 <Grid item xs={12} md={2}>
@@ -121,8 +103,7 @@ const Campaigns = () => {
                                         }}>
                                             <Button
                                                 onClick={() => {
-                                                    setCurrentContractId(contract.id);
-                                                    setDetailView(true);
+                                                    navigate("/campaign/" + contract.id);
                                                 }}
                                                 fullWidth
                                             >

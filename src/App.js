@@ -9,11 +9,13 @@ import Campaigns from "./pages/Campaigns";
 import Team from "./pages/Team";
 import TalentDashboard from "./pages/TalentDashboard";
 import Register from "./authProcess/auth/login/Register";
+import AgencySettings from "./pages/AgencySettings";
+import CampaignDetail from "./pages/CampaignDetail";
 
 
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    
+
 
 
 
@@ -54,9 +56,19 @@ function App() {
                         <TalentDashboard />
                     </ProtectedRoute>
                 } />
+                <Route path='agencySettings' element={
+                    <ProtectedRoute>
+                        <AgencySettings />
+                    </ProtectedRoute>
+                } />
                 <Route path='' element={
                     <ProtectedRoute>
                         <Login />
+                    </ProtectedRoute>
+                } />
+                <Route path='campaign/:contractId' element={
+                    <ProtectedRoute>
+                        <CampaignDetail />
                     </ProtectedRoute>
                 } />
                 <Route path='*' element={<Auth />}>
