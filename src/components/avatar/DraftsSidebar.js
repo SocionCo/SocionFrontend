@@ -26,9 +26,6 @@ const DraftList = ({ contract, dashboardOpen }) => {
                 />)}
             <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                 <Box>
-                    <Typography variant='h5' sx={{ textAlign: 'center', marginBottom: .5, paddingTop: 1 }}>
-                        Drafts
-                    </Typography>
                     <List>
 
                         {drafts.map(draft => {
@@ -45,12 +42,6 @@ const DraftList = ({ contract, dashboardOpen }) => {
                                         <>
                                             <Typography variant='body2'>{"Submitted By: " + draft.fullName}</Typography>
                                             <Typography variant='body2'>{"Status: " + draft.approvalStatus}</Typography>
-                                            {draft.approvalStatus != "UNREVIEWED" && (
-                                                <Link sx={{ cursor: 'pointer' }} onClick={() => {
-                                                    setDraft(draft);
-                                                    setOpen(true);
-                                                }}>View Comments</Link>
-                                            )}
                                         </>
                                     }
                                 />
@@ -61,18 +52,13 @@ const DraftList = ({ contract, dashboardOpen }) => {
 
                     </List>
                 </Box>
-                <Box sx={{width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                <Box sx={{width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'flex-end'}}>
                     <Badge badgeContent={drafts.filter((draft) => {return draft.approvalStatus === "UNREVIEWED"}).length} color="error" sx={{ maxWidth: "max-content", p:0, m:0 }}>
-                        <Button variant='contained'
+                        <Button 
+                        variant='contained'
                             onClick={dashboardOpen}
-                            sx={{
-                                color: 'grey',
-                                backgroundColor: 'white',
-                                width: '100%',
-                                alignSelf: 'center',
-                                borderRadius: 25,
-                                m: 1,
-                            }}>Dashboard</Button>
+                            color='grey'
+                            >Dashboard</Button>
                     </Badge>
                 </Box>
             </Box>
@@ -82,12 +68,12 @@ const DraftList = ({ contract, dashboardOpen }) => {
 
 const DraftsSidebar = ({ contract, dashboardOpen }) => {
     return (
-        <Paper sx={{
+        <Box sx={{
             width: '100%',
             height: '100%'
         }}>
             <DraftList contract={contract} dashboardOpen={dashboardOpen}></DraftList>
-        </Paper>
+        </Box>
     );
 }
 

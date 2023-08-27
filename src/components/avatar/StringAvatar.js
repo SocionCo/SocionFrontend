@@ -45,8 +45,6 @@ const secondInitial = nameParts[1] ? nameParts[1][0] : '';
 }
 
 export default function StringAvatar({ name, size }) {
-  console.log("Name and size", name);
-  console.log("Name and size", size);
   if (size) {
     return (
 

@@ -14,7 +14,7 @@ import {
     Typography
 } from '@mui/material';
 import React, { useState } from "react";
-import { reviewDraft } from "../../services/campaignServices";
+import { reviewDraft } from "../../services/draftServices";
 
 const DraftReview = ({ drafts }) => {
     const [status, setStatus] = useState("");

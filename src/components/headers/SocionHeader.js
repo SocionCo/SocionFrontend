@@ -5,6 +5,7 @@ import logo from "../../assets/logos/socionLogo.png";
 import React from 'react';
 import Menu from '@mui/material/Menu/Menu';
 import { useNavigate } from 'react-router';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 
 const SocionHeader = ({ onClick, showButton = true, showX = false, onX }) => {
@@ -75,7 +76,7 @@ const SocionHeader = ({ onClick, showButton = true, showX = false, onX }) => {
                 open={Boolean(anchorElement)}
                 onClose={handleMenuClose}
             >
-                <MenuItem onClick={handleLogout} sx={{ color: 'red' }}>Logout</MenuItem>
+                <MenuItem onClick={handleLogout} sx={{ color: 'red' }}><LogoutIcon/> Logout</MenuItem>
             </Menu>
 
             {!showX && (<IconButton sx={{

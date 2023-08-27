@@ -5,7 +5,7 @@ import * as React from 'react';
 import { v4 as uuid } from 'uuid';
 import * as Yup from "yup";
 import uploadVideo from "../../aws/uploadVideo";
-import { addDraftToCampaign } from "../../services/campaignServices";
+import { addDraftToCampaign } from "../../services/draftServices";
 
 const Input = styled('input')({
     display: 'none',

@@ -2,7 +2,7 @@ import { Box, Button, List, ListItem, ListItemAvatar, ListItemText, Typography }
 import Paper from '@mui/material/Paper';
 import StringAvatar from '../avatar/StringAvatar';
 
-const InfluencerDraftsSidebar = ({ contract, dashboardOpen }) => {
+const InfluencerDraftsSidebar = ({ contract, dashboardOpen, uploadOpen }) => {
     const { drafts } = contract;
 
     return (
@@ -34,15 +34,24 @@ const InfluencerDraftsSidebar = ({ contract, dashboardOpen }) => {
 
                 </List>
             </Box>
-            <Box sx={{display: 'flex', justifyContent: 'flex-end'}}>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <Button variant='contained'
 
-                    onClick={dashboardOpen}
+                    onClick={uploadOpen}
                     sx={{
                         color: 'grey',
                         backgroundColor: 'white',
                         alignSelf: 'center',
                     }}>Add Draft</Button>
+                <Button variant='contained'
+
+                    onClick={dashboardOpen}
+                    sx={{
+                        mx: 1,
+                        color: 'grey',
+                        backgroundColor: 'white',
+                        alignSelf: 'center',
+                    }}>Open Dashboard</Button>
             </Box>
         </Box>
     );

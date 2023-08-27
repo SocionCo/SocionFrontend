@@ -27,9 +27,12 @@ const InfluencerCampaignDetail = () => {
     const [contract, setContract] = useState(null);
     const [influencerId, setInfluencerId] = useState(null);
     const [openDraftDashboard, setOpenDraftDashboard] = useState(false);
+    const [openDraftUpload, setOpenDraftUpload] = useState(false);
     const [openAttachmentUpload, setOpenAttachmentUpload] = useState(false);
     const [refresh, setRefresh] = useState(false);
     const [value, setValue] = React.useState('1');
+
+    
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -46,6 +49,14 @@ const InfluencerCampaignDetail = () => {
     const handleCloseAttachment = () => {
         handleRefresh();
         setOpenAttachmentUpload(false);
+    }
+
+    const handleOpenDraftUpload = () =>  { 
+        setOpenDraftUpload(true);
+    }
+
+    const handleCloseDraftUpload = () => { 
+        setOpenDraftUpload(false);
     }
 
     const handleOpenDashboard = () => {
@@ -105,11 +116,17 @@ const InfluencerCampaignDetail = () => {
             />
 
             <UploadDraftModal
-                open={openDraftDashboard}
-                handleClose={handleCloseDashboard}
+                open={openDraftUpload}
+                handleClose={handleCloseDraftUpload}
                 contractId={contractId}
                 refresh={handleRefresh}
                 influencer={influencerId}
+            />
+            <DraftDashboardModal
+                open={openDraftDashboard}
+                handleClose={handleCloseDashboard}
+                drafts={contract.drafts}
+                contractId={contractId}
             />
             <Box sx={{ p: 1, m: 1 }}>
                 <SocionHeader showButton={false} />
@@ -129,10 +146,10 @@ const InfluencerCampaignDetail = () => {
                                     <Box sx={{ borderBottom: 1, borderColor: 'divider', display: 'flex', alignItems: 'center', justifyContent: 'start' }}>
                                         <TabList onChange={handleChange} aria-label="lab API tabs example">
                                             <Tab label="Campaign Details" value="1" />
+                                            <Tab label="Talent" value="5" />
                                             <Tab label="Tasks" value="2" />
                                             <Tab label="Attachments" value="3" />
                                             <Tab label="Drafts" value="4" />
-                                            <Tab label="Talent" value="5" />
                                         </TabList>
                                     </Box>
                                     <TabPanel value="1">
@@ -158,6 +175,7 @@ const InfluencerCampaignDetail = () => {
                                     <TabPanel value="4">
                                         <InfluencerDraftsSidebar
                                             dashboardOpen={handleOpenDashboard}
+                                            uploadOpen={handleOpenDraftUpload}
                                             contract={contract} />
                                     </TabPanel>
                                     <TabPanel value="5">
@@ -182,6 +200,7 @@ const AdminCampaignDetail = () => {
     const [openDraftDashboard, setOpenDraftDashboard] = useState(false);
     const [openAttachmentUpload, setOpenAttachmentUpload] = useState(false);
     const [refresh, setRefresh] = useState(false);
+
     const [value, setValue] = React.useState('1');
 
     const handleChange = (event, newValue) => {
@@ -252,6 +271,7 @@ const AdminCampaignDetail = () => {
                 open={openDraftDashboard}
                 handleClose={handleCloseDashboard}
                 drafts={contract.drafts}
+                contractId={contractId}
             />
             <Box sx={{ p: 1, m: 1 }}>
                 <SocionHeader showButton={false} />
@@ -271,10 +291,11 @@ const AdminCampaignDetail = () => {
                                     <Box sx={{ borderBottom: 1, borderColor: 'divider', display: 'flex', alignItems: 'center', justifyContent: 'start' }}>
                                         <TabList onChange={handleChange} aria-label="lab API tabs example">
                                             <Tab label="Campaign Details" value="1" />
+                                            <Tab label="Talent" value="5" />
                                             <Tab label="Tasks" value="2" />
                                             <Tab label="Attachments" value="3" />
                                             <Tab label="Drafts" value="4" />
-                                            <Tab label="Talent" value="5" />
+                                            
                                         </TabList>
                                     </Box>
                                     <TabPanel value="1">
