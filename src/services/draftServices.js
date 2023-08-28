@@ -76,3 +76,31 @@ export async function deleteCommentFromDraft(commentId) {
         return;
     }
 }
+
+export async function replyToComment(contractId, draftId, comment, timeStamp, replyingToId) { 
+    const DraftAndCommentDTO = { 
+        draftDTO : { 
+            id: draftId,
+            contractId: contractId
+        }, 
+        videoCommentDTO : {
+            comment: comment,
+            timeStamp: timeStamp,
+
+        },
+        replyingToComment : { 
+            id: replyingToId
+        }
+    }
+
+     try {
+        const token = localStorage.getItem('user-token');
+        const headers = { 'Authorization': 'Bearer ' + token };
+        const response = await api.post('/api/replyToComment', DraftAndCommentDTO, { headers });
+        console.log(response);
+        return response.data;
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+}

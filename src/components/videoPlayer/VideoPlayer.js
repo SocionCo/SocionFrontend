@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Container, Box, Grid, Paper, Toolbar, MenuItem, Select, IconButton, ThemeProvider, createTheme, Typography, List, ListItem, setRef } from '@mui/material';
+import { Container, Box, Grid, Paper, Toolbar, MenuItem, Select, IconButton, ThemeProvider, createTheme, Typography, List, ListItem, setRef, Slide } from '@mui/material';
 import ShareIcon from '@mui/icons-material/Share';
 import ReactPlayer from 'react-player';
 import { Stack } from '@mui/system';
@@ -11,9 +11,10 @@ import ListItemText from '@mui/material/ListItemText/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar/ListItemAvatar';
 import LinearProgress from '@mui/material/LinearProgress/LinearProgress';
 import styled from '@emotion/styled';
-import { addCommentToDraft, deleteCommentFromDraft, reviewDraft } from '../../services/draftServices';
+import { addCommentToDraft, deleteCommentFromDraft, replyToComment, reviewDraft } from '../../services/draftServices';
 import { getContractDetailsWithId } from '../../services/campaignServices';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { timeAgo } from '../../util/conversionUtil';
 
 
 const timeConvert = (seconds) => {
@@ -43,52 +44,142 @@ const theme = createTheme({
         },
     },
 });
-const CommentSticker = ({ videoPlayer, comment, currentTime, refresh }) => {
+const CommentSticker = ({ contractId, videoPlayer, comment, currentTime, refresh, draftId }) => {
     const commenterName = comment.commenter.firstName + " " + comment.commenter.lastName;
+    const [replyMode, setReplyMode] = React.useState(false);
+    const [currentText, setCurrentText] = React.useState('');
+    const [showRepliesMode, setShowRepliesMode] = React.useState(false);
     if (!videoPlayer || !videoPlayer.current) { return null; }
+
+    const handleTextFieldChange = (event) => {
+        setCurrentText(event.target.value);
+    }
+
     return (
-        <ListItem
-            selected={Math.abs(currentTime - comment.timeStamp) < 2 && currentTime > 0}
-            alignItems="flex-start"
-            sx={{
-                '&:hover': {
-                    backgroundColor: 'rgba(0, 161, 82, 0.1)'
-                },
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center'
+        <Box>
+            <ListItem
+                selected={Math.abs(currentTime - comment.timeStamp) < 2 && currentTime > 0}
+                alignItems="flex-start"
+                sx={{
+                    '&:hover': {
+                        backgroundColor: 'rgba(0, 161, 82, 0.1)'
+                    },
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center'
 
-            }}
-            onClick={() => videoPlayer.current.seekTo(comment.timeStamp, 'seconds')}
-        >
+                }}
+                onClick={() => videoPlayer.current.seekTo(comment.timeStamp, 'seconds')}
+            >
 
 
-            <ListItemAvatar>
-                <StringAvatar name={commenterName} />
-            </ListItemAvatar>
-            <ListItemText
+                <ListItemAvatar sx={{ m: 0 }}>
+                    <StringAvatar name={commenterName} />
+                </ListItemAvatar>
 
-                primary={
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <Box>{commenterName}</Box>
-                        {comment.timeStamp ? (<Box>{timeConvert(comment.timeStamp)}</Box>) : (<></>)}
+                <Stack>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                        <ListItemText
+
+                            primary={
+                                <>
+                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                        <Box>{commenterName}</Box>
+                                        {comment.timeStamp ? (<Box>{timeConvert(comment.timeStamp)}</Box>) : (<></>)}
+
+                                        {comment.commentedDate && (
+                                            <Box>
+                                                <Typography variant='caption'>{timeAgo(comment.commentedDate)}</Typography>
+
+                                            </Box>)}
+                                    </Box>
+
+                                </>
+
+                            }
+                            secondary={
+                                <Box>
+                                    <Box>
+                                        <Typography>{comment.comment}</Typography>
+                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                                            <Typography onClick={(e) => {
+                                                e.stopPropagation();
+                                                setShowRepliesMode(false);
+                                                setReplyMode(!replyMode);
+                                            }} variant='caption'>Reply</Typography>
+                                            {(comment.replies && comment.replies.length > 0) &&
+                                                (<Typography
+                                                    onClick={() => {
+                                                        setReplyMode(false);
+                                                        setShowRepliesMode(!showRepliesMode);
+                                                    }}
+                                                    variant='caption'>{"Show Replies(" + comment.replies.length + ")"}</Typography>
+
+                                                )
+                                            }
+                                        </Box>
+                                    </Box>
+                                    {replyMode && (
+
+                                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                            <TextField
+                                                onChange={handleTextFieldChange}
+                                                size='small'
+                                                sx={{
+                                                    width: '80%'
+                                                }}
+                                            />
+                                            <IconButton onClick={async () => {
+                                                await replyToComment(contractId, draftId, currentText, null, comment.id);
+                                                setReplyMode(false);
+                                                setShowRepliesMode(true);
+                                                refresh();
+                                            }}>
+                                                <SendIcon />
+                                            </IconButton>
+                                        </Box>
+
+                                    )}
+                                </Box>
+
+                            }
+
+                        />
+                        < IconButton onClick={async (event) => {
+                            event.stopPropagation();
+                            await deleteCommentFromDraft(comment.id);
+                            refresh();
+                        }}>
+                            <DeleteIcon />
+                        </IconButton >
                     </Box>
 
-                }
-                secondary={comment.comment}
-            />
-            <IconButton onClick={async (event) => {
-                event.stopPropagation();
-                await deleteCommentFromDraft(comment.id);
-                refresh();
-            }}>
-                <DeleteIcon />
-            </IconButton>
-        </ListItem>
+                </Stack>
+            </ListItem >
+            {showRepliesMode && (
+                <Box sx={{ marginLeft: 4 }}>  {/* Add some margin to indicate these are replies */}
+                    {
+                        comment.replies.map((element) => {
+                            return (
+                                <CommentSticker
+                                    contractId={contractId}
+                                    comment={element}
+                                    currentTime={currentTime}
+                                    videoPlayer={videoPlayer}
+                                    key={element.id}
+                                    refresh={refresh}
+                                    draftId={draftId}
+                                />
+                            );
+                        })
+                    }
+                </Box>
+            )}
+        </Box>
     );
 }
 
-export default function AdminVideoPlayer({ drafts, handleClose, contractId }) {
+export default function VideoPlayer({ isForAdmin = false, contractId }) {
     const [activeDraft, setActiveDraft] = React.useState(null);
     const [duration, setDuration] = useState(null);
     const playerRef = useRef(null);
@@ -96,6 +187,7 @@ export default function AdminVideoPlayer({ drafts, handleClose, contractId }) {
     const [useTimeStamp, setUseTimeStamp] = useState(true);
     const [currentTime, setCurrentTime] = useState(0);
     const [updateDrafts, setUpdatedDrafts] = useState(null);
+
 
 
     useEffect(() => {
@@ -113,9 +205,12 @@ export default function AdminVideoPlayer({ drafts, handleClose, contractId }) {
         for (let index = 0; index < response.drafts.length; index++) {
             if (response.drafts[index].id == activeDraft.id) {
                 setActiveDraft(response.drafts[index]);
+                console.log("Peeping data:", response.drafts[index]);
+
             }
 
         }
+
         setTextFieldContains('');
         setUpdatedDrafts(response.drafts);
     }
@@ -131,7 +226,6 @@ export default function AdminVideoPlayer({ drafts, handleClose, contractId }) {
     }
 
     const handleUpdateDraftReview = async (event) => {
-        console.log("Updated", event.target.value);
         const response = await reviewDraft(activeDraft, event.target.value, "");
         refresh();
     }
@@ -277,7 +371,7 @@ export default function AdminVideoPlayer({ drafts, handleClose, contractId }) {
 
 
 
-                                {duration && (< Stack >
+                                {(duration && isForAdmin) && (< Stack >
                                     <Box elevation={3} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                                         <TextField onChange={(event) => setTextFieldContains(event.target.value)} variant="outlined" value={textFieldContains} sx={{ flexGrow: 10, marginX: 1 }} placeholder="Write a comment..." />
                                         <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -314,11 +408,13 @@ export default function AdminVideoPlayer({ drafts, handleClose, contractId }) {
                                         (playerRef && activeDraft && activeDraft.videoComments) && (activeDraft.videoComments.map(element => {
                                             return (
                                                 <CommentSticker
+                                                    contractId={contractId}
                                                     comment={element}
                                                     currentTime={currentTime}
                                                     videoPlayer={playerRef}
                                                     key={element.id}
                                                     refresh={refresh}
+                                                    draftId={activeDraft.id}
                                                 />
                                             );
                                         }))

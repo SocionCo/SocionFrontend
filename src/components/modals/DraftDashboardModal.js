@@ -1,10 +1,12 @@
 import CloseIcon from '@mui/icons-material/Close';
 import { Box, Dialog, IconButton, Slide } from "@mui/material";
 import * as React from 'react';
-import AdminVideoPlayer from "../videoPlayer/AdminVideoPlayer";
+import AdminVideoPlayer from "../videoPlayer/VideoPlayer";
 import { ThemeProvider } from 'react-bootstrap';
 import { createTheme } from '@mui/system';
 import styled from '@emotion/styled';
+import VideoPlayer from '../videoPlayer/VideoPlayer';
+
 
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -12,6 +14,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 const DraftDashboardModal = ({ open, handleClose, drafts, contractId }) => {
+
+  const userType = localStorage.getItem('user-type');
 
   return (
 
@@ -21,13 +25,27 @@ const DraftDashboardModal = ({ open, handleClose, drafts, contractId }) => {
       onClose={handleClose}
       TransitionComponent={Transition}
     >
-      <Box sx={{backgroundColor: '#00a152'}}>
+      <Box sx={{ backgroundColor: '#00a152' }}>
         <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
           <IconButton onClick={handleClose}>
             <CloseIcon></CloseIcon>
           </IconButton>
         </Box>
-        <AdminVideoPlayer drafts={drafts} handleClose={handleClose} contractId={contractId}/>
+        {userType === "Admin" || userType === "TalentManager" ?
+          (
+            <VideoPlayer isForAdmin={true} drafts={drafts} handleClose={handleClose} contractId={contractId} />
+          ) :
+          (
+            <VideoPlayer
+              draft={drafts}
+              handleClose={handleClose}
+              contractId={contractId}
+            />
+          )
+
+        }
+
+
       </Box>
     </Dialog>
   );

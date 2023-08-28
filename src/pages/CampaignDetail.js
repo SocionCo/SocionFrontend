@@ -133,7 +133,7 @@ const InfluencerCampaignDetail = () => {
                 <Grid container spacing={2}>
                     {/* Sidebar */}
                     <Grid item xs={12} md={2}>
-                        <Sidebar />
+                        <InfluencerSidebar />
                     </Grid>
                     {/* Main Content */}
                     <Grid item xs={12} md={10}>
