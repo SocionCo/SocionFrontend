@@ -149,10 +149,8 @@ const InfluencerCampaignDetail = () => {
                             <Grid item xs={12}>
                                 <TabContext value={value}>
                                     <Box sx={{ borderBottom: 1, borderColor: 'divider', display: 'flex', alignItems: 'center', justifyContent: 'start' }}>
-                                        <Tabs
-                                            vvalue={true}
+                                        <TabList
                                             variant="scrollable"
-                                            scrollButtons
                                             allowScrollButtonsMobile
                                             onChange={handleChange}
                                             aria-label="lab API tabs example"
@@ -162,7 +160,7 @@ const InfluencerCampaignDetail = () => {
                                             <Tab label="Tasks" value="2" />
                                             <Tab label="Attachments" value="3" />
                                             <Tab label="Drafts" value="4" />
-                                        </Tabs>
+                                        </TabList>
                                     </Box>
                                     <TabPanel value="1">
                                         <EditTab
@@ -303,10 +301,8 @@ const AdminCampaignDetail = () => {
                             <Grid item xs={12}>
                                 <TabContext value={value}>
                                     <Box sx={{ borderBottom: 1, borderColor: 'divider', display: 'flex', alignItems: 'center', justifyContent: 'start' }}>
-                                        <Tabs
-                                            value={true}
+                                        <TabList
                                             variant="scrollable"
-                                            scrollButtons
                                             allowScrollButtonsMobile
                                             onChange={handleChange}
                                             aria-label="lab API tabs example"
@@ -317,7 +313,7 @@ const AdminCampaignDetail = () => {
                                             <Tab label="Attachments" value="3" />
                                             <Tab label="Drafts" value="4" />
 
-                                        </Tabs>
+                                        </TabList>
                                     </Box>
                                     <TabPanel value="1">
                                         <EditTab
