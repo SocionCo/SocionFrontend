@@ -1,4 +1,4 @@
-import { Box, Stack } from '@mui/material';
+import { Box, Container, Stack } from '@mui/material';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import Paper from '@mui/material/Paper';
@@ -32,16 +32,21 @@ export default function InfluencerDetailsModal({ open, handleClose, user }) {
     const [formattedTalentManagers, setFormattedTalentManagers] = React.useState([]);
     const [talentManagers, setTalentManagers] = React.useState([]);
     const [addTalentManagerOpen, setAddTalentManagerOpen] = React.useState(false);
+    const [editMode, setEditMode] = React.useState(false);
     const [refresh, setRefresh] = useState(false);
 
- 
+
     const handleRefresh = () => {
         setTimeout(() => {
             setRefresh(!refresh);
         }, 500);
     }
 
-   
+    const handleSetEditMode = () => {
+        setEditMode(true);
+    }
+
+
 
     const handleOpenAddTalentManager = () => {
         setAddTalentManagerOpen(true);
@@ -131,7 +136,7 @@ export default function InfluencerDetailsModal({ open, handleClose, user }) {
             TransitionComponent={Transition}
             closeAfterTransition
         >
-            
+
             {addTalentManagerOpen &&
                 <AddTalentManagerModal
                     open={addTalentManagerOpen}
@@ -144,15 +149,36 @@ export default function InfluencerDetailsModal({ open, handleClose, user }) {
             <SocionHeader showButton={false} showX={true} onX={handleClose} />
             <Grid container spacing={2}>
                 <Grid xs={4}>
-                    <Paper sx={{ p: 2, m: 1 }}>
+                    <Paper sx={{ marginX: 3, marginY: 1 }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                             <StringAvatar size={125} name={user.fullName} />
                             <Typography sx={{}} component="h1" variant="h6">{user.fullName}</Typography>
                             <Typography sx={{ m: .25 }} component='h2' variant="caption">Influencer</Typography>
                             <Typography sx={{ m: .25 }} component="h6" variant="caption">{user.email}</Typography>
                             <Stack direction='row'>
-                                <Button sx={{ m: .5 }} variant='contained'>Message</Button>
-                                <Button sx={{ m: .5 }} variant='outlined' onClick={handleDialogueOpen}>Remove</Button>
+                                {!editMode ? (<Button sx={{ m: .5 }}
+                                    variant='contained'
+                                    onClick={handleSetEditMode}
+                                >Edit</Button>) : (
+                                    <Button
+                                        variant='contained'
+                                        sx={{m : .5}}
+                                    >Save
+
+
+                                    </Button>
+                                )
+                                
+                                }
+                                {!editMode ? (<Button sx={{ m: .5 }} variant='outlined' onClick={handleDialogueOpen}>Remove</Button>) : (
+                                    <Button
+                                        sx={{m: .5}}
+                                        variant='outlined'
+                                        onClick={() => setEditMode(false)}
+                                    >Cancel</Button>
+                                )
+                                
+                            }
                             </Stack>
                         </Box>
                     </Paper>
@@ -163,13 +189,13 @@ export default function InfluencerDetailsModal({ open, handleClose, user }) {
                     </Box>
                 </Grid>
                 <Grid xs={4}>
-                    <Box>
-                        <SocialTable rows={otherRows} />
+                    <Box sx={{ marginX: 3, marginY: 1 }}>
+                        <SocialTable editMode={editMode} rows={otherRows} />
                     </Box>
                 </Grid>
-                <Grid xs={8 / 2} >
-                    <Box>
-                        <Paper>
+                <Grid xs={4} >
+                    <Box sx={{ m: 1 }}>
+                        <Paper >
                             <Stack sx={{ display: 'flex', flexDirection: 'column', justifyItems: 'center', alignItems: 'center' }}>
                                 <Typography>Talent Managers</Typography>
                                 {formattedTalentManagers.length !== 0 ?
@@ -184,9 +210,9 @@ export default function InfluencerDetailsModal({ open, handleClose, user }) {
                         <Button onClick={handleOpenAddTalentManager}>Manage</Button>
                     </Box>
                 </Grid>
-                <Grid xs={8 / 2}>
-                    <Box>
-                        <Paper>
+                <Grid xs={4}>
+                    <Box sx={{ m: 1 }}>
+                        <Paper >
                             <Stack sx={{ display: 'flex', flexDirection: 'column', justifyItems: 'center', alignItems: 'center' }}>
                                 <Typography>Completed Campaigns</Typography>
                                 {completedCampaigns.length !== 0 ?

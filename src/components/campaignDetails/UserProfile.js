@@ -8,9 +8,9 @@ import AddInfluencerModal from '../modals/AddInfluencerModal';
 import ConfirmActionDialogue from '../modals/ConfirmActionDialogue';
 import InfluencerDetailsModal from '../modals/InfluencerDetailsModal';
 
-const label = "Label";
+const label = "Are you sure you want to remove this talent?";
 
-const description = "Description";
+const description = "This action is not reversible.";
 
 
 

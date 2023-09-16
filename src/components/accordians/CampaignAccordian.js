@@ -13,6 +13,7 @@ import AddTaskIcon from '@mui/icons-material/AddTask';
 import { Box } from '@mui/system';
 import Button from '@mui/material/Button';
 import { IconButton } from '@mui/material';
+import { Modal } from 'react-bootstrap';
 
 export function AttachmentsTab({ contract, refresh, handleOpen }) {
   const { attachments } = contract;
@@ -36,24 +37,31 @@ export function TasksTab({ contract, refresh }) {
   const { tasks } = contract;
   const [showNextTask, setShowNextTask] = React.useState(false);
 
+  const handleClose = () => { 
+      setShowNextTask(false);
+  }
+
   return (
-    <Box>
-      {tasks.map((element, index) => {
-        return <TaskSticker key={index} refresh={refresh} task={element} />;
-      })}
+    <>
+      <Modal
+        open={showNextTask}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description">
+          <h1>Faaa</h1>
+      </Modal>
+      <Box>
+        {tasks.map((element, index) => {
+          return <TaskSticker key={index} refresh={refresh} task={element} />;
+        })}
 
-      {showNextTask && (
-
-        <TaskSticker refresh={refresh} isInputTask={true} contractId={contract.id} handleClose={() => setShowNextTask(false)} />
-
-      )}
-
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-        <Button sx={{ marginY: 1, paddingY: 1 }} variant='contained' color='grey' onClick={() => setShowNextTask(true)} >
-          Add Task
-        </Button>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <Button sx={{ marginY: 1, paddingY: 1 }} variant='contained' color='grey' onClick={() => setShowNextTask(true)} >
+            Add Task
+          </Button>
+        </Box>
       </Box>
-    </Box>
+    </>
   );
 }
 
