@@ -11,6 +11,7 @@ import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import api from "../../../services/api.js";
 import { getUserType } from "../../../services/influencerServices.js";
+import { resetPassword } from "../../../services/userServices.js";
 
 
 export default function Login() {
@@ -104,7 +105,11 @@ export default function Login() {
           </Button>
           <Grid container>
             <Grid item xs>
-              <Link href="#" variant="body2">
+              <Link sx={{cursor: 'pointer'}} onClick={() => {
+                navigate("/resetPassword")
+              }}
+
+                variant="body2">
                 Forgot password?
               </Link>
             </Grid>

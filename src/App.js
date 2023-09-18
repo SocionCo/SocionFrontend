@@ -11,6 +11,7 @@ import TalentDashboard from "./pages/TalentDashboard";
 import Register from "./authProcess/auth/login/Register";
 import AgencySettings from "./pages/AgencySettings";
 import CampaignDetail from "./pages/CampaignDetail";
+import ResetPassword from "./pages/resetPassword";
 
 
 function App() {
@@ -40,6 +41,9 @@ function App() {
                     <ProtectedRoute>
                         <Campaigns />
                     </ProtectedRoute>
+                } />
+                <Route path='resetPassword' element={
+                    <ResetPassword/>
                 } />
                 <Route path='home' element={
                     <ProtectedRoute>
