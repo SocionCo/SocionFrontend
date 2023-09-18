@@ -206,18 +206,20 @@ export async function deleteAttachment(attachmentDTO) {
     }
 }
 
-export async function addTaskToContract(taskName, contractId) { 
+export async function addTaskToContract(taskName, taskDescription, contractId) { 
 
     const taskWrapper = { 
         taskDTO : { 
             taskName : taskName,
-            taskDetails : "",
+            details : taskDescription,
             taskCompleted : false
         }, 
         contractDTO : { 
             id : contractId
         }
     }
+
+    console.log("taskWrapper", taskWrapper);
 
     try {
         const token = localStorage.getItem('user-token');

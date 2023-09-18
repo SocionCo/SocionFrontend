@@ -55,8 +55,8 @@ export default function TaskSticker({ contractId, isInputTask, task, refresh, ha
                 }} />
             </Box>
             <Box>
-                <IconButton onClick={() => {
-                    deleteTask(task);
+                <IconButton onClick={async () => {
+                    await deleteTask(task);
                     refresh();
                 }}>
                     <DeleteIcon
@@ -64,13 +64,13 @@ export default function TaskSticker({ contractId, isInputTask, task, refresh, ha
                     />
                 </IconButton>
                 {!task.taskCompleted ?
-                    (<IconButton onClick={() => {
-                        checkOffTask(task);
+                    (<IconButton onClick={ async() => {
+                        await checkOffTask(task);
                         refresh();
                     }}>
                         <CheckIcon />
-                    </IconButton>) : (<IconButton onClick={() => {
-                        markTaskAsUnchecked(task);
+                    </IconButton>) : (<IconButton onClick={ async () => {
+                        await markTaskAsUnchecked(task);
                         refresh();
                     }}>
                         <ClearIcon />
