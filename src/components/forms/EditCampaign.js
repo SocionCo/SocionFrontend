@@ -99,6 +99,7 @@ export default function EditCampaign({ agencyId, contractId, refresh }) {
             }
 
             const response = await editContract(props);
+            setEditMode(false);
             refresh();
 
         }

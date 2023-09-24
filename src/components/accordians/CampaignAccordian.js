@@ -38,6 +38,8 @@ export function TasksTab({ contract, refresh }) {
   const [taskDescription, setTaskDescription] = React.useState("");
 
   const handleClose = () => {
+    setTaskDescription("");
+    setTaskName("");
     setShowNextTask(false);
   }
 
@@ -94,7 +96,14 @@ export function TasksTab({ contract, refresh }) {
         })}
 
         <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <Button sx={{ marginY: 1, paddingY: 1 }} variant='contained' color='grey' onClick={() => setShowNextTask(true)} >
+          <Button sx={{ marginY: 1, paddingY: 1 }} variant='contained' color='grey' onClick={() => {
+            setTaskName("");
+            setTaskDescription("");
+            setShowNextTask(true);
+
+          }
+        
+        } >
             Add Task
           </Button>
         </Box>
