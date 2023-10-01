@@ -5,11 +5,14 @@ import { formatDate } from "../../util/dateUtil";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ConfirmActionDialogue from '../modals/ConfirmActionDialogue';
 import { deleteContractWithId, markContractAsComplete, markContractAsIncomplete } from '../../services/campaignServices';
+import { useNavigate } from 'react-router-dom';
 
 const CampaignSummary = ({ contract, refresh }) => {
     const { name, creationDate, completed } = contract;
     const stringDate = formatDate(creationDate);
     const [confirmationOpen, setConfirmationOpen] = React.useState(false);
+
+    const navigate = useNavigate();
 
     const [anchorEl, setAnchorEl] = useState(null);
     const handleOpenMenu = (event) => {
@@ -26,8 +29,9 @@ const CampaignSummary = ({ contract, refresh }) => {
 
     }
 
-    const deleteCampaign = () => {
-        deleteContractWithId(contract.id);
+    const deleteCampaign = async () => {
+        await deleteContractWithId(contract.id);
+        navigate("/home");
     }
 
     const handleCompleteCampaing = async () => {
@@ -53,7 +57,7 @@ const CampaignSummary = ({ contract, refresh }) => {
                 onClick={deleteCampaign}
                 label="Are you sure you want to delete this campaign?"
                 description="This action is not reversible."
-                handleClose={() => setConfirmationOpen(false)}
+                handleClose={() => {setConfirmationOpen(false);}}
             />
             <Box sx={{ paddingLeft: 2 }}>
                 <Typography component='h4' variant='h5'>{name}</Typography>

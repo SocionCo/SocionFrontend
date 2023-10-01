@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Link, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
@@ -51,8 +51,8 @@ function getInfluencers(influencerArray) {
             finalString += influencerArray[i].fullName + ", "
         }
     }
-    if (finalString === '') {finalString = "N/A"}
-     return finalString;
+    if (finalString === '') { finalString = "N/A" }
+    return finalString;
 }
 
 function mapApiObjectToJson(apiResponse) {
@@ -92,7 +92,7 @@ const Subheading = ({ userName }) => {
                 fontWeight: 500
             }} >Welcome back, {userName}!</Typography> : <Typography component="h4" variant="h4" >Welcome back!</Typography>}
 
-            { (userType === "Admin" || userType === "TalentManager")?
+            {(userType === "Admin" || userType === "TalentManager") ?
                 (<Typography color="grey" variant="subtitle1" component="p">Let's see how your company is doing today.</Typography>) : (<Typography color="grey" variant="subtitle1" component="p">Let’s see your campaigns for this week.</Typography>)
             }
         </Box>
@@ -226,6 +226,16 @@ const AdminDashboard = () => {
                                 refresh={refreshRows}
                                 handleComplete={handleComplete}
                             />}
+                        {rows.length == 0 &&
+                            <Typography>
+                                Create a <Link
+                                onClick={()=> {
+                                    setOpen(true);
+                                }}
+                                sx={{fontWeight: 'bold', textDecoration: 'none', cursor: 'pointer'}}
+                                >New Campaign</Link> to get started!
+                            </Typography>
+                        }
                     </Box>
                 </Grid>
             </Grid>

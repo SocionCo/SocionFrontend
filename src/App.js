@@ -12,6 +12,7 @@ import Register from "./authProcess/auth/login/Register";
 import AgencySettings from "./pages/AgencySettings";
 import CampaignDetail from "./pages/CampaignDetail";
 import ResetPassword from "./pages/resetPassword";
+import GuestVideoPlayer from "./components/videoPlayer/GuestVideoPlayer";
 
 
 function App() {
@@ -75,6 +76,11 @@ function App() {
                         <CampaignDetail />
                     </ProtectedRoute>
                 } />
+                <Route path="guestDashboard/:inviteToken"
+                    element={
+                        <GuestVideoPlayer/>
+                    }
+                />
                 <Route path='*' element={<Auth />}>
                     <Route path='login' element={<Login />} />
                 </Route>

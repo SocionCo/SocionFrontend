@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Container, Box, Grid, Paper, Toolbar, MenuItem, Select, IconButton, ThemeProvider, createTheme, Typography, List, ListItem, setRef, Slide, CircularProgress } from '@mui/material';
+import { Container, Box, Grid, Paper, Toolbar, MenuItem, Select, IconButton, ThemeProvider, createTheme, Typography, List, ListItem, setRef, Slide, CircularProgress, Modal } from '@mui/material';
 import ShareIcon from '@mui/icons-material/Share';
 import ReactPlayer from 'react-player';
 import { Stack } from '@mui/system';
@@ -11,7 +11,7 @@ import ListItemText from '@mui/material/ListItemText/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar/ListItemAvatar';
 import LinearProgress from '@mui/material/LinearProgress/LinearProgress';
 import styled from '@emotion/styled';
-import { addCommentToDraft, deleteCommentFromDraft, generateReviewalLinkForDraft, replyToComment, reviewDraft } from '../../services/draftServices';
+import { addCommentToDraft, addGuestCommentToDraft, deleteCommentFromDraft, generateReviewalLinkForDraft, getDraftInformationWithGuestToken, replyToComment, reviewDraft } from '../../services/draftServices';
 import { getContractDetailsWithId } from '../../services/campaignServices';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { timeAgo } from '../../util/conversionUtil';
@@ -19,6 +19,9 @@ import CopyIcon from '@mui/icons-material/FileCopy';
 import Button from '@mui/material/Button';
 import Popover from '@mui/material/Popover';
 import Error404 from '../../util/errorPage';
+import { useParams } from 'react-router-dom';
+
+
 
 
 export const timeConvert = (seconds) => {
@@ -51,13 +54,13 @@ export const theme = createTheme({
 
 export const CommentSticker = ({ contractId, videoPlayer, comment, currentTime, refresh, draftId }) => {
     var commenterName = "";
-    if (!comment.commenter) {
+    if (!comment.commenter) { 
         commenterName = comment.brandName + ": " + comment.displayName;
-    } else {
+    } else { 
         commenterName = comment.displayName;
     }
 
-
+    
     const [replyMode, setReplyMode] = React.useState(false);
     const [currentText, setCurrentText] = React.useState('');
     const [showRepliesMode, setShowRepliesMode] = React.useState(false);
@@ -201,7 +204,7 @@ export const CommentSticker = ({ contractId, videoPlayer, comment, currentTime, 
     );
 }
 
-export default function VideoPlayer({ isForAdmin = false, contractId }) {
+export default function GuestVideoPlayer({ isForAdmin = false, contractId }) {
     const [activeDraft, setActiveDraft] = React.useState(null);
     const [duration, setDuration] = useState(null);
     const playerRef = useRef(null);
@@ -209,38 +212,48 @@ export default function VideoPlayer({ isForAdmin = false, contractId }) {
     const [useTimeStamp, setUseTimeStamp] = useState(true);
     const [currentTime, setCurrentTime] = useState(0);
     const [updateDrafts, setUpdatedDrafts] = useState(null);
+    const { inviteToken } = useParams();
+    const [guestName, setGuestName] = React.useState(null);
+    const [open, setOpen] = useState(true);
+    const [brandName, setBrandName] = useState("");
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+
+    const handleClose = () => {
+        if (brandName && firstName && lastName) {
+            setOpen(false);
+        } else {
+            alert("Please fill out all fields before closing.");
+        }
+    };
+
+
+
+
 
 
     useEffect(() => {
-        const fetchData = async () => {
-            const response = await getContractDetailsWithId(contractId);
-            setUpdatedDrafts(response.drafts);
-        };
+        async function setPage() {
+            const response = await getDraftInformationWithGuestToken(inviteToken);
+            setActiveDraft(response);
+        }
+        setPage();
 
-        fetchData();
     }, []);
 
 
     const refresh = async () => {
-        const response = await getContractDetailsWithId(contractId);
-        for (let index = 0; index < response.drafts.length; index++) {
-            if (response.drafts[index].id == activeDraft.id) {
-                setActiveDraft(response.drafts[index]);
-                console.log("Peeping data:", response.drafts[index]);
-
-            }
-
-        }
-
-        setTextFieldContains('');
-        setUpdatedDrafts(response.drafts);
+        const response = await getDraftInformationWithGuestToken(inviteToken);
+        setActiveDraft(response);
     }
 
     const handleSendComment = async () => {
         if (useTimeStamp) {
-            await addCommentToDraft(activeDraft.contractId, activeDraft.id, textFieldContains, currentTime);
+            const response = await addGuestCommentToDraft(brandName, firstName + " " + lastName, activeDraft.contractId, activeDraft.id, textFieldContains, currentTime);
+            console.log(response);
         } else {
-            await addCommentToDraft(activeDraft.contractId, activeDraft.id, textFieldContains, null);
+            const response = await addGuestCommentToDraft(brandName, firstName + " " + lastName, activeDraft.contractId, activeDraft.id, textFieldContains, currentTime);
+            console.log(response);
         }
 
         refresh();
@@ -258,37 +271,68 @@ export default function VideoPlayer({ isForAdmin = false, contractId }) {
     };
 
     const handleDuration = (d) => {
-        console.log("Duration: ", d);
         setDuration(d);
     };
 
     if (!activeDraft) {
         return (
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <Select
-                    value={activeDraft ? activeDraft.id : "Select Draft"}
-                    variant="outlined"
-                    style={{ minWidth: '120px', height: '40px', borderRadius: '4px' }}
-                    onChange={handleDraftChange}
-                >
-                    <MenuItem value="Select Draft" disabled>
-                        Select draft
-                    </MenuItem>
-                    {updateDrafts && (updateDrafts.map((draft) => (
-                        <MenuItem key={draft.id} value={draft.id}>
-                            {draft.draftName}
-                        </MenuItem>
-                    )))}
-                </Select>
-            </Box>
-        );
+            <CircularProgress />
+        )
     }
-
 
 
 
     return (
         <ThemeProvider theme={theme}>
+            <Modal
+                open={open}
+                onClose={handleClose}
+            >
+
+                <Box
+                    sx={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        bgcolor: 'background.paper',
+                        border: '2px solid #000',
+                        boxShadow: 24,
+                        p: 4,
+                    }}
+                >
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <Typography variant='h4'>Sign in For Guest Commenting</Typography>
+                    </Box>
+                    <TextField
+                        label="Brand Name"
+                        variant="outlined"
+                        value={brandName}
+                        onChange={(e) => setBrandName(e.target.value)}
+                        fullWidth
+                        margin="normal"
+                    />
+                    <TextField
+                        label="First Name"
+                        variant="outlined"
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
+                        fullWidth
+                        margin="normal"
+                    />
+                    <TextField
+                        label="Last Name"
+                        variant="outlined"
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                        fullWidth
+                        margin="normal"
+                    />
+                    <Button onClick={handleClose} fullWidth variant="contained">
+                        Submit
+                    </Button>
+                </Box>
+            </Modal>
             <SolidBackground p={3}>
                 <Grid container spacing={3}>
                     <Grid item xs={12} md={8}>
@@ -303,22 +347,6 @@ export default function VideoPlayer({ isForAdmin = false, contractId }) {
                                     <MenuItem value="UNREVIEWED">Unreviewed</MenuItem>
                                     <MenuItem value="APPROVED">Approved</MenuItem>
                                     <MenuItem value="REJECTED">Rejected</MenuItem>
-                                </Select>
-                                <div style={{ flexGrow: 1 }} />
-                                <Select
-                                    value={activeDraft ? activeDraft.id : "Select Draft"}
-                                    variant="outlined"
-                                    style={{ minWidth: '120px', height: '40px', borderRadius: '4px' }}
-                                    onChange={handleDraftChange}
-                                >
-                                    <MenuItem value="Select Draft" disabled>
-                                        Select draft
-                                    </MenuItem>
-                                    {updateDrafts && (updateDrafts.map((draft) => (
-                                        <MenuItem key={draft.id} value={draft.id}>
-                                            {draft.draftName}
-                                        </MenuItem>
-                                    )))}
                                 </Select>
                                 <div style={{ flexGrow: 1 }} />
                                 <ShareButton
@@ -396,7 +424,7 @@ export default function VideoPlayer({ isForAdmin = false, contractId }) {
 
 
 
-                                {(duration && isForAdmin) && (< Stack >
+                                {(duration) && (< Stack >
                                     <Box elevation={3} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                                         <TextField onChange={(event) => setTextFieldContains(event.target.value)} variant="outlined" value={textFieldContains} sx={{ flexGrow: 10, marginX: 1 }} placeholder="Write a comment..." />
                                         <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -472,10 +500,10 @@ const ShareButton = ({ draftId, contractId }) => {
         setAnchorEl(null);
     };
 
-    const copyLink = () => {
+    const copyLink = async () => {
         if (textRef.current) {
             textRef.current.select();
-            document.execCommand('copy');
+            await navigator.clipboard.writeText(textRef.value);
             handleClose();
         }
     };
