@@ -170,13 +170,6 @@ export const CommentSticker = ({ contractId, videoPlayer, comment, currentTime, 
                             }
 
                         />
-                        < IconButton onClick={async (event) => {
-                            event.stopPropagation();
-                            await deleteCommentFromDraft(comment.id);
-                            refresh();
-                        }}>
-                            <DeleteIcon />
-                        </IconButton >
                     </Box>
 
                 </Stack>
@@ -205,6 +198,9 @@ export const CommentSticker = ({ contractId, videoPlayer, comment, currentTime, 
 }
 
 export default function GuestVideoPlayer({ isForAdmin = false, contractId }) {
+
+
+
     const [activeDraft, setActiveDraft] = React.useState(null);
     const [duration, setDuration] = useState(null);
     const playerRef = useRef(null);
@@ -213,14 +209,18 @@ export default function GuestVideoPlayer({ isForAdmin = false, contractId }) {
     const [currentTime, setCurrentTime] = useState(0);
     const [updateDrafts, setUpdatedDrafts] = useState(null);
     const { inviteToken } = useParams();
-    const [guestName, setGuestName] = React.useState(null);
-    const [open, setOpen] = useState(true);
-    const [brandName, setBrandName] = useState("");
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
+    const [brandName, setBrandName] = useState(localStorage.getItem("brandName"));
+    const [firstName, setFirstName] = useState(localStorage.getItem("firstName"));
+    const [lastName, setLastName] = useState(localStorage.getItem("lastName"));
+
+    const [open, setOpen] = useState((!brandName || !firstName || !lastName));
+
 
     const handleClose = () => {
         if (brandName && firstName && lastName) {
+            localStorage.setItem("brandName",brandName);
+            localStorage.setItem("firstName", firstName);
+            localStorage.setItem("lastName",lastName);
             setOpen(false);
         } else {
             alert("Please fill out all fields before closing.");
@@ -252,7 +252,7 @@ export default function GuestVideoPlayer({ isForAdmin = false, contractId }) {
             const response = await addGuestCommentToDraft(brandName, firstName + " " + lastName, activeDraft.contractId, activeDraft.id, textFieldContains, currentTime);
             console.log(response);
         } else {
-            const response = await addGuestCommentToDraft(brandName, firstName + " " + lastName, activeDraft.contractId, activeDraft.id, textFieldContains, currentTime);
+            const response = await addGuestCommentToDraft(brandName, firstName + " " + lastName, activeDraft.contractId, activeDraft.id, textFieldContains, null);
             console.log(response);
         }
 

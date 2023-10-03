@@ -157,9 +157,7 @@ export async function addGuestCommentToDraft(brandName,displayName, contractId, 
     }
 
      try {
-        const token = localStorage.getItem('user-token');
-        const headers = { 'Authorization': 'Bearer ' + token };
-        const response = await api.post('/api/addGuestCommentToDraft', DraftAndCommentDTO, { headers });
+        const response = await api.post('/api/addGuestCommentToDraft', DraftAndCommentDTO);
         console.log(response);
         return response.data;
     } catch (error) {
