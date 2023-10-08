@@ -56,6 +56,7 @@ function getInfluencers(influencerArray) {
 }
 
 function mapApiObjectToJson(apiResponse) {
+    console.log("ApiResponse",apiResponse);
     return {
         id: apiResponse.id,
         name: apiResponse.name,
@@ -64,7 +65,9 @@ function mapApiObjectToJson(apiResponse) {
         status: apiResponse.completed ? 'Complete' : 'Incomplete',
         date: `${apiResponse.dueDate[1]}/${apiResponse.dueDate[2]}/${apiResponse.dueDate[0].toString().substr(-2)}`,
         rate: apiResponse.rate,
-        talentManagers: getInfluencers(apiResponse.talentManagers)
+        talentManagers: getInfluencers(apiResponse.talentManagers),
+        creatorRate: apiResponse.creatorRate
+
     };
 }
 
@@ -226,7 +229,7 @@ const AdminDashboard = () => {
                                 refresh={refreshRows}
                                 handleComplete={handleComplete}
                             />}
-                        {rows.length == 0 &&
+                        {(rows.length == 0 && userType === "Admin") &&
                             <Typography>
                                 Create a <Link
                                 onClick={()=> {

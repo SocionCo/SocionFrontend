@@ -58,6 +58,10 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
+const userType = localStorage.getItem("user-type");
+const isAdminOrTalent = (userType === "Admin" || userType === "TalentManager");
+
+const bookingHeading = isAdminOrTalent ? "Booking Price" : "Creator Rate";
 const headCells = [
   {
     id: 'name',
@@ -93,7 +97,7 @@ const headCells = [
     id: 'rate',
     numeric: true,
     disablePadding: false,
-    label: 'Booking Price',
+    label: bookingHeading,
   },
   {
     id: 'buttons',
@@ -207,7 +211,7 @@ function EnhancedTableToolbar(props) {
 
 export default function EnhancedTable({ rows, refresh, handleComplete }) {
   const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('date'); 
+  const [orderBy, setOrderBy] = React.useState('date');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
@@ -331,7 +335,7 @@ export default function EnhancedTable({ rows, refresh, handleComplete }) {
                   <TableCell align="left">{trimmedClientName}</TableCell>
                   <TableCell align="left">{row.talentManagers}</TableCell>
                   <TableCell align="left">{row.date}</TableCell>
-                  <TableCell align="center">{row.rate}</TableCell>
+                  <TableCell align="center">{isAdminOrTalent ? row.rate : row.creatorRate}</TableCell>
                   <TableCell align="left">
                     <IconButton onClick={(event) => {
                       navigate("/campaign/" + row.id);

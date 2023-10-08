@@ -17,3 +17,23 @@ code {
   color: black !important;
   -webkit-text-fill-color:black !important;
 }
+
+.player-wrapper {
+  position: relative;
+  width: 100%;        
+  height: 0;           
+  background-color: #000; 
+}
+
+.react-player {
+  padding-top: 56.25%;     
+  position: relative;      
+}
+
+.react-player > div {
+  position: absolute;  
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
