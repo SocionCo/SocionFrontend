@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Paper, Typography } from "@mui/material";
+import { Box, Button, Grid, Paper, Typography, Tab, TextField, InputAdornment, IconButton } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import ContractSticker from "../components/avatar/ContractSticker";
 import SocionHeader from "../components/headers/SocionHeader";
@@ -10,6 +10,10 @@ import { getAllAgencyContractsForCurrentUser } from "../services/agencyServices"
 import { getUserInformation } from "../services/influencerServices";
 import styled from "@emotion/styled";
 import { useNavigate } from "react-router";
+import { TabContext, TabList, TabPanel } from "@mui/lab";
+import { ControlCameraOutlined } from "@mui/icons-material";
+import SearchIcon from '@mui/icons-material/Search';
+import AddIcon from '@mui/icons-material/Add';
 
 
 const Campaigns = () => {
@@ -19,6 +23,39 @@ const Campaigns = () => {
     const [contracts, setContracts] = useState([]);
     const [props, setProps] = useState(null);
     const [updateRefresh, setUpdateRefresh] = useState(false);
+    const [selectedTab, setSelectedTab] = useState("0");
+    const [searchBarVisible, setSearchBarVisible] = useState(false);
+
+
+
+    const filteredContracts = contracts.filter(contract =>
+        contract.name.toLowerCase().includes(searchInput.toLowerCase()) || contract.companyName.toLowerCase().includes(searchInput.toLowerCase())
+    );
+
+    const toggleSearchBar = () => {
+        setSearchBarVisible(!searchBarVisible);
+    };
+
+
+    let displayedContracts;
+    switch (selectedTab) {
+        case "0":
+
+            displayedContracts = filteredContracts;
+            break;
+        case "1":
+            displayedContracts = filteredContracts.filter(contract => !contract.completed);
+            break;
+        case "2":
+            displayedContracts = filteredContracts.filter(contract => contract.completed);
+            break;
+        default:
+            displayedContracts = filteredContracts;
+    }
+
+    const handleChange = (event, newValue) => {
+        setSelectedTab(newValue);
+    };
 
 
 
@@ -56,12 +93,9 @@ const Campaigns = () => {
         getData();
     }, [updateRefresh]);
 
-    const filteredContracts = contracts.filter(contract =>
-        contract.name.toLowerCase().includes(searchInput.toLowerCase()) || contract.companyName.toLowerCase().includes(searchInput.toLowerCase())
-    );
+
 
     const handleSearchChange = (event) => {
-        console.log("Search change");
         setSearchInput(event.target.value);
     };
 
@@ -89,12 +123,61 @@ const Campaigns = () => {
                             <Typography variant='h3' component='h3'>Campaigns</Typography>
                         </Grid>
                         <Grid item xs={12}>
-                            <TalentSearchBar handleOpen={handleOpen} onChange={handleSearchChange} label="New Campaign" />
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 2 }}>
+                                <Typography variant='h6' component='h1'>{"All Campaigns: " + contracts.length}</Typography>
+
+                                <Box sx={{ display: 'flex', position: 'relative' }}>
+                                    <TabContext value={selectedTab}>
+                                        <TabList
+                                            variant="scrollable"
+                                            allowScrollButtonsMobile
+                                            onChange={handleChange}
+                                        >
+                                            <Tab label="All" value="0" />
+                                            <Tab label="Active" value="1" />
+                                            <Tab label="Completed" value="2" />
+                                        </TabList>
+                                    </TabContext>
+                                    <IconButton onClick={() => setSearchBarVisible(!searchBarVisible)}>
+                                        <SearchIcon />
+                                    </IconButton>
+                                    <IconButton onClick={handleOpen}>
+                                        <AddIcon />
+                                    </IconButton>
+
+                                    {
+                                        searchBarVisible && (
+                                            <TextField
+                                                sx={{
+                                                    position: 'absolute',
+                                                    top: '-60px',  // adjust this based on the height of your TextField
+                                                    left: '0',
+                                                    zIndex: 10,
+                                                    background: 'white'
+                                                }}
+                                                fullWidth
+                                                placeholder="Search..."
+                                                onChange={handleSearchChange}
+                                                InputProps={{
+                                                    startAdornment: (
+                                                        <InputAdornment position="start">
+                                                            <SearchIcon />
+                                                        </InputAdornment>
+                                                    ),
+                                                }}
+                                            />
+                                        )
+                                    }
+                                </Box>
+                            </Box>
+
                         </Grid>
+
+
                         {
-                            filteredContracts.map(contract => {
+                            displayedContracts.map(contract => {
                                 return (
-                                    <Grid item xs={12} sm={6} md={4} key={contract.id}>
+                                    <Grid item xs={12} key={contract.id}>
                                         {/* Single column on mobile, two on small screens, three on medium screens */}
                                         <Box key={contract.id} sx={{
                                             display: 'flex',
@@ -107,10 +190,11 @@ const Campaigns = () => {
                                                 }}
                                                 fullWidth
                                             >
-                                                <ContractSticker 
-                                                contract={contract}
-                                                refresh={refreshRows}
-                                                 />
+                                                <ContractSticker
+                                                    contract={contract}
+                                                    refresh={refreshRows}
+                                                    fullWidth
+                                                />
                                             </Button>
                                         </Box>
                                     </Grid>

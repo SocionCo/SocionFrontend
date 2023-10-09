@@ -1,26 +1,52 @@
 import { Box, IconButton, Paper, Stack, Typography } from "@mui/material";
+
 import StringAvatar from "./StringAvatar";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { deleteContractWithId } from "../../services/campaignServices";
 import ConfirmActionDialogue from "../modals/ConfirmActionDialogue";
-import { useState } from "react";
+import CampaignIcon from '@mui/icons-material/Campaign';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { useEffect, useState } from "react";
+import { timeAgo } from "../../util/conversionUtil";
 
 const ContractSticker = ({ contract, sx, refresh }) => {
     const { influencers, name } = contract;
     const [open, setOpen] = useState(false);
+    const [randomColor, setRandomColor] = useState("");
 
     const userType = localStorage.getItem('user-type');
 
     const trimmedName = name.length > 20 ? name.substring(0, 15) + "..." : name;
 
+    const getRandomColor = () => {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
+
+
+    useEffect(() => {
+        if (!randomColor) {
+            setRandomColor(getRandomColor());
+        }
+    }, [randomColor]);
+
     return (
         <Paper sx={{
             display: 'flex',
             alignItems: 'center',
-            backgroundColor: 'lightGrey',
+            justifyContent: 'left',
+            paddingLeft: 5,
+            backgroundColor: '#FAFAFA',
             height: '15vh',
             width: '100%',
-            position: 'relative' // Relative positioning
+            position: 'relative',
+            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+            border: '1px solid #EAEAEA'
         }}>
             <ConfirmActionDialogue
                 open={open}
@@ -38,42 +64,39 @@ const ContractSticker = ({ contract, sx, refresh }) => {
             />
             <Box sx={{
                 display: 'flex',
-                alignItems: 'center',
-                marginLeft: 'auto', // Auto margin
-                marginRight: 'auto' // Auto margin
+                alignItems: 'center'
             }}>
-                <StringAvatar name={name} />
-                <Stack sx={{ paddingLeft: '1rem' }}>
-                    <Typography variant='body1' component='h6' sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{trimmedName}</Typography>
+                <CampaignIcon sx={{
+                    color: randomColor,
+                    backgroundColor: `${randomColor}20`,
+                    borderRadius: '25%',
+                    padding: '0.5rem',
+                    fontSize: '2rem'
+                }} />
+                <Stack sx={{ paddingLeft: '1.5rem', alignItems: 'flex-start' }}>
+                    <Typography align="left" variant='h6' component='h6' sx={{
+                        whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', textTransform: 'none'
+                    }}>{trimmedName}</Typography>
                     {
-                        influencers.map(influencer => {
-                            return (
-                                <Typography variant='caption' component='p' key={influencer.email}>{influencer.fullName}</Typography>
-                            );
-                        })
-                    }
-                </Stack>
-            </Box>
-            <Box sx={{
-                position: 'absolute', // Absolute positioning
-                right: '4%', // Align it to the right
-                top: '50%', // Align it vertically center
-                transform: 'translateY(-50%)', // Perfectly center it
-            }}>
-                {
-                    (userType === "Admin" || userType === "TalentManager") &&
-                    (
-                        <Box 
-                        sx={{display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                        onClick={(event) => {
-                            event.stopPropagation();
-                            setOpen(true);
-                        }}>
-                            <DeleteIcon sx={{ color: 'red' }} />
-                        </Box>
+                        (influencers.length === 0) ?
+                            '' :
+                            (influencers.length === 1) ?
+                                (
+                                    <Typography sx={{
+                                        textTransform: 'none'
+                                    }} variant='body1' component='p' key={influencers[0].email}>{influencers[0].fullName}</Typography>
+                                ) :
 
-                    )
-                }
+                                (
+                                    <Typography sx={{
+                                        textTransform: 'none'
+                                    }} variant='body1' component='p' key={influencers[0].email}>{influencers[0].fullName} and {influencers.length} others</Typography>
+                                )
+                    }
+                    <Typography variant='caption' component='caption' sx={{
+                        textTransform: 'none'
+                    }}>{timeAgo(contract.creationDate)} </Typography>
+                </Stack>
             </Box>
         </Paper>
     );

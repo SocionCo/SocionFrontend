@@ -6,7 +6,7 @@ import TextField from '@mui/material/TextField';
 import * as React from 'react';
 import { getTalentManagersAtUsersAgency, updateTalentManagersForUser } from '../../services/agencyServices';
 
-const AddTalentManagerModal = ({ open, handleClose, userEmail, currentTalentManagers, refresh, contractId }) => {
+const AddTalentManagerModal = ({ open, handleClose, userEmail, currentTalentManagers, refresh, contractId, forContract = false}) => {
 
     const [selectedTalentManagers,setSelectedTalentManagers] = React.useState(currentTalentManagers || []);
     const [talentManagers, setTalentManagers] = React.useState([]);

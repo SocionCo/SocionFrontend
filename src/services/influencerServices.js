@@ -56,7 +56,6 @@ export async function getTalentManagersForUser(email, formatForDropdown = true) 
         return [];
     }  
 
-
 }
 
 

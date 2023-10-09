@@ -9,6 +9,7 @@ export function convertInfluencersToDropdownObjects(influencers) {
 
 
 export function timeAgo(isoTime) {
+  if (!isoTime) {return ""}
     const currentTime = new Date();
     const pastTime = new Date(isoTime);
   

@@ -21,6 +21,7 @@ import InfluencerSidebar from "../components/navigation/InfluencerSidebar";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { AttachmentsTab } from "../components/accordians/CampaignAccordian";
 import useMediaQuery from '@mui/material/useMediaQuery';
+import ManagerProfileList from "../components/campaignDetails/ManagerProfileList";
 
 
 const isMobile = window.innerWidth <= 800 && window.innerHeight <= 600;
@@ -157,6 +158,7 @@ const InfluencerCampaignDetail = () => {
                                         >
                                             <Tab label="Campaign Details" value="1" />
                                             <Tab label="Talent" value="5" />
+                                            <Tab label="Managers" value="6" />
                                             <Tab label="Tasks" value="2" />
                                             <Tab label="Attachments" value="3" />
                                             <Tab label="Drafts" value="4" />
@@ -174,6 +176,12 @@ const InfluencerCampaignDetail = () => {
                                             refresh={handleRefresh}
                                         />
 
+                                    </TabPanel>
+                                    <TabPanel value="6">
+                                        <Box>
+                                            <ManagerProfileList
+                                                contract={contract} />
+                                        </Box>
                                     </TabPanel>
                                     <TabPanel value="3">
                                         <AttachmentsTab
@@ -309,6 +317,7 @@ const AdminCampaignDetail = () => {
                                         >
                                             <Tab label="Campaign Details" value="1" />
                                             <Tab label="Talent" value="5" />
+                                            <Tab label="Managers" value="6" />
                                             <Tab label="Tasks" value="2" />
                                             <Tab label="Attachments" value="3" />
                                             <Tab label="Drafts" value="4" />
@@ -334,6 +343,12 @@ const AdminCampaignDetail = () => {
                                             refresh={handleRefresh}
                                             handleOpen={() => setOpenAttachmentUpload(true)}
                                         />
+                                    </TabPanel>
+                                    <TabPanel value="6">
+                                        <Box>
+                                            <ManagerProfileList
+                                                contract={contract} />
+                                        </Box>
                                     </TabPanel>
                                     <TabPanel value="4">
                                         <DraftsSidebar
