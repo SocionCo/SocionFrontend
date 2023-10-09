@@ -37,7 +37,7 @@
     "yup": "^1.2.0"
   },
   "scripts": {
-    "start": "node server.js",
+    "start": "react-scripts start",
     "postinstall": "npm run webpack",
     "webpack": "webpack",
     "build": "webpack --mode production",
