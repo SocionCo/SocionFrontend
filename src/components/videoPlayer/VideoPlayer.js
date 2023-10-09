@@ -1,7 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import '../../index.css';
-import { Container, Box, Grid, Paper, Toolbar, MenuItem, Select, IconButton, 
-    ThemeProvider, createTheme, Typography, List, ListItem, setRef, Slide, CircularProgress } from '@mui/material';
+import { Container, Box, Grid, Paper, Toolbar, MenuItem, Select, IconButton, ThemeProvider, createTheme, Typography, List, ListItem, setRef, Slide, CircularProgress } from '@mui/material';
 import ShareIcon from '@mui/icons-material/Share';
 import ReactPlayer from 'react-player';
 import { Stack } from '@mui/system';
@@ -211,8 +209,6 @@ export default function VideoPlayer({ isForAdmin = false, contractId }) {
     const [useTimeStamp, setUseTimeStamp] = useState(true);
     const [currentTime, setCurrentTime] = useState(0);
     const [updateDrafts, setUpdatedDrafts] = useState(null);
-    const [aspectRatio, setAspectRatio] = useState(null);
-
 
 
     useEffect(() => {
@@ -339,12 +335,14 @@ export default function VideoPlayer({ isForAdmin = false, contractId }) {
                                     <ReactPlayer
                                         controls
                                         width='100%'
+                                        height='100%'
                                         url={activeDraft?.reference}
                                         onDuration={handleDuration}
                                         onProgress={({ playedSeconds }) => setCurrentTime(playedSeconds)}
                                         ref={playerRef}
-                                        progressInterval={100} />
+                                        progressInterval={100}
 
+                                    />
                                     {duration && (
                                         <LinearProgress
                                             value={(currentTime / duration) * 100}
