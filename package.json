@@ -23,7 +23,6 @@
     "express-favicon": "^2.0.4",
     "formik": "^2.4.2",
     "js-cookie": "^3.0.5",
-    "node": "^20.7.0",
     "path": "^0.12.7",
     "react": "^18.2.0",
     "react-aws-s3": "^1.5.0",
@@ -64,7 +63,6 @@
   },
   "devDependencies": {
     "@babel/core": "^7.22.10",
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@babel/preset-env": "^7.22.10",
     "@babel/preset-react": "^7.22.5",
     "babel-loader": "^9.1.3",
