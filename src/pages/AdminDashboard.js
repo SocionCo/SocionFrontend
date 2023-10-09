@@ -226,7 +226,7 @@ const AdminDashboard = () => {
                                 refresh={refreshRows}
                                 handleComplete={handleComplete}
                             />}
-                        {rows.length == 0 &&
+                        {(!isLoading && rows.length == 0) &&
                             <Typography>
                                 Create a <Link
                                 onClick={()=> {

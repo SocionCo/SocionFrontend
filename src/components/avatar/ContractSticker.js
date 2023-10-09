@@ -39,7 +39,6 @@ const ContractSticker = ({ contract, sx, refresh }) => {
         <Paper sx={{
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'left',
             paddingLeft: 5,
             backgroundColor: '#FAFAFA',
             height: '15vh',
@@ -64,39 +63,57 @@ const ContractSticker = ({ contract, sx, refresh }) => {
             />
             <Box sx={{
                 display: 'flex',
-                alignItems: 'center'
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                width: '100%'
             }}>
-                <CampaignIcon sx={{
-                    color: randomColor,
-                    backgroundColor: `${randomColor}20`,
-                    borderRadius: '25%',
-                    padding: '0.5rem',
-                    fontSize: '2rem'
-                }} />
-                <Stack sx={{ paddingLeft: '1.5rem', alignItems: 'flex-start' }}>
-                    <Typography align="left" variant='h6' component='h6' sx={{
-                        whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', textTransform: 'none'
-                    }}>{trimmedName}</Typography>
-                    {
-                        (influencers.length === 0) ?
-                            '' :
-                            (influencers.length === 1) ?
-                                (
-                                    <Typography sx={{
-                                        textTransform: 'none'
-                                    }} variant='body1' component='p' key={influencers[0].email}>{influencers[0].fullName}</Typography>
-                                ) :
+                <Box sx={{ display: 'flex', alignItems: 'center', width: '50%' }}>
+                    <CampaignIcon sx={{
+                        color: randomColor,
+                        backgroundColor: `${randomColor}20`,
+                        borderRadius: '25%',
+                        padding: '0.5rem',
+                        fontSize: '2rem'
+                    }} />
+                    <Stack sx={{ paddingLeft: '1.5rem', alignItems: 'flex-start' }}>
+                        <Typography align="left" variant='h6' component='h6' sx={{
+                            whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', textTransform: 'none'
+                        }}>{trimmedName}</Typography>
+                        {
+                            (influencers.length === 0) ?
+                                '' :
+                                (influencers.length === 1) ?
+                                    (
+                                        <Typography sx={{
+                                            textTransform: 'none'
+                                        }} variant='body1' component='p' key={influencers[0].email}>{influencers[0].fullName}</Typography>
+                                    ) :
 
-                                (
-                                    <Typography sx={{
-                                        textTransform: 'none'
-                                    }} variant='body1' component='p' key={influencers[0].email}>{influencers[0].fullName} and {influencers.length} others</Typography>
-                                )
-                    }
-                    <Typography variant='caption' component='caption' sx={{
-                        textTransform: 'none'
-                    }}>{timeAgo(contract.creationDate)} </Typography>
-                </Stack>
+                                    (
+                                        <Typography sx={{
+                                            textTransform: 'none'
+                                        }} variant='body1' component='p' key={influencers[0].email}>{influencers[0].fullName} and {influencers.length} others</Typography>
+                                    )
+                        }
+                        <Typography variant='caption' component='caption' sx={{
+                            textTransform: 'none'
+                        }}>{timeAgo(contract.creationDate)} </Typography>
+                    </Stack>
+                </Box>
+                <Box sx={{display: 'flex', alignItems: 'center', width: '50%'}}>
+                    <Box sx={{marginX: 2, width: '33%'}}>
+                        <Typography variant="body1">Brand:</Typography>
+                        <Typography variant="subtitle2">{contract.companyName}</Typography>
+                    </Box>
+                    <Box sx={{marginX: 2, width: '33%'}}>
+                        <Typography variant="body1">Due Date:</Typography>
+                        <Typography variant="subtitle2">{contract.dueDate}</Typography>
+                    </Box>
+                    <Box sx={{marginX: 2, width: '33%'}}>
+                        <Typography variant="body1">Progress:</Typography>
+                        <Typography variant="subtitle2">{contract.percentCompleted}</Typography>
+                    </Box>
+                </Box>
             </Box>
         </Paper>
     );
