@@ -4,10 +4,9 @@ import DraftDashboardModal from "../components/modals/DraftDashboardModal";
 import { Box, Grid, Tab, Tabs } from "@mui/material";
 import SocionHeader from "../components/headers/SocionHeader";
 import CampaignSummary from "../components/campaignDetails/CampaignSummary";
-import { EditTab, TasksTab } from "../components/accordians/CampaignAccordian";
+import { EditTab, InvoicesTab, TasksTab } from "../components/accordians/CampaignAccordian";
 import UserProfile from "../components/campaignDetails/UserProfile";
 import DraftsSidebar from "../components/avatar/DraftsSidebar";
-import AddAttachmentAndMarkComplete from "../components/campaignDetails/AddAttachmentAndMarkComplete";
 import React, { useState } from "react";
 import { getContractDetailsWithId, markContractAsComplete, markContractAsIncomplete } from "../services/campaignServices";
 import UploadDraftModal from "../components/modals/UploadDraftModal";
@@ -22,6 +21,7 @@ import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { AttachmentsTab } from "../components/accordians/CampaignAccordian";
 import useMediaQuery from '@mui/material/useMediaQuery';
 import ManagerProfileList from "../components/campaignDetails/ManagerProfileList";
+import UploadInvoiceModal from "../components/modals/UploadInvoiceModal";
 
 
 const isMobile = window.innerWidth <= 800 && window.innerHeight <= 600;
@@ -45,10 +45,6 @@ const InfluencerCampaignDetail = () => {
 
     const handleRefresh = () => {
         setRefresh(!refresh);
-    }
-
-    const handleOpenAttachment = () => {
-        setOpenAttachmentUpload(true);
     }
 
     const handleCloseAttachment = () => {
@@ -161,6 +157,7 @@ const InfluencerCampaignDetail = () => {
                                             <Tab label="Managers" value="6" />
                                             <Tab label="Tasks" value="2" />
                                             <Tab label="Attachments" value="3" />
+                                            <Tab label="Invoices" value="7" />
                                             <Tab label="Drafts" value="4" />
                                         </TabList>
                                     </Box>
@@ -190,12 +187,20 @@ const InfluencerCampaignDetail = () => {
                                             handleOpen={() => setOpenAttachmentUpload(true)}
                                         />
                                     </TabPanel>
+                                    <TabPanel value="7">
+                                        <InvoicesTab
+                                            contract={contract}
+                                            refresh={handleRefresh}
+                                            handleOpen={() => setOpenAttachmentUpload(true)}
+                                        />
+                                    </TabPanel>
                                     <TabPanel value="4">
                                         <InfluencerDraftsSidebar
                                             dashboardOpen={handleOpenDashboard}
                                             uploadOpen={handleOpenDraftUpload}
                                             contract={contract} />
                                     </TabPanel>
+
                                     <TabPanel value="5">
                                         <InfluencerUserProfile contract={contract} />
                                     </TabPanel>
@@ -217,6 +222,7 @@ const AdminCampaignDetail = () => {
     const [contract, setContract] = useState(null);
     const [openDraftDashboard, setOpenDraftDashboard] = useState(false);
     const [openAttachmentUpload, setOpenAttachmentUpload] = useState(false);
+    const [openInvoiceUpload, setOpenInvoiceUpload] = useState(false);
     const [refresh, setRefresh] = useState(false);
 
     const [value, setValue] = React.useState('1');
@@ -285,6 +291,17 @@ const AdminCampaignDetail = () => {
                 handleClose={handleCloseAttachment}
                 contractId={contractId}
             />
+
+            <UploadInvoiceModal
+                open={openInvoiceUpload}
+                handleClose={() => {
+                    setOpenInvoiceUpload(false);
+                    handleRefresh();
+                }
+
+                }
+                contractId={contractId}
+            />
             <DraftDashboardModal
                 open={openDraftDashboard}
                 handleClose={handleCloseDashboard}
@@ -320,6 +337,7 @@ const AdminCampaignDetail = () => {
                                             <Tab label="Managers" value="6" />
                                             <Tab label="Tasks" value="2" />
                                             <Tab label="Attachments" value="3" />
+                                            <Tab label="Invoices" value="7" />
                                             <Tab label="Drafts" value="4" />
 
                                         </TabList>
@@ -349,6 +367,14 @@ const AdminCampaignDetail = () => {
                                             <ManagerProfileList
                                                 contract={contract} />
                                         </Box>
+                                    </TabPanel>
+                                    <TabPanel value="7">
+                                        <InvoicesTab
+                                            contract={contract}
+                                            refresh={handleRefresh}
+                                            handleOpen={() => setOpenInvoiceUpload(true)}
+                                            isAdmin={true}
+                                        />
                                     </TabPanel>
                                     <TabPanel value="4">
                                         <DraftsSidebar

@@ -6,11 +6,31 @@ import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import { Box } from '@mui/system';
 import * as React from 'react';
-import AttachmentBlock from '../campaignDetails/AttachmentBlock';
+import AttachmentBlock, { InvoiceBlock } from '../campaignDetails/AttachmentBlock';
 import TaskSticker from '../campaignDetails/taskSticker';
 import EditCampaign from '../forms/EditCampaign';
 import InfluencerEditCampaign from '../forms/influencerEditCampaign';
 import { addTaskToContract } from '../../services/campaignServices';
+
+
+export function InvoicesTab({ contract, refresh, handleOpen, isAdmin = false }) {
+  const { invoices } = contract;
+
+  console.log("Invoices conny", invoices);
+  return (
+    <>
+      {invoices.map(element => {
+        return <InvoiceBlock refresh={refresh} invoice={element} key={element.id} />
+      })}
+
+
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end' }} >
+        {isAdmin && (<Button sx={{ marginY: 1, paddingY: 1 }} variant='contained' color='grey' onClick={handleOpen}> Add Invoice
+        </Button >)}
+      </Box>
+    </>
+  );
+}
 
 
 export function AttachmentsTab({ contract, refresh, handleOpen }) {
@@ -43,8 +63,8 @@ export function TasksTab({ contract, refresh }) {
     setShowNextTask(false);
   }
 
-  const handleSubmit = () => { 
-    addTaskToContract(taskName, taskDescription, contract.id);
+  const handleSubmit = async () => {
+    await addTaskToContract(taskName, taskDescription, contract.id);
     refresh();
     handleClose();
   }
@@ -65,8 +85,8 @@ export function TasksTab({ contract, refresh }) {
             label="Task Name"
             type="text"
             fullWidth
-          value={taskName}
-          onChange={(e) => setTaskName(e.target.value)}
+            value={taskName}
+            onChange={(e) => setTaskName(e.target.value)}
           />
           <TextField
             margin="dense"
@@ -75,8 +95,8 @@ export function TasksTab({ contract, refresh }) {
             type="text"
             fullWidth
             multiline
-            rows={4} 
-            rowsmax={10} 
+            rows={4}
+            rowsmax={10}
             value={taskDescription}
             onChange={(e) => setTaskDescription(e.target.value)}
           />
@@ -102,8 +122,8 @@ export function TasksTab({ contract, refresh }) {
             setShowNextTask(true);
 
           }
-        
-        } >
+
+          } >
             Add Task
           </Button>
         </Box>

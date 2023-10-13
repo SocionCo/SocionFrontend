@@ -2,8 +2,9 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import * as React from 'react';
 import UploadAttachmentForm from '../forms/UploadAttachmentForm';
+import UploadInvoiceForm from '../forms/UploadInvoiceForm';
 
-const UploadAttachmentModal = ( {open, handleClose, influencer, contractId, refresh} ) => { 
+const UploadInvoiceModal = ( {open, handleClose, influencer, contractId, refresh} ) => { 
 
   const style = {
     position: 'absolute',
@@ -26,7 +27,7 @@ const UploadAttachmentModal = ( {open, handleClose, influencer, contractId, refr
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <UploadAttachmentForm
+          <UploadInvoiceForm
             contractId={contractId}
             handleClose={handleClose}
           />
@@ -35,4 +36,4 @@ const UploadAttachmentModal = ( {open, handleClose, influencer, contractId, refr
     );
 }
 
-export default UploadAttachmentModal;
+export default UploadInvoiceModal;
