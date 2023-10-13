@@ -70,7 +70,9 @@ export default function EditCampaign({ agencyId, contractId, refresh }) {
             date: contract ? contract.date : null,
             rate: contract ? contract.rate : 0,
             agencyCommission: contract ? contract.rate : 0,
-            creatorRate: contract ? contract.rate : 0
+            creatorRate: contract ? contract.rate : 0,
+            additionalDeadlines : contract ? contract.additionalDeadlines : "",
+            affiliateLink : contract ? contract.affiliateLink : ""
 
         },
         validationSchema: formValidation,
@@ -92,7 +94,9 @@ export default function EditCampaign({ agencyId, contractId, refresh }) {
                     dueDate: values.date,
                     companyName: values.companyName,
                     creatorRate: values.creatorRate,
-                    agencyCommission: values.agencyCommission
+                    agencyCommission: values.agencyCommission,
+                    additionalDeadlines: values.additionalDeadlines,
+                    affiliateLink: values.affiliateLink
                 },
 
                 userDTO: userDTOs
@@ -118,7 +122,9 @@ export default function EditCampaign({ agencyId, contractId, refresh }) {
                 date: contract.dueDate ? dayjs(contract.dueDate) : null,
                 rate: contract.hasOwnProperty('rate') ? contract.rate : 0,
                 agencyCommission: contract.hasOwnProperty('agencyCommission') ? contract.agencyCommission : 0,
-                creatorRate: contract.hasOwnProperty('creatorRate') ? contract.creatorRate : 0
+                creatorRate: contract.hasOwnProperty('creatorRate') ? contract.creatorRate : 0,
+                affiliateLink: contract.affiliateLink || "",
+                additionalDeadlines: contract.additionalDeadlines || ""
             });
         }
     }
@@ -243,6 +249,42 @@ export default function EditCampaign({ agencyId, contractId, refresh }) {
                     onChange={myForm.handleChange}
                     error={!!myForm.errors.creatorRate}
                     helperText={myForm.errors.creatorRate}
+                    sx={{
+                        marginBottom: 1,
+                        width: '100%',
+                        m: 1
+                    }}
+                    disabled={!editMode}
+                />
+            </Grid>
+
+            <Grid item xs={6} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <TextField
+                    margin="dense"
+                    name="affiliateLink"
+                    label="Affiliate Link"
+                    value={myForm.values.affiliateLink}
+                    onChange={myForm.handleChange}
+                    error={!!myForm.errors.affiliateLink}
+                    helperText={myForm.errors.affiliateLink}
+                    sx={{
+                        marginBottom: 1,
+                        width: '100%',
+                        m: 1
+                    }}
+                    disabled={!editMode}
+                />
+            </Grid>
+
+            <Grid item xs={6} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <TextField
+                    margin="dense"
+                    name="additionalDeadlines"
+                    label="Additional Deadlines"
+                    value={myForm.values.additionalDeadlines}
+                    onChange={myForm.handleChange}
+                    error={!!myForm.errors.additionalDeadlines}
+                    helperText={myForm.errors.additionalDeadlines}
                     sx={{
                         marginBottom: 1,
                         width: '100%',

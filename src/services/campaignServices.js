@@ -19,6 +19,9 @@ export async function createNewContract({ userDTO, contractDTO }) {
 }
 
 export async function editContract({ contractDTO, userDTO }) {
+    console.log("Edit Contract, ",  contractDTO);
+
+
     const wrapper = {
         userDTO: userDTO,
         contractDTO: contractDTO
