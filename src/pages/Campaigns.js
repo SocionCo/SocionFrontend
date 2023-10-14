@@ -14,6 +14,7 @@ import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { ControlCameraOutlined } from "@mui/icons-material";
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
+import Searchbar from "../components/forms/inputs/Searchbar";
 
 
 const Campaigns = () => {
@@ -25,6 +26,7 @@ const Campaigns = () => {
     const [updateRefresh, setUpdateRefresh] = useState(false);
     const [selectedTab, setSelectedTab] = useState("0");
     const [searchBarVisible, setSearchBarVisible] = useState(false);
+    const [loading, setLoading] = useState(true);
 
 
 
@@ -88,7 +90,7 @@ const Campaigns = () => {
         async function getData() {
             const returnedContracts = await getAllAgencyContractsForCurrentUser();
             setContracts(returnedContracts);
-            console.log("Returned contracts", returnedContracts);
+            setLoading(false);
         }
         getData();
     }, [updateRefresh]);
@@ -146,27 +148,10 @@ const Campaigns = () => {
                                     </IconButton>
 
                                     {
-                                        searchBarVisible && (
-                                            <TextField
-                                                sx={{
-                                                    position: 'absolute',
-                                                    top: '-60px',  // adjust this based on the height of your TextField
-                                                    left: '0',
-                                                    zIndex: 10,
-                                                    background: 'white'
-                                                }}
-                                                fullWidth
-                                                placeholder="Search..."
-                                                onChange={handleSearchChange}
-                                                InputProps={{
-                                                    startAdornment: (
-                                                        <InputAdornment position="start">
-                                                            <SearchIcon />
-                                                        </InputAdornment>
-                                                    ),
-                                                }}
-                                            />
-                                        )
+                                       searchBarVisible && (<Searchbar
+                                       handleChange={handleSearchChange}
+                                       />)
+
                                     }
                                 </Box>
                             </Box>

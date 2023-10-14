@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Typography } from "@mui/material";
+import { Box, Button, Grid, Typography, Tab, IconButton, TextField, InputAdornment } from "@mui/material";
 import React, { useState } from "react";
 import EmployeeSticker from "../components/avatar/EmployeeSticker";
 import SocionHeader from "../components/headers/SocionHeader";
@@ -7,6 +7,11 @@ import InfluencerDetailsModal from "../components/modals/InfluencerDetailsModal"
 import InviteInfluencerModal from "../components/modals/InviteInfluencerModal";
 import Sidebar from "../components/navigation/Sidebar";
 import { getInfluencersManagedBy } from "../services/influencerServices";
+import { TabContext, TabList } from "@mui/lab";
+import SearchIcon from '@mui/icons-material/Search';
+import AddIcon from '@mui/icons-material/Add';
+import { CircularProgress } from '@mui/material';
+
 
 const TalentDashboard = () => {
     const [searchInput, setSearchInput] = useState('');
@@ -14,6 +19,9 @@ const TalentDashboard = () => {
     const [influencers, setInfluencers] = useState([]);
     const [detailViewOpen, setDetailViewOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
+    const [selectedTab, setSelectedTab] = useState("0");
+    const [searchBarVisible, setSearchBarVisible] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     const handleDetailViewOpen = (user) => {
         setSelectedUser(user);
@@ -23,7 +31,7 @@ const TalentDashboard = () => {
     const handleDetailViewClose = () => {
         setSelectedUser(null);
         setDetailViewOpen(false);
-        
+
     }
 
     const handleClose = () => {
@@ -36,9 +44,9 @@ const TalentDashboard = () => {
 
     React.useEffect(() => {
         async function getData() {
-            console.log("Ok this is actually it");
             const returnedInfluencers = await getInfluencersManagedBy(false);
             setInfluencers(returnedInfluencers);
+            setLoading(false);
         }
         getData();
     }, []);
@@ -50,6 +58,7 @@ const TalentDashboard = () => {
     const handleSearchChange = (event) => {
         setSearchInput(event.target.value);
     };
+
 
 
 
@@ -69,29 +78,66 @@ const TalentDashboard = () => {
                     <Sidebar index={2} />
                 </Grid>
                 <Grid item xs={12} md={10}>
-                    <Grid container spacing={2}>
-                        <Grid item xs={12}>
-                            <Typography variant='h3' component='h3'>Talent</Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TalentSearchBar handleOpen={handleOpen} onChange={handleSearchChange} />
-                        </Grid>
-                        {
-                            filteredInfluencers.map(influencer => (
+                    {loading ? (
+                        // Display centered CircularProgress when loading is true
+                        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                            <CircularProgress />
+                        </Box>
+                    ) : (
+                        <Grid container spacing={2}>
+                            <Grid item xs={12}>
+                                <Typography variant='h3' component='h3'>Talent</Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 2 }}>
+                                    <Typography variant='h6' component='h1'>{"All Talent: " + influencers.length}</Typography>
+                                    <Box sx={{ display: 'flex', position: 'relative' }}>
+                                        <IconButton onClick={() => setSearchBarVisible(!searchBarVisible)}>
+                                            <SearchIcon />
+                                        </IconButton>
+                                        <IconButton onClick={handleOpen}>
+                                            <AddIcon />
+                                        </IconButton>
+                                        {searchBarVisible && (
+                                            <TextField
+                                                sx={{
+                                                    position: 'absolute',
+                                                    width: "300px",
+                                                    top: '-60px',  // adjust this based on the height of your TextField
+                                                    left: '-200px',
+                                                    zIndex: 10,
+                                                    background: 'white'
+                                                }}
+                                                fullWidth
+                                                placeholder="Search..."
+                                                onChange={handleSearchChange}
+                                                InputProps={{
+                                                    startAdornment: (
+                                                        <InputAdornment position="start">
+                                                            <SearchIcon />
+                                                        </InputAdornment>
+                                                    ),
+                                                }}
+                                            />
+                                        )}
+                                    </Box>
+                                </Box>
+                            </Grid>
+                            {filteredInfluencers.map(influencer => (
                                 <Grid item xs={12} sm={6} md={4} key={influencer.email}>
-                                    <Box sx={{width: '100%', display: 'flex', justifyContent: 'center', alignItems : 'center' }}>
-                                        <Button 
-                                            sx={{ height: '100%', width: '100%' }} 
+                                    <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                        <Button
+                                            sx={{ height: '100%', width: '100%' }}
                                             onClick={() => { handleDetailViewOpen(influencer); }}
                                             fullWidth
                                         >
-                                            <EmployeeSticker influencer={ influencer } />
+                                            <EmployeeSticker influencer={influencer} />
                                         </Button>
                                     </Box>
                                 </Grid>
-                            ))
-                        }
-                    </Grid>
+                            ))}
+                        </Grid>
+                    )}
                 </Grid>
             </Grid>
         </Box>

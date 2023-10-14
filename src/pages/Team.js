@@ -1,16 +1,19 @@
-import { Box, Grid, Typography } from "@mui/material";
-import React, { useState } from "react";
+import AddIcon from '@mui/icons-material/Add';
+import SearchIcon from '@mui/icons-material/Search';
+import { Box, Grid, IconButton, InputAdornment, TextField, Typography, Button } from "@mui/material";
 import EmployeeSticker from "../components/avatar/EmployeeSticker";
 import SocionHeader from "../components/headers/SocionHeader";
-import TalentSearchBar from "../components/headers/TalentSearchBar";
 import InviteTalentManagerModal from "../components/modals/InviteTalentManagerModal";
 import Sidebar from "../components/navigation/Sidebar";
 import { getTalentManagersAtUsersAgency } from "../services/agencyServices";
+import React, { useState } from 'react';
 
 const TalentDashboard = () => {
     const [searchInput, setSearchInput] = useState('');
     const [open, setOpen] = useState(false);
     const [talentManagers, setTalentManagers] = useState([]);
+    const [searchBarVisible, setSearchBarVisible] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     const handleClose = () => {
         setOpen(false);
@@ -24,6 +27,7 @@ const TalentDashboard = () => {
         async function getData() {
             const returnedManagers = await getTalentManagersAtUsersAgency();
             setTalentManagers(returnedManagers);
+            setLoading(false);
         }
         getData();
     }, []);
@@ -52,12 +56,57 @@ const TalentDashboard = () => {
                             <Typography variant='h3' component='h3'>Team</Typography>
                         </Grid>
                         <Grid item xs={12}>
-                            <TalentSearchBar handleOpen={handleOpen} onChange={handleSearchChange} label="Invite Talent Manager" />
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 2 }}>
+                                <Typography variant='h6' component='h1'>{"All Managers: " + talentManagers.length}</Typography>
+
+                                <Box sx={{ display: 'flex', position: 'relative' }}>
+                                    <IconButton onClick={() => setSearchBarVisible(!searchBarVisible)}>
+                                        <SearchIcon />
+                                    </IconButton>
+                                    <IconButton onClick={handleOpen}>
+                                        <AddIcon />
+                                    </IconButton>
+
+                                    {
+                                        searchBarVisible && (
+                                            <TextField
+                                                sx={{
+                                                    position: 'absolute',
+                                                    width: "300px",
+                                                    top: '-60px',  // adjust this based on the height of your TextField
+                                                    left: '-200px',
+                                                    zIndex: 10,
+                                                    background: 'white'
+                                                }}
+                                                fullWidth
+                                                placeholder="Search..."
+                                                onChange={handleSearchChange}
+                                                InputProps={{
+                                                    startAdornment: (
+                                                        <InputAdornment position="start">
+                                                            <SearchIcon />
+                                                        </InputAdornment>
+                                                    ),
+                                                }}
+                                            />
+                                        )
+                                    }
+                                </Box>
+                            </Box>
+
                         </Grid>
                         {
-                            filteredManagers.map(manager => (
-                                <Grid item xs={12} sm={6} md={4} key={manager.email}>
-                                    <EmployeeSticker influencer={manager} />
+                            filteredManagers.map(influencer => (
+                                <Grid item xs={12} sm={6} md={4} key={influencer.email}>
+                                    <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                        <Button
+                                            sx={{ height: '100%', width: '100%', cursor: 'default' }}
+                                            onClick={() => console.log("")}
+                                            fullWidth
+                                        >
+                                            <EmployeeSticker influencer={influencer} />
+                                        </Button>
+                                    </Box>
                                 </Grid>
                             ))
                         }

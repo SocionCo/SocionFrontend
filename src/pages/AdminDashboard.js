@@ -1,4 +1,4 @@
-import { Box, Link, Typography } from "@mui/material";
+import { Box, CircularProgress, Link, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
@@ -114,7 +114,6 @@ const AdminDashboard = () => {
     const userType = localStorage.getItem("user-type");
     const settingsContext = React.useContext(SettingsContext);
 
-    console.log("Settings Context: ", settingsContext);
 
 
     const handleTestOpen = () => {
@@ -217,26 +216,35 @@ const AdminDashboard = () => {
                         (<Sidebar index={0}></Sidebar>) : (<InfluencerSidebar index={0} />)
                     }
                 </Grid>
-                <Grid item xs={12} md={10}>
-                    <Box sx={{ m: 1 }}>
-                        <Subheading userName={props ? props.firstName : null}></Subheading>
-                        {!isLoading && rows.length > 0 &&
-                            <EnhancedTable
-                                rows={rows}
-                                refresh={refreshRows}
-                                handleComplete={handleComplete}
-                            />}
-                        {(!isLoading && rows.length == 0) &&
-                            <Typography>
-                                Create a <Link
-                                onClick={()=> {
-                                    setOpen(true);
-                                }}
-                                sx={{fontWeight: 'bold', textDecoration: 'none', cursor: 'pointer'}}
-                                >New Campaign</Link> to get started!
-                            </Typography>
-                        }
-                    </Box>
+                <Grid item xs={12} md={10} sx={{ height: '100%' }}>
+                    {!isLoading ? (
+                        <Box sx={{ m: 1 }}>
+                            <Subheading userName={props ? props.firstName : null}></Subheading>
+                            {!isLoading && rows.length > 0 &&
+                                <EnhancedTable
+                                    rows={rows}
+                                    refresh={refreshRows}
+                                    handleComplete={handleComplete}
+                                />}
+                            {(!isLoading && rows.length == 0) &&
+                                <Typography>
+                                    Create a <Link
+                                        onClick={() => {
+                                            setOpen(true);
+                                        }}
+                                        sx={{ fontWeight: 'bold', textDecoration: 'none', cursor: 'pointer' }}
+                                    >New Campaign</Link> to get started!
+                                </Typography>
+                            }
+                        </Box>
+
+                    ) :
+                        (
+                            <Box sx={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <CircularProgress />
+                            </Box>
+                        )
+                    }
                 </Grid>
             </Grid>
         </Box>
