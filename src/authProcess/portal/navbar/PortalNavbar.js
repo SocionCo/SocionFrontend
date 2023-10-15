@@ -7,7 +7,7 @@ const PortalNavbar = () => {
     const navigate = useNavigate();
     const logout = () => {
         localStorage.clear();
-        window.location.reload();
+        navigate("/login");
     }
     return (
         <React.Fragment>

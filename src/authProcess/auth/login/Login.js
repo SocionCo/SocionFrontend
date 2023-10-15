@@ -8,7 +8,7 @@ import Link from "@mui/material/Link";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import React, { useState } from 'react';
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import api from "../../../services/api.js";
 import { getUserType } from "../../../services/influencerServices.js";
 import { resetPassword } from "../../../services/userServices.js";
@@ -17,6 +17,11 @@ import { resetPassword } from "../../../services/userServices.js";
 export default function Login() {
   const [error, setError] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const reason = queryParams.get('reason');
+
+
   console.log("Enetered login userToken", localStorage.getItem('user-token'));
 
   const navigateRegister = (event) => {
@@ -69,6 +74,7 @@ export default function Login() {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
+       
         <Box component="form" onSubmit={handleLogin} noValidate sx={{ mt: 1 }}>
           <TextField
             margin="normal"
@@ -91,6 +97,9 @@ export default function Login() {
             autoComplete="current-password"
           />
           {error && (<Typography component="p" variant="caption2">Incorrect Username or Password</Typography>)}
+          {reason == "expired" && ( 
+          <Typography>Session Expired. Please sign in again.</Typography>
+        )}
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
@@ -105,7 +114,7 @@ export default function Login() {
           </Button>
           <Grid container>
             <Grid item xs>
-              <Link sx={{cursor: 'pointer'}} onClick={() => {
+              <Link sx={{ cursor: 'pointer' }} onClick={() => {
                 navigate("/resetPassword")
               }}
 

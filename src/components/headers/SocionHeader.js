@@ -16,7 +16,7 @@ const SocionHeader = ({ onClick, showButton = true, showX = false, onX }) => {
 
     const handleLogout = () => {
         localStorage.clear();
-        window.location.reload();
+        navigate("/login");
     }
 
     const handleMenuOpen = (event) => {

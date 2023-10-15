@@ -9,7 +9,7 @@ import Campaigns from "./pages/Campaigns";
 import Team from "./pages/Team";
 import TalentDashboard from "./pages/TalentDashboard";
 import Register from "./authProcess/auth/login/Register";
-import AgencySettings from "./pages/AgencySettings";
+import AgencySettings from "./pages/agencySettings/AgencySettings";
 import CampaignDetail from "./pages/CampaignDetail";
 import ResetPassword from "./pages/resetPassword";
 import GuestVideoPlayer from "./components/videoPlayer/GuestVideoPlayer";
