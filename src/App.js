@@ -66,6 +66,7 @@ function App() {
                         <AgencySettings />
                     </ProtectedRoute>
                 } />
+                
                 <Route path='' element={
                     <ProtectedRoute>
                         <Login />

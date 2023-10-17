@@ -47,7 +47,8 @@ export default function BasicTableNoHeader({ rows }) {
                   >
                     {row.id ?
                       (<TableCell onClick={() => {
-                        navigate("campaigns/"+row.id);
+                        navigate("/campaign/"+row.id);
+                        window.location.reload();
                       }} component="th" scope="row" sx={{cursor: 'pointer'}}>
                         {row.name}
                       </TableCell>) : (<TableCell

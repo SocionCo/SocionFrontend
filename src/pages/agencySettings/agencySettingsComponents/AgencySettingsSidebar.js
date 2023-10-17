@@ -11,23 +11,25 @@ import DraftsIcon from '@mui/icons-material/Drafts';
 import PermIdentityIcon from '@mui/icons-material/PermIdentity';
 import SecurityIcon from '@mui/icons-material/Security';
 import { Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 export default function AgencySettingsSidebar({active}) {
+    const navigate = useNavigate();
 
     const handleClick = (event, index, path) => { 
-
+        navigate(path);
     }
 
     const navItems = [
         {
             name: 'My Account',
             icon: <PermIdentityIcon />,
-            path: '/home',
+            path: '/agencySettings',
         },
         {
             name: 'Security',
             icon: <SecurityIcon />,
-            path: '/campaigns',
+            path: '/agencySettings/security',
         },
 
     ];

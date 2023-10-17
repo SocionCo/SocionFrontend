@@ -28,7 +28,7 @@ export default function InfluencerEditCampaign({ agencyId, contractId, refresh }
         console.log("Setting contract details");
         async function setContractDetails(contractId) {
             const newDetails = await getContractDetailsWithId(contractId);
-            console.log(newDetails);
+            console.log("newDetails", newDetails);
             setContract(newDetails);
         }
         setContractDetails(contractId);
@@ -61,6 +61,8 @@ export default function InfluencerEditCampaign({ agencyId, contractId, refresh }
             description: contract ? contract.description : "",
             companyName: contract ? contract.companyName : "",
             date: contract ? contract.date : null,
+            affiliateLink: contract ? contract.affiliateLink : "",
+            additionalDeadlines: contract ? contract.additionalDeadlines : ""
 
         },
         validationSchema: formValidation,
@@ -79,7 +81,9 @@ export default function InfluencerEditCampaign({ agencyId, contractId, refresh }
                     name: values.campaignName,
                     description: values.description,
                     dueDate: values.date,
-                    agencyCommission: values.agencyCommission
+                    agencyCommission: values.agencyCommission,
+                    additionalDeadlines: values.additionalDeadlines,
+                    affiliateLink: values.affiliateLink
                 },
 
                 userDTO: userDTOs
@@ -98,6 +102,8 @@ export default function InfluencerEditCampaign({ agencyId, contractId, refresh }
                 description: contract.description || myForm.values.description,
                 companyName: contract.companyName || myForm.values.companyName,
                 date: dayjs(contract.dueDate) || myForm.values.date,
+                affiliateLink: contract.affiliateLink || "",
+                additionalDeadlines: contract.additionalDeadlines || ""
             });
         }
     }, [contract]);
@@ -160,6 +166,43 @@ export default function InfluencerEditCampaign({ agencyId, contractId, refresh }
                         helperText={myForm.errors.date}
                     />
                 </LocalizationProvider>
+            </Grid>
+
+            <Grid item xs={6} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <TextField
+                    margin="dense"
+                    name="additionalDeadlines"
+                    label="Additional Deadlines"
+                    value={myForm.values.additionalDeadlines}
+                    onChange={myForm.handleChange}
+                    error={!!myForm.errors.additionalDeadlines}
+                    helperText={myForm.errors.additionalDeadlines}
+                    disabled
+                    sx={{
+                        marginBottom: 1,
+                        width: '100%',
+                        m: 1
+                    }}
+
+                />
+            </Grid>
+
+            <Grid item xs={6} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <TextField
+                    margin="dense"
+                    name="affiliateLink"
+                    label="Affiliate Link"
+                    value={myForm.values.affiliateLink}
+                    onChange={myForm.handleChange}
+                    error={!!myForm.errors.affiliateLink}
+                    helperText={myForm.errors.affiliateLink}
+                    disabled
+                    sx={{
+                        marginBottom: 1,
+                        width: '100%',
+                        m: 1
+                    }}
+                />
             </Grid>
 
 
