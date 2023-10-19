@@ -12,15 +12,37 @@ import PermIdentityIcon from '@mui/icons-material/PermIdentity';
 import SecurityIcon from '@mui/icons-material/Security';
 import { Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { act } from 'react-dom/test-utils';
+import BusinessIcon from '@mui/icons-material/Business';
 
 export default function AgencySettingsSidebar({active}) {
+    const userType = localStorage.getItem("user-type");
     const navigate = useNavigate();
+
 
     const handleClick = (event, index, path) => { 
         navigate(path);
     }
 
-    const navItems = [
+
+    const navItems = (userType == "Admin") ? [
+        {
+            name: 'My Account',
+            icon: <PermIdentityIcon />,
+            path: '/agencySettings',
+        },
+        {
+            name: 'Security',
+            icon: <SecurityIcon />,
+            path: '/agencySettings/security',
+        },
+        {
+            name: 'Agency Settings',
+            icon: <BusinessIcon/>,
+            path: '/agencySettings/agency',
+        },
+
+    ] : [
         {
             name: 'My Account',
             icon: <PermIdentityIcon />,

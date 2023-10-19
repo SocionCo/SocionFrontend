@@ -13,6 +13,8 @@ import AgencySettings from "./pages/agencySettings/AgencySettings";
 import CampaignDetail from "./pages/CampaignDetail";
 import ResetPassword from "./pages/resetPassword";
 import GuestVideoPlayer from "./components/videoPlayer/GuestVideoPlayer";
+import Security from "./pages/agencySettings/Security";
+import AdminSettings from "./pages/agencySettings/adminSettings";
 
 
 function App() {
@@ -44,7 +46,7 @@ function App() {
                     </ProtectedRoute>
                 } />
                 <Route path='resetPassword' element={
-                    <ResetPassword/>
+                    <ResetPassword />
                 } />
                 <Route path='home' element={
                     <ProtectedRoute>
@@ -67,6 +69,18 @@ function App() {
                     </ProtectedRoute>
                 } />
                 
+                <Route path='/agencySettings/agency' element={
+                    <ProtectedRoute>
+                        <AdminSettings/>
+                    </ProtectedRoute>
+                } />
+
+                <Route path='agencySettings/security' element={
+                    <ProtectedRoute>
+                        <Security/>
+                    </ProtectedRoute>
+                } />
+
                 <Route path='' element={
                     <ProtectedRoute>
                         <Login />
@@ -79,7 +93,7 @@ function App() {
                 } />
                 <Route path="guestDashboard/:inviteToken"
                     element={
-                        <GuestVideoPlayer/>
+                        <GuestVideoPlayer />
                     }
                 />
                 <Route path='*' element={<Auth />}>

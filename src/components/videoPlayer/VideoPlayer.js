@@ -335,7 +335,7 @@ export default function VideoPlayer({ isForAdmin = false, contractId }) {
                                     <ReactPlayer
                                         controls
                                         width='100%'
-                                        height='100%'
+                                        height='80vh'
                                         url={activeDraft?.reference}
                                         onDuration={handleDuration}
                                         onProgress={({ playedSeconds }) => setCurrentTime(playedSeconds)}

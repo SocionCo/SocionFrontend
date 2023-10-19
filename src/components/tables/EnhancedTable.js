@@ -20,6 +20,9 @@ import { visuallyHidden } from '@mui/utils';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
+import SearchIcon from '@mui/icons-material/Search';
+import { TextField } from '@mui/material';
+import Searchbar from '../forms/inputs/Searchbar';
 
 
 function descendingComparator(a, b, orderBy) {
@@ -106,9 +109,11 @@ const headCells = [
 function EnhancedTableHead(props) {
   const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } =
     props;
+
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
+
 
   return (
     <TableHead>
@@ -158,9 +163,15 @@ EnhancedTableHead.propTypes = {
   rowCount: PropTypes.number.isRequired
 };
 
+
 function EnhancedTableToolbar(props) {
-  const { selected } = props;
+  const { selected, handleSearchChange } = props;
   const numSelected = selected.length;
+  const [searchBarVisible, setSearchBarVisible] = React.useState(false);
+
+
+
+
 
   return (
     <Toolbar
@@ -200,6 +211,25 @@ function EnhancedTableToolbar(props) {
         <RefreshIcon />
       </IconButton>
 
+      <Box sx={{ position: 'relative' }}>
+        <IconButton onClick={() => setSearchBarVisible(!searchBarVisible)}>
+          <SearchIcon />
+        </IconButton>
+        {searchBarVisible && (
+          <Searchbar
+            sx={{
+              position: 'absolute',
+              width: '275px',
+              top: '-60px', // Adjust the top value as needed
+              left: '-100px',    // Adjust the left value as needed
+              zIndex: 10,
+              background: 'white',
+              transform: 'translateX(-50%)', // Center horizontally above the icon
+            }}
+            handleChange={handleSearchChange}
+          />)}
+      </Box>
+
     </Toolbar>
   );
 }
@@ -207,11 +237,16 @@ function EnhancedTableToolbar(props) {
 
 export default function EnhancedTable({ rows, refresh, handleComplete }) {
   const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('date'); 
+  const [orderBy, setOrderBy] = React.useState('date');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [searchInput, setSearchInput] = React.useState("");
+
+  const handleSearchChange = (event) => {
+    setSearchInput(event.target.value);
+  }
 
 
   React.useEffect(() => {
@@ -256,13 +291,29 @@ export default function EnhancedTable({ rows, refresh, handleComplete }) {
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   const visibleRows = React.useMemo(
-    () =>
-      stableSort(rows, getComparator(order, orderBy)).slice(
+    () => {
+      const filteredRows = stableSort(rows, getComparator(order, orderBy)).filter(row => {
+        const searchWords = searchInput.toLowerCase().split(' ');
+        return searchWords.every(word =>
+          row.name.toLowerCase().includes(word) ||
+          row.companyName.toLowerCase().includes(word)
+        );
+      });
+
+      return filteredRows.slice(
         page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage,
-      ),
-    [order, orderBy, page, rowsPerPage],
+        page * rowsPerPage + rowsPerPage
+      );
+    },
+    [order, orderBy, page, rowsPerPage, searchInput, rows]
   );
+
+
+
+
+
+
+
 
   const navigate = useNavigate();
 
@@ -271,6 +322,8 @@ export default function EnhancedTable({ rows, refresh, handleComplete }) {
       <EnhancedTableToolbar
         selected={selected}
         refresh={refresh}
+        handleSearchChange={handleSearchChange}
+
       />
       <TableContainer>
         <Table
