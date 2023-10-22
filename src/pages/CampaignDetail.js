@@ -128,6 +128,7 @@ const InfluencerCampaignDetail = () => {
                 handleClose={handleCloseDashboard}
                 drafts={contract.drafts}
                 contractId={contractId}
+                refresh={handleRefresh}
             />
             <Box sx={{ p: 1, m: 1 }}>
                 <SocionHeader showButton={false} />
@@ -222,6 +223,8 @@ const AdminCampaignDetail = () => {
     const [contract, setContract] = useState(null);
     const [openDraftDashboard, setOpenDraftDashboard] = useState(false);
     const [openAttachmentUpload, setOpenAttachmentUpload] = useState(false);
+    const [openDraftUpload, setOpenDraftUpload] = useState(false);
+    const [influencerId, setInfluencerId] = useState(null);
     const [openInvoiceUpload, setOpenInvoiceUpload] = useState(false);
     const [refresh, setRefresh] = useState(false);
 
@@ -235,6 +238,13 @@ const AdminCampaignDetail = () => {
         setTimeout(() => { setRefresh(!refresh) })
     }
 
+    const handleOpenDraftUpload = () => {
+        setOpenDraftUpload(true);
+    }
+
+    const handleCloseDraftUpload = () => {
+        setOpenDraftUpload(false);
+    }
 
 
     const handleOpenAttachment = () => {
@@ -253,6 +263,17 @@ const AdminCampaignDetail = () => {
     const handleCloseDashboard = () => {
         setOpenDraftDashboard(false);
     }
+
+    React.useEffect(() => {
+        getUserInformation()
+            .then((data) => {
+                console.log("Printing User Informationn", data);
+                setInfluencerId(data.email);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }, [contractId, refresh]);
 
     const completeContract = async () => {
         const contractDTO = {
@@ -292,6 +313,14 @@ const AdminCampaignDetail = () => {
                 contractId={contractId}
             />
 
+            <UploadDraftModal
+                open={openDraftUpload}
+                handleClose={handleCloseDraftUpload}
+                contractId={contractId}
+                refresh={handleRefresh}
+                influencer={influencerId}
+            />
+
             <UploadInvoiceModal
                 open={openInvoiceUpload}
                 handleClose={() => {
@@ -307,6 +336,7 @@ const AdminCampaignDetail = () => {
                 handleClose={handleCloseDashboard}
                 drafts={contract.drafts}
                 contractId={contractId}
+                refresh={handleRefresh}
             />
             <Box sx={{ p: 1, m: 1 }}>
                 <SocionHeader showButton={false} />
@@ -379,7 +409,9 @@ const AdminCampaignDetail = () => {
                                     <TabPanel value="4">
                                         <DraftsSidebar
                                             dashboardOpen={handleOpenDashboard}
-                                            contract={contract} />
+                                            contract={contract} 
+                                            uploadOpen={handleOpenDraftUpload}
+                                            />
                                     </TabPanel>
                                     <TabPanel value="5">
                                         <UserProfile contract={contract} />
