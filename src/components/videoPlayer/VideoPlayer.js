@@ -201,7 +201,7 @@ export const CommentSticker = ({ contractId, videoPlayer, comment, currentTime, 
     );
 }
 
-export default function VideoPlayer({ isForAdmin = false, contractId }) {
+export default function VideoPlayer({ isForAdmin = false, contractId, refreshOuterPage }) {
     const [activeDraft, setActiveDraft] = React.useState(null);
     const [duration, setDuration] = useState(null);
     const playerRef = useRef(null);
@@ -210,6 +210,7 @@ export default function VideoPlayer({ isForAdmin = false, contractId }) {
     const [currentTime, setCurrentTime] = useState(0);
     const [updateDrafts, setUpdatedDrafts] = useState(null);
 
+    console.log("Outer Refresh", refreshOuterPage);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -234,6 +235,9 @@ export default function VideoPlayer({ isForAdmin = false, contractId }) {
 
         setTextFieldContains('');
         setUpdatedDrafts(response.drafts);
+        if (refreshOuterPage) {
+            refreshOuterPage()
+        }
     }
 
     const handleSendComment = async () => {

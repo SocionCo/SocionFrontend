@@ -13,9 +13,10 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const DraftDashboardModal = ({ open, handleClose, drafts, contractId }) => {
+const DraftDashboardModal = ({ open, handleClose, drafts, contractId, refresh }) => {
 
   const userType = localStorage.getItem('user-type');
+
 
   return (
 
@@ -33,10 +34,11 @@ const DraftDashboardModal = ({ open, handleClose, drafts, contractId }) => {
         </Box>
         {userType === "Admin" || userType === "TalentManager" ?
           (
-            <VideoPlayer isForAdmin={true} drafts={drafts} handleClose={handleClose} contractId={contractId} />
+            <VideoPlayer isForAdmin={true} drafts={drafts} handleClose={handleClose} contractId={contractId} refreshOuterPage={refresh}/>
           ) :
           (
             <VideoPlayer
+              refreshOuterPage={refresh}
               draft={drafts}
               handleClose={handleClose}
               contractId={contractId}

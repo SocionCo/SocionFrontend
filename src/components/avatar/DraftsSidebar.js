@@ -5,7 +5,7 @@ import InfluencerDraftReviewModal from '../modals/InfluencerDraftReviewModal';
 import React from 'react';
 
 
-const DraftList = ({ contract, dashboardOpen }) => {
+const DraftList = ({ contract, dashboardOpen, uploadOpen }) => {
     const { drafts } = contract;
     console.log("drafts", drafts);
 
@@ -52,27 +52,38 @@ const DraftList = ({ contract, dashboardOpen }) => {
 
                     </List>
                 </Box>
-                <Box sx={{width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'flex-end'}}>
-                    <Badge badgeContent={drafts.filter((draft) => {return draft.approvalStatus === "UNREVIEWED"}).length} color="error" sx={{ maxWidth: "max-content", p:0, m:0 }}>
-                        <Button 
-                        variant='contained'
-                            onClick={dashboardOpen}
-                            color='grey'
-                            >Dashboard</Button>
-                    </Badge>
+
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <Button variant='contained'
+                        onClick={uploadOpen}
+                        color='grey'
+                        sx={{
+                            mx: 1,
+                            backgroundColor: 'white',
+                            alignSelf: 'center',
+                        }}>Add Draft</Button>
+                    <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+                        <Badge badgeContent={drafts.filter((draft) => { return draft.approvalStatus === "UNREVIEWED" }).length} color="error" sx={{ maxWidth: "max-content", p: 0, m: 0 }}>
+                            <Button
+                                variant='contained'
+                                onClick={dashboardOpen}
+                                color='grey'
+                            >Open Dashboard</Button>
+                        </Badge>
+                    </Box>
                 </Box>
             </Box>
         </>
     );
 }
 
-const DraftsSidebar = ({ contract, dashboardOpen }) => {
+const DraftsSidebar = ({ contract, dashboardOpen, uploadOpen }) => {
     return (
         <Box sx={{
             width: '100%',
             height: '100%'
         }}>
-            <DraftList contract={contract} dashboardOpen={dashboardOpen}></DraftList>
+            <DraftList contract={contract} dashboardOpen={dashboardOpen} uploadOpen={uploadOpen}></DraftList>
         </Box>
     );
 }

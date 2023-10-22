@@ -74,5 +74,5 @@
     "style-loader": "^3.3.3",
     "webpack-cli": "^5.1.4"
   }
-  
+
 }
