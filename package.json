@@ -1,3 +1,4 @@
+
 {
   "name": "socion",
   "version": "0.1.0",
@@ -40,11 +41,11 @@
   },
   "scripts": {
     "build": "react-scripts build",
-    "devstart": "react-scripts start",
-    "start": "node server.js",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
+     "devstart": "react-scripts start",
+     "start": "node server.js",
+      "test": "react-scripts test",
+ 	"eject": "react-scripts eject"
+   },
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -73,4 +74,5 @@
     "style-loader": "^3.3.3",
     "webpack-cli": "^5.1.4"
   }
+  
 }
