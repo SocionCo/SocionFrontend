@@ -1,4 +1,4 @@
-import { Box, Button, Link } from '@mui/material';
+import { Box, Button, Dialog, Link, Modal } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -9,14 +9,24 @@ import * as React from 'react';
 import apiString from '../../services/apiString';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
+import MediaKitModal from '../modals/MediaKitModal';
 
 
-export default function BasicTableNoHeader({ rows }) {
+export default function BasicTableNoHeader({ rows, influencerEmail = "" }) {
   const navigate = useNavigate();
-
+  const [mediaKitOpen, setMediaKitOpen] = React.useState(false);
+  const handleClose = () => { 
+    setMediaKitOpen(false);
+  }
 
   return (
     <>
+    <MediaKitModal
+      open={mediaKitOpen}
+      handleClose={handleClose}
+      influencer={influencerEmail}
+
+    />
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableBody>
@@ -33,8 +43,11 @@ export default function BasicTableNoHeader({ rows }) {
                       {row.name}
                     </TableCell>
                     {
-                      row.details ?
-                        (<TableCell align="center"><Button target='_blank' href={apiString + "/api/getYoutubeInfo/" + row.details}>Open Analytics</Button></TableCell>) : (<TableCell align="center"><Button target='_blank' href={apiString + "/api/getYoutubeInfo/" + row.details} disabled>Not Available</Button></TableCell>)
+                      (<TableCell align="center">
+                        <Button 
+                        onClick={() => setMediaKitOpen(true)}
+                        target='_blank'>Generate Media Kit</Button>
+                        </TableCell>)
                     }
                   </TableRow>
                 );
@@ -47,9 +60,9 @@ export default function BasicTableNoHeader({ rows }) {
                   >
                     {row.id ?
                       (<TableCell onClick={() => {
-                        navigate("/campaign/"+row.id);
+                        navigate("/campaign/" + row.id);
                         window.location.reload();
-                      }} component="th" scope="row" sx={{cursor: 'pointer'}}>
+                      }} component="th" scope="row" sx={{ cursor: 'pointer' }}>
                         {row.name}
                       </TableCell>) : (<TableCell
                         component="th" scope="row">

@@ -185,7 +185,7 @@ export default function InfluencerDetailsModal({ open, handleClose, user }) {
                 </Grid>
                 <Grid xs={8}>
                     <Box sx={{ m: 1 }}>
-                        <BasicTableNoHeader rows={rows}></BasicTableNoHeader>
+                        <BasicTableNoHeader rows={rows} influencerEmail={user.email}></BasicTableNoHeader>
                     </Box>
                 </Grid>
                 <Grid xs={4}>
