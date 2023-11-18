@@ -57,3 +57,29 @@ export function timeAgo(isoTime) {
     return 'Just now';
   }
   
+
+  export function formatDuration(seconds) {
+    if (seconds < 0) {
+      return 'Invalid duration';
+    }
+  
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = Math.round(seconds % 60);
+  
+    const formattedDuration = [];
+  
+    if (hours > 0) {
+      formattedDuration.push(`${hours}h`);
+    }
+  
+    if (minutes > 0) {
+      formattedDuration.push(`${minutes}m`);
+    }
+  
+    if (remainingSeconds > 0) {
+      formattedDuration.push(`${remainingSeconds}s`);
+    }
+  
+    return formattedDuration.join(' ');
+  }

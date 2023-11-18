@@ -46,6 +46,7 @@ const InfluencerDraftsSidebar = ({ contract, dashboardOpen, uploadOpen }) => {
                 <Button variant='contained'
 
                     onClick={dashboardOpen}
+                    disabled={!drafts || drafts.length === 0}
                     sx={{
                         mx: 1,
                         color: 'grey',

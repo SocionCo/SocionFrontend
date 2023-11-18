@@ -6,6 +6,7 @@ import { v4 as uuid } from 'uuid';
 import * as Yup from "yup";
 import uploadVideo from "../../aws/uploadVideo";
 import { addDraftToCampaign } from "../../services/draftServices";
+import LinearWithValueLabel from "../loadingIcon/LoadingBar";
 
 const Input = styled('input')({
     display: 'none',
@@ -15,6 +16,12 @@ export default function UploadDraftForm({ influencerEmail, contractId, refresh, 
     const [videoPreview, setVideoPreview] = React.useState(null)
     const uploadInputRef = React.useRef(null);
     const [loading, setLoading] = React.useState(false);
+    const [loadingProgress, setLoadingProgress] = React.useState(0);
+
+    const onProgress = (newProgress) => { 
+        console.log("Setting new progress to: " + newProgress);
+        setLoadingProgress(newProgress);
+    }
 
     const formValidation = Yup.object().shape({
         draftName: Yup.string().required("Campaign Name is required")
@@ -75,7 +82,7 @@ export default function UploadDraftForm({ influencerEmail, contractId, refresh, 
                                 setLoading(true);
                                 const unique_id = uuid();
                                 const file = event.target.files[0];
-                                const ref = await uploadVideo(file, unique_id);
+                                const ref = await uploadVideo(file, unique_id, onProgress);
                                 setLoading(false);
                                 setVideoPreview(ref);
                             }}
@@ -85,7 +92,7 @@ export default function UploadDraftForm({ influencerEmail, contractId, refresh, 
 
                             (
                                 <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                    <CircularProgress />
+                                    <LinearWithValueLabel progress={loadingProgress}/>
                                 </Box>
                             )
 

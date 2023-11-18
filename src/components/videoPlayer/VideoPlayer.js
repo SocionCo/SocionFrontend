@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Container, Box, Grid, Paper, Toolbar, MenuItem, Select, IconButton, ThemeProvider, createTheme, Typography, List, ListItem, setRef, Slide, CircularProgress } from '@mui/material';
+import { Container, Box, Grid, Paper, Toolbar, MenuItem, Select, IconButton, ThemeProvider, createTheme, Typography, List, ListItem, setRef, Slide, CircularProgress, Dialog } from '@mui/material';
 import ShareIcon from '@mui/icons-material/Share';
 import ReactPlayer from 'react-player';
 import { Stack } from '@mui/system';
@@ -14,11 +14,16 @@ import styled from '@emotion/styled';
 import { addCommentToDraft, deleteCommentFromDraft, generateReviewalLinkForDraft, replyToComment, reviewDraft } from '../../services/draftServices';
 import { getContractDetailsWithId } from '../../services/campaignServices';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { timeAgo } from '../../util/conversionUtil';
+import { formatDuration, timeAgo } from '../../util/conversionUtil';
 import CopyIcon from '@mui/icons-material/FileCopy';
 import Button from '@mui/material/Button';
 import Popover from '@mui/material/Popover';
 import Error404 from '../../util/errorPage';
+import VideocamIcon from '@mui/icons-material/Videocam';
+import VideoThumbnail from '../../util/VideoThumbnail';
+import CloseIcon from '@mui/icons-material/Close';
+import ChatIcon from '@mui/icons-material/Chat';
+import Chip from '@mui/material/Chip';
 
 
 export const timeConvert = (seconds) => {
@@ -68,17 +73,19 @@ export const CommentSticker = ({ contractId, videoPlayer, comment, currentTime, 
     }
 
     return (
-        <Box>
+        <Box sx={{ width: '100%' }}>
             <ListItem
                 selected={Math.abs(currentTime - comment.timeStamp) < 2 && currentTime > 0}
-                alignItems="flex-start"
                 sx={{
                     '&:hover': {
                         backgroundColor: 'rgba(0, 161, 82, 0.1)'
                     },
                     cursor: 'pointer',
                     display: 'flex',
-                    alignItems: 'center'
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    borderBottom: '1px solid grey'
+
 
                 }}
                 onClick={() => videoPlayer.current.seekTo(comment.timeStamp, 'seconds')}
@@ -89,10 +96,9 @@ export const CommentSticker = ({ contractId, videoPlayer, comment, currentTime, 
                     <StringAvatar name={comment.displayName} />
                 </ListItemAvatar>
 
-                <Stack>
+                <Stack sx={{ width: '100%' }}>
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <ListItemText
-
                             primary={
                                 <>
                                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -108,11 +114,13 @@ export const CommentSticker = ({ contractId, videoPlayer, comment, currentTime, 
 
                                 </>
 
-                            }
+                            }xr
                             secondary={
                                 <Box>
-                                    <Box>
-                                        <Typography>{comment.comment}</Typography>
+                                    <Box >
+                                        <Typography
+                                            sx={{ wordBreak: 'break-word', maxWidth: '100%' }}
+                                        >{comment.comment}</Typography>
                                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                                             <Typography onClick={(e) => {
                                                 e.stopPropagation();
@@ -167,16 +175,20 @@ export const CommentSticker = ({ contractId, videoPlayer, comment, currentTime, 
                             }
 
                         />
-                        < IconButton onClick={async (event) => {
-                            event.stopPropagation();
-                            await deleteCommentFromDraft(comment.id);
-                            refresh();
-                        }}>
-                            <DeleteIcon />
-                        </IconButton >
-                    </Box>
 
+
+
+                    </Box>
                 </Stack>
+                < IconButton
+                    onClick={async (event) => {
+                        event.stopPropagation();
+                        await deleteCommentFromDraft(comment.id);
+                        refresh();
+                    }}>
+                    <DeleteIcon />
+                </IconButton >
+
             </ListItem >
             {showRepliesMode && (
                 <Box sx={{ marginLeft: 4 }}>  {/* Add some margin to indicate these are replies */}
@@ -201,7 +213,7 @@ export const CommentSticker = ({ contractId, videoPlayer, comment, currentTime, 
     );
 }
 
-export default function VideoPlayer({ isForAdmin = false, contractId, refreshOuterPage }) {
+export default function VideoPlayer({ isForAdmin = false, contractId, refreshOuterPage, handleClose }) {
     const [activeDraft, setActiveDraft] = React.useState(null);
     const [duration, setDuration] = useState(null);
     const playerRef = useRef(null);
@@ -209,6 +221,15 @@ export default function VideoPlayer({ isForAdmin = false, contractId, refreshOut
     const [useTimeStamp, setUseTimeStamp] = useState(true);
     const [currentTime, setCurrentTime] = useState(0);
     const [updateDrafts, setUpdatedDrafts] = useState(null);
+    const [videosLeftToLoad, setVideosLeftToLoad] = useState(null);
+    const [videoDurations, setVideoDurations] = useState({});
+
+    const handleVideoDuration = (url, duration) => {
+        setVideoDurations((prevDurations) => ({
+            ...prevDurations,
+            [url]: duration,
+        }));
+    };
 
     console.log("Outer Refresh", refreshOuterPage);
 
@@ -216,6 +237,7 @@ export default function VideoPlayer({ isForAdmin = false, contractId, refreshOut
         const fetchData = async () => {
             const response = await getContractDetailsWithId(contractId);
             setUpdatedDrafts(response.drafts);
+            setVideosLeftToLoad(response.drafts.length);
         };
 
         fetchData();
@@ -262,29 +284,145 @@ export default function VideoPlayer({ isForAdmin = false, contractId, refreshOut
     };
 
     const handleDuration = (d) => {
-        console.log("Duration: ", d);
         setDuration(d);
     };
 
+
+
+
+
     if (!activeDraft) {
+
+        if (videosLeftToLoad === 0) { console.log("All videos loaded") }
+
         return (
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <Select
-                    value={activeDraft ? activeDraft.id : "Select Draft"}
-                    variant="outlined"
-                    style={{ minWidth: '120px', height: '40px', borderRadius: '4px' }}
-                    onChange={handleDraftChange}
-                >
-                    <MenuItem value="Select Draft" disabled>
-                        Select draft
-                    </MenuItem>
-                    {updateDrafts && (updateDrafts.map((draft) => (
-                        <MenuItem key={draft.id} value={draft.id}>
-                            {draft.draftName}
-                        </MenuItem>
-                    )))}
-                </Select>
-            </Box>
+            <Dialog
+                open={!activeDraft}
+                onClose={handleClose}
+                fullScreen
+                sx={{ m: 5 }}
+            >
+
+                <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center', width: '100%' }}>
+                    {videosLeftToLoad !== 0 && (
+                        <CircularProgress />
+                    )}
+                </Box>
+                <Box sx={{ width: '100%', height: '100%', opacity: (videosLeftToLoad === 0) ? '100' : '0', backgroundColor: (videosLeftToLoad === 0) ? '#444a60' : 'white' }}>
+                    <IconButton
+                        sx={{ position: 'absolute', top: 4, right: 4, zIndex: 1 }}
+                        onClick={handleClose}
+                    >
+                        <CloseIcon />
+                    </IconButton>
+
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 2 }}>
+                        <Typography sx={{ m: 1 }} variant='h5'>Select Draft</Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+
+                        <Grid container sx={{ backgroundColor: '#444a60', p: 2 }} spacing={2}>
+                            {
+                                updateDrafts && updateDrafts.length === 0 ?
+                                    (
+                                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                            <Typography>No Drafts Yet!</Typography>
+                                        </Box>
+                                    )
+                                    :
+                                    (updateDrafts && updateDrafts.map(element => {
+                                        return (
+                                            <Grid item xs={12} s={6} md={3} key={element.reference}>
+                                                <Stack sx={{ height: '50%' }}>
+                                                    <Box
+                                                        sx={{
+                                                            position: 'relative',
+                                                            backgroundColor: 'black',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                            overflow: 'hidden',
+                                                            cursor: 'pointer',
+                                                        }}
+                                                        onClick={() => {
+                                                            setActiveDraft(element);
+                                                        }}
+                                                    >
+                                                        <ReactPlayer
+                                                            url={element.reference}
+                                                            disabled
+                                                            playing={false}
+                                                            onDuration={(duration) => {
+                                                                handleVideoDuration(element.reference, duration);
+
+                                                            }}
+                                                            onReady={() => {
+                                                                setVideosLeftToLoad(prev => prev - 1);
+                                                                console.log("Ready now at,", videosLeftToLoad);
+                                                            }}
+                                                        />
+                                                        <Chip
+                                                            color={element.approvalStatus === "APPROVED" ? "success" : (element.approvalStatus === "UNREVIEWED" ? "warning" : "error")}
+                                                            sx={{
+                                                                position: 'absolute',
+                                                                top: 4,
+                                                                right: 4,
+                                                                padding: '4px',
+                                                                borderRadius: '20px'
+                                                            }}
+                                                            label={element.approvalStatus}
+                                                        >
+                                                        </Chip>
+                                                        <Typography
+                                                            variant="caption"
+                                                            sx={{
+                                                                position: 'absolute',
+                                                                bottom: 4,
+                                                                right: 4,
+                                                                backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                                                                color: 'white',
+                                                                padding: '4px',
+                                                                borderRadius: '4px'
+                                                            }}
+                                                        >
+                                                            {formatDuration(videoDurations[element.reference])}
+                                                        </Typography>
+                                                    </Box>
+
+                                                    <Box sx={{ backgroundColor: '#384666', width: '100%' }}>
+                                                        <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', mX: 2 }}>
+                                                            <Box sx={{ marginRight: 2, marginLeft: 2 }}>
+                                                                <StringAvatar
+                                                                    name={element.fullName}
+                                                                />
+                                                            </Box>
+                                                            <Box sx={{ width: '100%', p: 1 }}>
+                                                                <Typography variant='h6'>{element.draftName}</Typography>
+                                                                <Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                                    <Box sx={{ display: 'flex', alignContent: 'center' }}>
+                                                                        <Typography>{element.dateCreated}</Typography>
+                                                                    </Box>
+
+                                                                    <Box sx={{ display: 'flex', alignContent: 'center' }}>
+                                                                        <ChatIcon sx={{ marginRight: 1 }} />
+                                                                        <Typography variant="caption">
+                                                                            {element.videoComments ? (element.videoComments.length) : "0"}
+                                                                        </Typography>
+
+                                                                    </Box>
+                                                                </Box>
+                                                            </Box>
+
+                                                        </Box>
+
+                                                    </Box>
+                                                </Stack>
+                                            </Grid>)
+                                    }))}
+                        </Grid>
+                    </Box >
+                </Box>
+            </Dialog >
         );
     }
 
@@ -293,7 +431,13 @@ export default function VideoPlayer({ isForAdmin = false, contractId, refreshOut
 
     return (
         <ThemeProvider theme={theme}>
-            <SolidBackground p={3}>
+            <SolidBackground p={3} paddingY={5}>
+                <IconButton
+                    sx={{ position: 'absolute', top: 4, right: 4, zIndex: 1 }}
+                    onClick={handleClose}
+                >
+                    <CloseIcon />
+                </IconButton>
                 <Grid container spacing={3}>
                     <Grid item xs={12} md={8}>
                         <Paper elevation={3} square style={{ backgroundColor: '#f1f1f1' }}>
@@ -334,12 +478,12 @@ export default function VideoPlayer({ isForAdmin = false, contractId, refreshOut
 
                         {/* Video Player */}
                         <Stack>
-                            <Box elevation={3} style={{ padding: 10, backgroundColor: '#e1e1e1' }}>
+                            <Box elevation={3} style={{ padding: 10, backgroundColor: '#e1e1e1', height: '90%' }}>
                                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                     <ReactPlayer
                                         controls
                                         width='100%'
-                                        height='80vh'
+                                        height='70vh'
                                         url={activeDraft?.reference}
                                         onDuration={handleDuration}
                                         onProgress={({ playedSeconds }) => setCurrentTime(playedSeconds)}
@@ -365,20 +509,26 @@ export default function VideoPlayer({ isForAdmin = false, contractId, refreshOut
                                             height: '60px',
                                             width: '100%',
                                             position: 'relative',
+                                            borderBottom: '1px solid black',
+                                            marginBottom: 1,
+                                            overflow: 'hidden'
                                         }}
                                     >
                                         {activeDraft && activeDraft.videoComments && activeDraft.videoComments.length > 0 && (
                                             activeDraft.videoComments.map((comment, index) => {
                                                 const position = (comment.timeStamp / duration) * 100;
+                                                var adjustedPosition = position > 98 ? 98 : position;
+                                                adjustedPosition = position < 3 ? 3 : position;
                                                 return (
                                                     <Box
                                                         key={index}
                                                         onClick={() => playerRef.current.seekTo(comment.timeStamp, 'seconds')}
                                                         style={{
                                                             position: 'absolute',
-                                                            left: `${position}%`,
+                                                            left: `${adjustedPosition}%`,
                                                             bottom: '10px',
                                                             backgroundColor: 'blue',
+                                                            transform: 'translateX(-50%)',
                                                             height: '40px',
                                                             width: '40px',
                                                             borderRadius: '50%',
@@ -425,7 +575,7 @@ export default function VideoPlayer({ isForAdmin = false, contractId, refreshOut
 
                     <Grid item xs={12} md={4}>
                         <Paper elevation={5} square style={{ backgroundColor: '#e9e9e9', overflow: 'auto', maxHeight: 600 }}>
-                            <List sx={{ width: '100%', maxWidth: 400 }}>
+                            <List  sx={{ width: '100%', padding: 0 }}>
                                 {
                                     activeDraft && activeDraft.videoComments && activeDraft.videoComments.length === 0 ?
                                         (

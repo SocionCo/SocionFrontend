@@ -15,6 +15,7 @@ import ResetPassword from "./pages/resetPassword";
 import GuestVideoPlayer from "./components/videoPlayer/GuestVideoPlayer";
 import Security from "./pages/agencySettings/Security";
 import AdminSettings from "./pages/agencySettings/adminSettings";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 
 function App() {
@@ -39,71 +40,73 @@ function App() {
 
     return (
         <BrowserRouter basename={''}>
-            <Routes>
-                <Route path='campaigns' element={
-                    <ProtectedRoute>
-                        <Campaigns />
-                    </ProtectedRoute>
-                } />
-                <Route path='resetPassword' element={
-                    <ResetPassword />
-                } />
-                <Route path='home' element={
-                    <ProtectedRoute>
-                        <AdminDashboard />
-                    </ProtectedRoute>
-                } />
-                <Route path='team' element={
-                    <ProtectedRoute>
-                        <Team></Team>
-                    </ProtectedRoute>
-                } />
-                <Route path='talent' element={
-                    <ProtectedRoute>
-                        <TalentDashboard />
-                    </ProtectedRoute>
-                } />
-                <Route path='agencySettings' element={
-                    <ProtectedRoute>
-                        <AgencySettings />
-                    </ProtectedRoute>
-                } />
-                
-                <Route path='/agencySettings/agency' element={
-                    <ProtectedRoute>
-                        <AdminSettings/>
-                    </ProtectedRoute>
-                } />
+            <ErrorBoundary>
+                <Routes>
+                    <Route path='campaigns' element={
+                        <ProtectedRoute>
+                            <Campaigns />
+                        </ProtectedRoute>
+                    } />
+                    <Route path='resetPassword' element={
+                        <ResetPassword />
+                    } />
+                    <Route path='home' element={
+                        <ProtectedRoute>
+                            <AdminDashboard />
+                        </ProtectedRoute>
+                    } />
+                    <Route path='team' element={
+                        <ProtectedRoute>
+                            <Team></Team>
+                        </ProtectedRoute>
+                    } />
+                    <Route path='talent' element={
+                        <ProtectedRoute>
+                            <TalentDashboard />
+                        </ProtectedRoute>
+                    } />
+                    <Route path='agencySettings' element={
+                        <ProtectedRoute>
+                            <AgencySettings />
+                        </ProtectedRoute>
+                    } />
 
-                <Route path='agencySettings/security' element={
-                    <ProtectedRoute>
-                        <Security/>
-                    </ProtectedRoute>
-                } />
+                    <Route path='/agencySettings/agency' element={
+                        <ProtectedRoute>
+                            <AdminSettings />
+                        </ProtectedRoute>
+                    } />
 
-                <Route path='' element={
-                    <ProtectedRoute>
-                        <Login />
-                    </ProtectedRoute>
-                } />
-                <Route path='campaign/:contractId' element={
-                    <ProtectedRoute>
-                        <CampaignDetail />
-                    </ProtectedRoute>
-                } />
-                <Route path="guestDashboard/:inviteToken"
-                    element={
-                        <GuestVideoPlayer />
-                    }
-                />
-                <Route path='*' element={<Auth />}>
-                    <Route path='login' element={<Login />} />
-                </Route>
-                <Route path='register' element={
-                    <Register />}
-                >
-                </Route>
-            </Routes>
+                    <Route path='agencySettings/security' element={
+                        <ProtectedRoute>
+                            <Security />
+                        </ProtectedRoute>
+                    } />
+
+                    <Route path='' element={
+                        <ProtectedRoute>
+                            <Login />
+                        </ProtectedRoute>
+                    } />
+                    <Route path='campaign/:contractId' element={
+                        <ProtectedRoute>
+                            <CampaignDetail />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="guestDashboard/:inviteToken"
+                        element={
+                            <GuestVideoPlayer />
+                        }
+                    />
+                    <Route path='*' element={<Auth />}>
+                        <Route path='login' element={<Login />} />
+                    </Route>
+                    <Route path='register' element={
+                        <Register />}
+                    >
+                    </Route>
+                </Routes>
+            </ErrorBoundary>
         </BrowserRouter>
     );
 }

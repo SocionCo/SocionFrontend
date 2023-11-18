@@ -14,7 +14,10 @@ const ProtectedRoute = (props) => {
         console.log("Checking token");
         const userToken = localStorage.getItem('user-token');
         console.log("Is token valid? : " + isTokenValid(userToken));
-        if (!userToken || userToken === 'undefined' || !isTokenValid(userToken)) {
+        if (!userToken ||userToken === 'undefined' ) { 
+            navigate('/login');
+        }
+        if (!isTokenValid(userToken)) {
             navigate('/login?reason=expired');
             return false;
         }

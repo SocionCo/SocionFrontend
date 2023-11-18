@@ -68,6 +68,7 @@ const DraftList = ({ contract, dashboardOpen, uploadOpen }) => {
                                 variant='contained'
                                 onClick={dashboardOpen}
                                 color='grey'
+                                disabled={!drafts || drafts.length === 0}
                             >Open Dashboard</Button>
                         </Badge>
                     </Box>

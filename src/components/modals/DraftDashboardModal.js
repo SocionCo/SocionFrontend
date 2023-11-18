@@ -26,29 +26,22 @@ const DraftDashboardModal = ({ open, handleClose, drafts, contractId, refresh })
       onClose={handleClose}
       TransitionComponent={Transition}
     >
-      <Box sx={{ backgroundColor: '#00a152' }}>
-        <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
-          <IconButton onClick={handleClose}>
-            <CloseIcon></CloseIcon>
-          </IconButton>
-        </Box>
-        {userType === "Admin" || userType === "TalentManager" ?
-          (
-            <VideoPlayer isForAdmin={true} drafts={drafts} handleClose={handleClose} contractId={contractId} refreshOuterPage={refresh}/>
-          ) :
-          (
-            <VideoPlayer
-              refreshOuterPage={refresh}
-              draft={drafts}
-              handleClose={handleClose}
-              contractId={contractId}
-            />
-          )
+      {userType === "Admin" || userType === "TalentManager" ?
+        (
+          <VideoPlayer isForAdmin={true} drafts={drafts} handleClose={handleClose} contractId={contractId} refreshOuterPage={refresh} />
+        ) :
+        (
+          <VideoPlayer
+            refreshOuterPage={refresh}
+            draft={drafts}
+            handleClose={handleClose}
+            contractId={contractId}
+          />
+        )
 
-        }
+      }
 
 
-      </Box>
     </Dialog>
   );
 }
