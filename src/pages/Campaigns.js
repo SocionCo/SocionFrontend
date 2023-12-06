@@ -143,14 +143,14 @@ const Campaigns = () => {
                                     <IconButton onClick={() => setSearchBarVisible(!searchBarVisible)}>
                                         <SearchIcon />
                                     </IconButton>
-                                    <IconButton onClick={handleOpen}>
+                                    {(userType === "Admin" || userType === "TalentManager") && (<IconButton onClick={handleOpen}>
                                         <AddIcon />
-                                    </IconButton>
+                                    </IconButton>)}
 
                                     {
-                                       searchBarVisible && (<Searchbar
-                                       handleChange={handleSearchChange}
-                                       />)
+                                        searchBarVisible && (<Searchbar
+                                            handleChange={handleSearchChange}
+                                        />)
 
                                     }
                                 </Box>
@@ -160,7 +160,16 @@ const Campaigns = () => {
 
 
                         {
-                            displayedContracts.map(contract => {
+                            contracts.length == 0 ? (
+                                <Box sx={{width: '100%', 
+                                display: 'flex', 
+                                justifyContent: 'center', 
+                                alignItems: 'center',
+                                marginTop: 2}}>
+                                    <Typography variant='h6' component={'h6'}>No campaigns yet! Add one by clicking the + button.</Typography>
+                                </Box>
+
+                            ) : (displayedContracts.map(contract => {
                                 return (
                                     <Grid item xs={12} key={contract.id}>
                                         {/* Single column on mobile, two on small screens, three on medium screens */}
@@ -184,7 +193,7 @@ const Campaigns = () => {
                                         </Box>
                                     </Grid>
                                 )
-                            })
+                            }))
                         }
                     </Grid>
                 </Grid>

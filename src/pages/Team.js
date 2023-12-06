@@ -40,6 +40,8 @@ const TalentDashboard = () => {
         setSearchInput(event.target.value);
     };
 
+    const userType = localStorage.getItem("user-type");
+
 
 
     return (
@@ -63,9 +65,9 @@ const TalentDashboard = () => {
                                     <IconButton onClick={() => setSearchBarVisible(!searchBarVisible)}>
                                         <SearchIcon />
                                     </IconButton>
-                                    <IconButton onClick={handleOpen}>
+                                    {(userType === "Admin" || userType === "TalentManager") && (<IconButton onClick={handleOpen}>
                                         <AddIcon />
-                                    </IconButton>
+                                    </IconButton>)}
 
                                     {
                                         searchBarVisible && (
@@ -96,19 +98,34 @@ const TalentDashboard = () => {
 
                         </Grid>
                         {
-                            filteredManagers.map(influencer => (
-                                <Grid item xs={12} sm={6} md={4} key={influencer.email}>
-                                    <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                        <Button
-                                            sx={{ height: '100%', width: '100%', cursor: 'default' }}
-                                            onClick={() => console.log("")}
-                                            fullWidth
-                                        >
-                                            <EmployeeSticker influencer={influencer} />
-                                        </Button>
-                                    </Box>
-                                </Grid>
-                            ))
+
+
+                            filteredManagers.length == 0 ? (
+                                <Box sx={{
+                                    width: '100%',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    marginTop: 2
+                                }}>
+                                    <Typography variant='h6' component={'h6'}>No managers yet! Add one by clicking the + button.</Typography>
+                                </Box>
+
+                            )
+
+                                : (filteredManagers.map(influencer => (
+                                    <Grid item xs={12} sm={6} md={4} key={influencer.email}>
+                                        <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                            <Button
+                                                sx={{ height: '100%', width: '100%', cursor: 'default' }}
+                                                onClick={() => console.log("")}
+                                                fullWidth
+                                            >
+                                                <EmployeeSticker influencer={influencer} />
+                                            </Button>
+                                        </Box>
+                                    </Grid>
+                                )))
                         }
                     </Grid>
                 </Grid>

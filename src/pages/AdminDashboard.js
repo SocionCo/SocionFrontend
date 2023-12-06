@@ -216,7 +216,7 @@ const AdminDashboard = () => {
                         (<Sidebar index={0}></Sidebar>) : (<InfluencerSidebar index={0} />)
                     }
                 </Grid>
-                <Grid item xs={12} md={10} sx={{ height: '100%' }}>
+                <Grid item xs={12} md={10} sx={{ height: '100%'}}>
                     {!isLoading ? (
                         <Box sx={{ m: 1 }}>
                             <Subheading userName={props ? props.firstName : null}></Subheading>
@@ -226,15 +226,18 @@ const AdminDashboard = () => {
                                     refresh={refreshRows}
                                     handleComplete={handleComplete}
                                 />}
-                            {(!isLoading && rows.length == 0) &&
-                                <Typography>
+
+                            {!isLoading && rows.length == 0 &&  (((userType === "Admin" || userType === "TalentManager")) ?
+                                (<Typography sx={{m: 1}}>
                                     Create a <Link
                                         onClick={() => {
                                             setOpen(true);
                                         }}
                                         sx={{ fontWeight: 'bold', textDecoration: 'none', cursor: 'pointer' }}
                                     >New Campaign</Link> to get started!
-                                </Typography>
+                                </Typography>) : (<Typography variant="h6" sx={{m: 1}}>
+                                    No campaigns yet!
+                                </Typography>))
                             }
                         </Box>
 

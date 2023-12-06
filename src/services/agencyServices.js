@@ -193,3 +193,54 @@ export async function getAgencySettings() {
         return null;
     }
 }
+
+export async function getAgencyIDForInviteToken(joinToken) { 
+
+    
+    try {
+        const token = localStorage.getItem('user-token');
+        const response = await api.get('/api/joinLink/' + joinToken);
+        return response.data;
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
+
+export async function registerNewTalentManager(agencyId, userDTO) { 
+    const registerWrapper = { 
+        userDTO : userDTO,
+        agencyDTO : { 
+            id : agencyId
+        }
+    }
+
+    try {
+        const response = await api.post('/api/registerNewTalentManager' , registerWrapper);
+        return response;
+    } catch (error) {
+        console.log(error);
+        return error;
+    }
+
+
+}
+
+export async function registerNewInfluencer(agencyId, userDTO) { 
+    const registerWrapper = { 
+        userDTO : userDTO,
+        agencyDTO : { 
+            id : agencyId
+        }
+    }
+
+    try {
+        const response = await api.post('/api/joinAgency' , registerWrapper);
+        return response;
+    } catch (error) {
+        console.log(error);
+        return error;
+    }
+
+
+}

@@ -21,6 +21,8 @@ export default function Register() {
     const navigate = useNavigate();
 
 
+    
+
 
 
     const formValidation = Yup.object().shape({
@@ -29,7 +31,7 @@ export default function Register() {
         email: Yup.string().email().required("Email is required"),
         agencyName: Yup.string().required("Agency Name is required"),
         password: Yup.string().required("Password is required"),
-        confirmPassword: Yup.string().required("Confirm password is required")
+        confirmPassword: Yup.string().required("Confirm password is required").oneOf([Yup.ref('password'), null], 'Passwords must match')
     });
 
     const myForm = useFormik({
@@ -54,7 +56,7 @@ export default function Register() {
                 setTimeout(() => {
                     navigate('/home');
                 }, 500);
-            } else { 
+            } else {
                 setError(true);
             }
 
@@ -71,22 +73,27 @@ export default function Register() {
 
 
     return (
-        <Box sx={{
-            display: 'flex',
-            flexDirection: 'column'
-        }}>
-            <Box sx={{
+        <Box
+            sx={{
                 display: 'flex',
+                flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                flexDirection: 'column'
-            }}>
+                backgroundColor: '#ffffff', // White background
+                padding: '40px',
+                borderRadius: '8px',
+                boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)', // Light shadow
+            }}
+        >
+            <Typography variant="h4" sx={{ color: '#4CAF50', marginBottom: '20px' }}>
+                Register
+            </Typography>
+            <Typography variant="caption" sx={{ color: '#4CAF50', marginBottom: '20px' }}>
+                Are you an influencer? Reach out to a manager at your agency to receive an invite.
+            </Typography>
 
-                <Typography component='h6' variant="h6" >Register</Typography>
-                <Typography component='h6' variant="caption" >Are you an influencer? Reach out to a manager at your agency to recieve an invite.</Typography>
-            </Box>
+            {/* Form Inputs */}
             <TextField
-                required
                 label="First Name"
                 margin="dense"
                 name="firstName"
@@ -94,11 +101,10 @@ export default function Register() {
                 onChange={myForm.handleChange}
                 error={!!myForm.errors.firstName}
                 helperText={myForm.errors.firstName}
+                sx={{width: '50%'}}
             />
 
-
             <TextField
-                required
                 label="Last Name"
                 margin="dense"
                 name="lastName"
@@ -106,10 +112,10 @@ export default function Register() {
                 onChange={myForm.handleChange}
                 error={!!myForm.errors.lastName}
                 helperText={myForm.errors.lastName}
+                sx={{width: '50%'}}
             />
 
             <TextField
-                required
                 label="Email"
                 margin="dense"
                 name="email"
@@ -117,10 +123,10 @@ export default function Register() {
                 onChange={myForm.handleChange}
                 error={!!myForm.errors.email}
                 helperText={myForm.errors.email}
+                sx={{width: '50%'}}
             />
 
             <TextField
-                required
                 label="Agency Name"
                 margin="dense"
                 name="agencyName"
@@ -128,10 +134,10 @@ export default function Register() {
                 onChange={myForm.handleChange}
                 error={!!myForm.errors.agencyName}
                 helperText={myForm.errors.agencyName}
+                sx={{width: '50%'}}
             />
 
             <TextField
-                required
                 label="Password"
                 type="password"
                 margin="dense"
@@ -140,10 +146,10 @@ export default function Register() {
                 onChange={myForm.handleChange}
                 error={!!myForm.errors.password}
                 helperText={myForm.errors.password}
+                sx={{width: '50%'}}
             />
 
             <TextField
-                required
                 label="Confirm Password"
                 margin="dense"
                 name="confirmPassword"
@@ -152,31 +158,32 @@ export default function Register() {
                 onChange={myForm.handleChange}
                 error={!!myForm.errors.confirmPassword}
                 helperText={myForm.errors.confirmPassword}
-                sx={{
-                    marginBottom: 1
-                }}
+                sx={{ width: '50%', marginBottom: '20px' }}
             />
 
+            {/* Form Submission */}
+            <Button
+                disabled={!myForm.isValid}
+                onClick={myForm.handleSubmit}
+                variant="contained"
+                sx={{
+                    backgroundColor: '#4CAF50', // Green button background
+                    color: '#ffffff', // White text
+                    '&:hover': {
+                        backgroundColor: '#45a049', // Darker green on hover
+                    },
+                }}
+            >
+                Create Agency
+            </Button>
 
-
-            <Box sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexDirection: 'column'
-            }}>
-
-
-                {error && (<Typography component='h6' variant="caption" >Error submitting the form. Make sure user email is not already in use.</Typography>)}
-                <Button
-                    disabled={!myForm.isValid || !isFormValid}
-                    onClick={myForm.submitForm}
-                    variant="contained"
-                >
-                    Create Agency
-                </Button>
-            </Box>
-
+            {/* Error Message */}
+            {error && (
+                <Typography variant="caption" sx={{ color: 'red', marginTop: '10px' }}>
+                    Error submitting the form. Make sure the user email is not already in use.
+                </Typography>
+            )}
         </Box>
     );
-}
+};
+

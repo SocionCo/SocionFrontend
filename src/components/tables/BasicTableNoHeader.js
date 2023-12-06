@@ -46,7 +46,8 @@ export default function BasicTableNoHeader({ rows, influencerEmail = "" }) {
                       (<TableCell align="center">
                         <Button 
                         onClick={() => setMediaKitOpen(true)}
-                        target='_blank'>Generate Media Kit</Button>
+                        disabled
+                        target='_blank'>Not Available</Button>
                         </TableCell>)
                     }
                   </TableRow>

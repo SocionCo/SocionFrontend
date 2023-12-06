@@ -16,6 +16,7 @@ import GuestVideoPlayer from "./components/videoPlayer/GuestVideoPlayer";
 import Security from "./pages/agencySettings/Security";
 import AdminSettings from "./pages/agencySettings/adminSettings";
 import ErrorBoundary from "./components/ErrorBoundary";
+import InviteSignUp from "./pages/InviteSignUp";
 
 
 function App() {
@@ -93,6 +94,10 @@ function App() {
                             <CampaignDetail />
                         </ProtectedRoute>
                     } />
+                    <Route path='registerInvite/:inviteToken' element={
+                        <InviteSignUp />
+                    }
+                    ></Route>
                     <Route path="guestDashboard/:inviteToken"
                         element={
                             <GuestVideoPlayer />
@@ -104,6 +109,7 @@ function App() {
                     <Route path='register' element={
                         <Register />}
                     >
+
                     </Route>
                 </Routes>
             </ErrorBoundary>
