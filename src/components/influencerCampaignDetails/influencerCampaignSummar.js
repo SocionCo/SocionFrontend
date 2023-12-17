@@ -6,6 +6,8 @@ const InfluencerCampaignSummary = ({ contract }) => {
     const { name, creationDate, completed } = contract;
     const stringDate = formatDate(creationDate);
 
+    console.log("Creating date: " + creationDate);
+
     return (
         <Paper sx={{
             display: 'flex',
@@ -49,7 +51,7 @@ const InfluencerCampaignSummary = ({ contract }) => {
                         }}
                     />
                 </Box>
-                <Typography component='p' variant='subtitle1' >{"Created " + stringDate}</Typography>
+                { creationDate && <Typography component='p' variant='subtitle1' >{"Created " + stringDate}</Typography>}
             </Box>
 
 

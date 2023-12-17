@@ -12,6 +12,8 @@ const CampaignSummary = ({ contract, refresh }) => {
     const stringDate = formatDate(creationDate);
     const [confirmationOpen, setConfirmationOpen] = React.useState(false);
 
+    console.log("Creating date: " + creationDate);
+
     const navigate = useNavigate();
 
     const [anchorEl, setAnchorEl] = useState(null);
@@ -71,7 +73,7 @@ const CampaignSummary = ({ contract, refresh }) => {
                     }}
                 />
 
-                <Typography component='p' variant='subtitle2'>{`Created ${stringDate}`}</Typography>
+                {(creationDate && <Typography component='p' variant='subtitle2'>{`Created ${stringDate}`}</Typography>)}
             </Box>
 
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>

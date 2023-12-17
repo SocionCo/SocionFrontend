@@ -29,7 +29,7 @@ export default function EditCampaign({ agencyId, contractId, refresh }) {
     React.useEffect(() => {
         async function setContractDetails(contractId) {
             const newDetails = await getContractDetailsWithId(contractId);
-            console.log(newDetails);
+            console.log("newDetails", newDetails);
             setContract(newDetails);
         }
         setContractDetails(contractId);
@@ -72,7 +72,8 @@ export default function EditCampaign({ agencyId, contractId, refresh }) {
             agencyCommission: contract ? contract.rate : 0,
             creatorRate: contract ? contract.rate : 0,
             additionalDeadlines : contract ? contract.additionalDeadlines : "",
-            affiliateLink : contract ? contract.affiliateLink : ""
+            affiliateLink : contract ? contract.affiliateLink : "",
+            songName : contract? contract.songName : ""
 
         },
         validationSchema: formValidation,
@@ -96,6 +97,7 @@ export default function EditCampaign({ agencyId, contractId, refresh }) {
                     creatorRate: values.creatorRate,
                     agencyCommission: values.agencyCommission,
                     additionalDeadlines: values.additionalDeadlines,
+                    songName: values.songName,
                     affiliateLink: values.affiliateLink
                 },
 
@@ -124,7 +126,8 @@ export default function EditCampaign({ agencyId, contractId, refresh }) {
                 agencyCommission: contract.hasOwnProperty('agencyCommission') ? contract.agencyCommission : 0,
                 creatorRate: contract.hasOwnProperty('creatorRate') ? contract.creatorRate : 0,
                 affiliateLink: contract.affiliateLink || "",
-                additionalDeadlines: contract.additionalDeadlines || ""
+                additionalDeadlines: contract.additionalDeadlines || "",
+                songName: contract.songName || ""
             });
         }
     }
@@ -258,7 +261,7 @@ export default function EditCampaign({ agencyId, contractId, refresh }) {
                 />
             </Grid>
 
-            <Grid item xs={6} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Grid item xs={4} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <TextField
                     margin="dense"
                     name="affiliateLink"
@@ -276,7 +279,7 @@ export default function EditCampaign({ agencyId, contractId, refresh }) {
                 />
             </Grid>
 
-            <Grid item xs={6} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Grid item xs={4} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <TextField
                     margin="dense"
                     name="additionalDeadlines"
@@ -285,6 +288,24 @@ export default function EditCampaign({ agencyId, contractId, refresh }) {
                     onChange={myForm.handleChange}
                     error={!!myForm.errors.additionalDeadlines}
                     helperText={myForm.errors.additionalDeadlines}
+                    sx={{
+                        marginBottom: 1,
+                        width: '100%',
+                        m: 1
+                    }}
+                    disabled={!editMode}
+                />
+            </Grid>
+
+            <Grid item xs={4} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <TextField
+                    margin="dense"
+                    name="songName"
+                    label="Song Name"
+                    value={myForm.values.songName}
+                    onChange={myForm.handleChange}
+                    error={!!myForm.errors.songName}
+                    helperText={myForm.errors.songName}
                     sx={{
                         marginBottom: 1,
                         width: '100%',

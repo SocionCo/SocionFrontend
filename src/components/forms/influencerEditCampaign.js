@@ -62,7 +62,8 @@ export default function InfluencerEditCampaign({ agencyId, contractId, refresh }
             companyName: contract ? contract.companyName : "",
             date: contract ? contract.date : null,
             affiliateLink: contract ? contract.affiliateLink : "",
-            additionalDeadlines: contract ? contract.additionalDeadlines : ""
+            additionalDeadlines: contract ? contract.additionalDeadlines : "",
+            songName: contract ? contract.songName : ""
 
         },
         validationSchema: formValidation,
@@ -83,6 +84,7 @@ export default function InfluencerEditCampaign({ agencyId, contractId, refresh }
                     dueDate: values.date,
                     agencyCommission: values.agencyCommission,
                     additionalDeadlines: values.additionalDeadlines,
+                    songName : values.songName,
                     affiliateLink: values.affiliateLink
                 },
 
@@ -103,7 +105,8 @@ export default function InfluencerEditCampaign({ agencyId, contractId, refresh }
                 companyName: contract.companyName || myForm.values.companyName,
                 date: dayjs(contract.dueDate) || myForm.values.date,
                 affiliateLink: contract.affiliateLink || "",
-                additionalDeadlines: contract.additionalDeadlines || ""
+                additionalDeadlines: contract.additionalDeadlines || "",
+                songName: contract.songName || ""
             });
         }
     }, [contract]);
@@ -168,7 +171,7 @@ export default function InfluencerEditCampaign({ agencyId, contractId, refresh }
                 </LocalizationProvider>
             </Grid>
 
-            <Grid item xs={6} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Grid item xs={4} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <TextField
                     margin="dense"
                     name="additionalDeadlines"
@@ -187,7 +190,26 @@ export default function InfluencerEditCampaign({ agencyId, contractId, refresh }
                 />
             </Grid>
 
-            <Grid item xs={6} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Grid item xs={4} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <TextField
+                    margin="dense"
+                    name="songName"
+                    label="Song Name"
+                    value={myForm.values.songName}
+                    onChange={myForm.handleChange}
+                    error={!!myForm.errors.songName}
+                    helperText={myForm.errors.songName}
+                    disabled
+                    sx={{
+                        marginBottom: 1,
+                        width: '100%',
+                        m: 1
+                    }}
+
+                />
+            </Grid>
+
+            <Grid item xs={4} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <TextField
                     margin="dense"
                     name="affiliateLink"
