@@ -186,9 +186,49 @@ export async function getAgencySettings() {
     try {
         const token = localStorage.getItem('user-token');
         const headers = { 'Authorization': 'Bearer ' + token };
-        // const response = await api.get('/api/getAgencySettings', { headers });
-        return "";
+        const response = await api.get('/api/getAgencySettings', { headers });
+        return response.data;
     } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
+
+export async function addContractFieldToAgency(contractFieldName) { 
+
+    const ContractFieldDTO = { 
+        fieldName : contractFieldName
+    }
+
+    try {
+        const token = localStorage.getItem('user-token');
+        const headers = { 'Authorization': 'Bearer ' + token };
+        const response = await api.post('/api/addContractFieldToAgency',ContractFieldDTO ,{ headers });
+        return response.data;
+        
+    } catch (error) { 
+        console.log(error);
+        return null;
+    }
+}
+
+
+
+export async function removeContractFieldFromAgency(contractFieldId) { 
+
+    const ContractFieldDTO = { 
+        id : contractFieldId
+    }
+
+    try {
+        console.log("Sending:", ContractFieldDTO);
+        const token = localStorage.getItem('user-token');
+        const headers = { 'Authorization': 'Bearer ' + token };
+        const response = await api.post('/api/removeContractFieldFromAgency',ContractFieldDTO ,{ headers });
+        console.log("response maybe,",response);
+        return response.data;
+        
+    } catch (error) { 
         console.log(error);
         return null;
     }

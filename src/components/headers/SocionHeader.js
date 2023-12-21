@@ -38,6 +38,7 @@ const SocionHeader = ({ onClick, showButton = true, showX = false, onX }) => {
             marginX: 0,
             width: '100%',
             height: 50,
+            
         }} >
             <Box
                 component="img"

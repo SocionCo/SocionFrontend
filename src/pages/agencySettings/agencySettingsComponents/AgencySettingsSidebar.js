@@ -6,6 +6,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
+import CampaignIcon from '@mui/icons-material/Campaign';
 import InboxIcon from '@mui/icons-material/Inbox';
 import DraftsIcon from '@mui/icons-material/Drafts';
 import PermIdentityIcon from '@mui/icons-material/PermIdentity';
@@ -37,9 +38,9 @@ export default function AgencySettingsSidebar({active}) {
             path: '/agencySettings/security',
         },
         {
-            name: 'Agency Settings',
-            icon: <BusinessIcon/>,
-            path: '/agencySettings/agency',
+            name: 'Campaign Settings',
+            icon: <CampaignIcon/>,
+            path: '/agencySettings/campaign',
         },
 
     ] : [

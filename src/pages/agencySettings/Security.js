@@ -1,11 +1,31 @@
-import { Box, Button, Grid, Paper, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Grid, Paper, Typography } from "@mui/material";
 import FullSettingsSidebar from "./agencySettingsComponents/FullSettingsSidebar";
 import StringAvatar from "../../components/avatar/StringAvatar";
 import { useNavigate } from "react-router-dom";
+import React from "react";
+import { getUserDetails } from "../../services/userServices";
 
 export default function Security() {
 
     const navigate = useNavigate();
+    const [email, setEmail] = React.useState();
+    const [loading, setLoading] = React.useState(true);
+
+
+    React.useEffect(() => { 
+        const callApi = async () => {
+         const response = await getUserDetails();
+         setEmail(response.data.email);
+         setLoading(false);
+         
+        }
+        callApi();
+        
+    },[]);
+
+    if (loading) { 
+        return (<CircularProgress/>);
+    }
 
     return (
         <FullSettingsSidebar
@@ -18,7 +38,7 @@ export default function Security() {
                             <Grid item xs={12} md={6}>
                                 <Box sx={{ marginBottom: 1 }}>
                                     <Typography variant='subtitle1' color='textSecondary'>Email</Typography>
-                                    <Typography variant='body1'>dbiundo09@gmail.com</Typography>
+                                    <Typography variant='body1'>{email}</Typography>
                                 </Box>
                                 <Box sx={{ marginBottom: 1 }}>
                                     <Button variant="contained"

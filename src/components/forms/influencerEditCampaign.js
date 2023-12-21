@@ -1,4 +1,4 @@
-import { Button, Grid, InputAdornment, TextField } from "@mui/material";
+import { Button, Grid, InputAdornment, LinearProgress, TextField } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -9,6 +9,7 @@ import * as Yup from "yup";
 import { editContract, getContractDetailsWithId } from "../../services/campaignServices";
 import { getInfluencersManagedBy } from "../../services/influencerServices";
 import styled from "@emotion/styled";
+import { formatContractFieldArray } from "./EditCampaign";
 
 
 
@@ -21,6 +22,13 @@ export default function InfluencerEditCampaign({ agencyId, contractId, refresh }
     const [isFormValid, setIsFormValid] = React.useState(false);
     const [influencers, setInfluencers] = React.useState([]);
     const [contract, setContract] = React.useState(null);
+    const [refreshBool, setRefreshBool] = React.useState(false);
+
+
+
+    const handleRefresh = () => {
+        setRefreshBool(!refreshBool);
+    }
 
 
 
@@ -32,7 +40,7 @@ export default function InfluencerEditCampaign({ agencyId, contractId, refresh }
             setContract(newDetails);
         }
         setContractDetails(contractId);
-    }, []);
+    }, [refreshBool]);
 
 
     React.useEffect(() => {
@@ -57,59 +65,42 @@ export default function InfluencerEditCampaign({ agencyId, contractId, refresh }
 
     const myForm = useFormik({
         initialValues: {
+            ... (contract ? formatContractFieldArray(contract.contractFields) : {}),
             campaignName: contract ? contract.campaignName : "",
             description: contract ? contract.description : "",
             companyName: contract ? contract.companyName : "",
-            date: contract ? contract.date : null,
-            affiliateLink: contract ? contract.affiliateLink : "",
-            additionalDeadlines: contract ? contract.additionalDeadlines : "",
-            songName: contract ? contract.songName : ""
+            date: contract ? contract.date : "",
+            rate: contract ? contract.rate : 0,
+            agencyCommission: contract ? contract.rate : 0,
+            creatorRate: contract ? contract.rate : 0,
 
         },
         validationSchema: formValidation,
         validateOnChange: true,
-        validateOnBlur: true,
-        onSubmit: (values) => {
-            const userDTOs = contract.influencers;
-
-
-            const props = {
-                contractDTO: {
-                    id: contractId,
-                    agency: {
-                        id: agencyId
-                    },
-                    name: values.campaignName,
-                    description: values.description,
-                    dueDate: values.date,
-                    agencyCommission: values.agencyCommission,
-                    additionalDeadlines: values.additionalDeadlines,
-                    songName : values.songName,
-                    affiliateLink: values.affiliateLink
-                },
-
-                userDTO: userDTOs
-            }
-
-            editContract(props);
-            refresh();
-
-        }
+        validateOnBlur: true
     });
 
     React.useEffect(() => {
+        resetFormValues();
+        console.log("Reset form values to: ", myForm.values);
+    }, [contract]);
+
+
+    const resetFormValues = () => {
         if (contract) {
             myForm.setValues({
-                campaignName: contract.name || myForm.values.campaignName,
-                description: contract.description || myForm.values.description,
-                companyName: contract.companyName || myForm.values.companyName,
-                date: dayjs(contract.dueDate) || myForm.values.date,
-                affiliateLink: contract.affiliateLink || "",
-                additionalDeadlines: contract.additionalDeadlines || "",
-                songName: contract.songName || ""
+                ... (formatContractFieldArray(contract.contractFields)),
+                campaignName: contract.name || "",
+                description: contract.description || "",
+                companyName: contract.companyName || "",
+                date: contract.dueDate ? dayjs(contract.dueDate) : "",
+                rate: contract.hasOwnProperty('rate') ? contract.rate : 0,
+                agencyCommission: contract.hasOwnProperty('agencyCommission') ? contract.agencyCommission : 0,
+                creatorRate: contract.hasOwnProperty('creatorRate') ? contract.creatorRate : 0,
+
             });
         }
-    }, [contract]);
+    }
 
     const handleDateChange = (date) => {
         myForm.setFieldValue('date', date);
@@ -118,6 +109,10 @@ export default function InfluencerEditCampaign({ agencyId, contractId, refresh }
     React.useEffect(() => {
         setIsFormValid(myForm.isValid);
     }, [myForm.isValid]);
+
+    if (!contract) {
+        return (<LinearProgress />);
+    }
 
     return (
         <Grid container>
@@ -171,61 +166,25 @@ export default function InfluencerEditCampaign({ agencyId, contractId, refresh }
                 </LocalizationProvider>
             </Grid>
 
-            <Grid item xs={4} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <TextField
-                    margin="dense"
-                    name="additionalDeadlines"
-                    label="Additional Deadlines"
-                    value={myForm.values.additionalDeadlines}
-                    onChange={myForm.handleChange}
-                    error={!!myForm.errors.additionalDeadlines}
-                    helperText={myForm.errors.additionalDeadlines}
-                    disabled
-                    sx={{
-                        marginBottom: 1,
-                        width: '100%',
-                        m: 1
-                    }}
-
-                />
-            </Grid>
-
-            <Grid item xs={4} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <TextField
-                    margin="dense"
-                    name="songName"
-                    label="Song Name"
-                    value={myForm.values.songName}
-                    onChange={myForm.handleChange}
-                    error={!!myForm.errors.songName}
-                    helperText={myForm.errors.songName}
-                    disabled
-                    sx={{
-                        marginBottom: 1,
-                        width: '100%',
-                        m: 1
-                    }}
-
-                />
-            </Grid>
-
-            <Grid item xs={4} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <TextField
-                    margin="dense"
-                    name="affiliateLink"
-                    label="Affiliate Link"
-                    value={myForm.values.affiliateLink}
-                    onChange={myForm.handleChange}
-                    error={!!myForm.errors.affiliateLink}
-                    helperText={myForm.errors.affiliateLink}
-                    disabled
-                    sx={{
-                        marginBottom: 1,
-                        width: '100%',
-                        m: 1
-                    }}
-                />
-            </Grid>
+            {contract.contractFields.map((contractField) => {
+                return (<Grid item xs={4} key={contractField.id} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <TextField
+                        margin="dense"
+                        name={contractField.compactName}
+                        label={contractField.fieldName}
+                        value={myForm.values[contractField.compactName]}
+                        onChange={myForm.handleChange}
+                        error={!!myForm.errors[contractField.compactName]}
+                        helperText={myForm.errors[contractField.compactName]}
+                        sx={{
+                            marginBottom: 1,
+                            width: '100%',
+                            m: 1
+                        }}
+                        disabled
+                    />
+                </Grid>);
+            })}
 
 
 

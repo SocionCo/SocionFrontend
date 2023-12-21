@@ -299,3 +299,37 @@ export async function deleteTask(taskDTO) {
     }
 }
 
+export async function addContractFieldToContract(contractId, contractFieldName) {
+
+    const ContractFieldDTO = { 
+        fieldName : contractFieldName
+    }
+
+    try {
+        const token = localStorage.getItem('user-token');
+        const headers = { 'Authorization': 'Bearer ' + token };
+        const response = await api.post('/api/addContractFieldToContract/' + contractId, ContractFieldDTO, { headers });
+        return response.data;
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+}
+
+export async function removeContractFieldFromContract(contractId, contractFieldId) {
+
+    const ContractFieldDTO = { 
+        id : contractFieldId
+    }
+
+    try {
+        const token = localStorage.getItem('user-token');
+        const headers = { 'Authorization': 'Bearer ' + token };
+        const response = await api.post('/api/removeContractFieldFromContract/' + contractId, ContractFieldDTO, { headers });
+        return response.data;
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+}
+

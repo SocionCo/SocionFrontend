@@ -7,6 +7,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 
 
@@ -26,6 +27,12 @@ export default function SelectedListItem({ index = 1 }) {
       path: '/campaigns',
       adminOnly: false,
     },
+    {
+      name: 'Settings',
+      icon: <SettingsIcon />,
+      path: '/agencySettings',
+      adminOnly: true,
+    }
 
   ];
 

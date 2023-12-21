@@ -13,7 +13,7 @@ export default function FullSettingsSidebar({ mainPage, currentIndex = 0 }) {
                 <Grid item xs={12} md={2}>
                     {userType === "Admin" || userType === "TalentManager" ?
                         <Sidebar index={4} /> :
-                        <InfluencerSidebar index={4} />
+                        <InfluencerSidebar index={2} />
                     }
                 </Grid>
                 <Grid item xs={12} md={2}>

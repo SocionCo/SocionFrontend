@@ -17,6 +17,7 @@ import Security from "./pages/agencySettings/Security";
 import AdminSettings from "./pages/agencySettings/adminSettings";
 import ErrorBoundary from "./components/ErrorBoundary";
 import InviteSignUp from "./pages/InviteSignUp";
+import CampaignSettings from "./pages/agencySettings/adminSettings";
 
 
 function App() {
@@ -72,9 +73,9 @@ function App() {
                         </ProtectedRoute>
                     } />
 
-                    <Route path='/agencySettings/agency' element={
+                    <Route path='/agencySettings/campaign' element={
                         <ProtectedRoute>
-                            <AdminSettings />
+                            <CampaignSettings />
                         </ProtectedRoute>
                     } />
 

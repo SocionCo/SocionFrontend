@@ -12,18 +12,33 @@ import { useFormik } from "formik";
 export default function AgencySettings() {
     const [userDetails, setUserDetails] = useState(null);
     const [editMode, setEditMode] = useState(false);
+    const [refresh, setRefresh] = useState(false);
+
+
+    const handleRefresh = () => {
+        setRefresh(!refresh);
+    }
 
     const userType = localStorage.getItem('user-type');
 
 
     useEffect(() => {
         const hitApi = async () => {
-            const response = await getUserDetails();
-            setUserDetails(response.data);
-        }
-        hitApi();
+            try {
+                const response = await getUserDetails();
+                setUserDetails(response.data);
+                console.log("Setting user details to", response.data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
 
-    }, [])
+        hitApi();
+    }, [refresh]);
+
+    useEffect(() => {
+        resetFormValues();
+    }, [userDetails]);
 
     const myForm = useFormik({
         initialValues: {
@@ -35,7 +50,7 @@ export default function AgencySettings() {
         },
         validateOnChange: true,
         validateOnBlur: true,
-        
+
         onSubmit: async (values) => {
             const influencerDTO = {
                 email: userDetails.email,
@@ -45,14 +60,26 @@ export default function AgencySettings() {
                 facebookUsername: values.facebookUsername
             }
 
-            
 
-            
+
+
             const response = await updateInfluencerSettings(influencerDTO);
+            handleRefresh();
             setEditMode(false);
+
 
         }
     });
+
+    const resetFormValues = () => {
+        console.log("Reseting form details to: ", userDetails);
+            myForm.setValues({
+                instagramUsername: userDetails ? userDetails.instagramUsername || "" : "",
+                youtubeUsername: userDetails ? userDetails.youtubeUsername || "" : "",
+                tiktokUsername: userDetails ? userDetails.tiktokUsername || "": "",
+                facebookUsername: userDetails ? userDetails.facebookUsername || "" : "",
+            });
+    }
 
     if (!userDetails) {
         return (<CircularProgress />)
@@ -115,21 +142,21 @@ export default function AgencySettings() {
                                         <Grid item xs={12} md={6}>
                                             <Box sx={{ marginBottom: 1 }}>
                                                 <Typography variant='subtitle1' color='textSecondary'>Instagram Username</Typography>
-                                                <Typography variant='body1'>{myForm.values.instagramUsername !== "" ? myForm.values.instagramUsername : "Not Set"}</Typography>
+                                                <Typography variant='body1'>{(myForm.values.instagramUsername !== "" && myForm.values.instagramUsername !== null) ? myForm.values.instagramUsername : "Not Set"}</Typography>
                                             </Box>
                                             <Box sx={{ marginBottom: 1 }}>
                                                 <Typography variant='subtitle1' color='textSecondary'>TikTok Username</Typography>
-                                                <Typography variant='body1'>{myForm.values.tiktokUsername !== "" ? myForm.values.tiktokUsername : "Not Set"}</Typography>
+                                                <Typography variant='body1'>{(myForm.values.tiktokUsername !== "" && myForm.values.tiktokUsername !== null) ? myForm.values.tiktokUsername : "Not Set"}</Typography>
                                             </Box>
                                             <Box sx={{ marginBottom: 1 }}>
                                                 <Typography variant='subtitle1' color='textSecondary'>Youtube Username</Typography>
-                                                <Typography variant='body1'>{myForm.values.youtubeUsername !== "" ? myForm.values.youtubeUsername : "Not Set"}</Typography>
+                                                <Typography variant='body1'>{(myForm.values.youtubeUsername !== "" && myForm.values.youtubeUsername !== null) ? myForm.values.youtubeUsername : "Not Set"}</Typography>
                                             </Box>
                                         </Grid>
                                         <Grid item xs={12} md={6}>
                                             <Box sx={{ marginBottom: 1 }}>
                                                 <Typography variant='subtitle1' color='textSecondary'>Facebook Username</Typography>
-                                                <Typography variant='body1'>{myForm.values.facebookUsername !== "" ? myForm.values.facebookUsername : "Not Set"}</Typography>
+                                                <Typography variant='body1'>{(myForm.values.facebookUsername !== "" && myForm.values.facebookUsername !== null) ? myForm.values.facebookUsername : "Not Set"}</Typography>
                                             </Box>
                                         </Grid>
                                     </>)
@@ -173,7 +200,7 @@ export default function AgencySettings() {
                                                 />
                                             </Box>
                                             <Box sx={{ marginBottom: 1 }}>
-                                            <TextField
+                                                <TextField
                                                     margin="dense"
                                                     name="youtubeUsername"
                                                     label="YouTube Username"
@@ -192,7 +219,7 @@ export default function AgencySettings() {
                                         </Grid>
                                         <Grid item xs={12} md={6}>
                                             <Box sx={{ marginBottom: 1 }}>
-                                            <TextField
+                                                <TextField
                                                     margin="dense"
                                                     name="facebookUsername"
                                                     label="Facebook Username"
@@ -229,7 +256,7 @@ export default function AgencySettings() {
                                                 color='success'
                                                 variant="contained"
                                                 onClick={myForm.handleSubmit}
-                                                >Save</Button>
+                                            >Save</Button>
                                         </Box>
 
                                     )}

@@ -18,6 +18,7 @@ export async function getUserDetails() {
         const token = localStorage.getItem('user-token');
         const headers = { 'Authorization': 'Bearer ' + token };
         const response = await api.get("/api/userDetails", { headers });
+        console.log("User details not object: ", response);
         return response;
     } catch (error) {
         console.log(error);
@@ -31,7 +32,6 @@ export async function updateInfluencerSettings(influencerDTO) {
         const token = localStorage.getItem('user-token');
         const headers = { 'Authorization': 'Bearer ' + token };
         const response = await api.post("/api/updateInfluencerSettings",influencerDTO, { headers });
-        
         return response;
     } catch (error) {
         console.log(error);
