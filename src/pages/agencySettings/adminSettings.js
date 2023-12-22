@@ -115,7 +115,7 @@ export default function CampaignSettings() {
                                 <Typography variant='caption'>Adding or removing campaign fields will cause all campaigns from this point forward to be automatically generated with the above fields.</Typography>
                                 <Button 
                                 sx={{margin: 'auto'}}
-                                onClick={() => setDialogOpen(true)}>Add Contract Field</Button>
+                                onClick={() => setDialogOpen(true)}>Add Campaign Field</Button>
                             </Stack>
                         </Paper>
                     </>

@@ -10,7 +10,7 @@ import { Typography } from '@mui/material';
 import CampaignIcon from '@mui/icons-material/Campaign';
 import GroupsIcon from '@mui/icons-material/Groups';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
-import BusinessIcon from '@mui/icons-material/Business';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 
 export default function SelectedListItem({ index = 1 }) {
@@ -44,8 +44,8 @@ export default function SelectedListItem({ index = 1 }) {
       adminOnly: true,
     },
     {
-      name: 'Agency',
-      icon: <BusinessIcon />,
+      name: 'Settings',
+      icon: <SettingsIcon />,
       path: '/agencySettings',
       adminOnly: true,
     }
