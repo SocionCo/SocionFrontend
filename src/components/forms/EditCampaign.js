@@ -262,7 +262,7 @@ export default function EditCampaign({ agencyId, contractId, refresh }) {
                         <Typography variant='caption'>Fields edited here only apply to this campaign.</Typography>
                         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             <Button
-                                onClick={() => setDialogOpen(true)}>Add Contract Field
+                                onClick={() => setDialogOpen(true)}>Add Campaign Field
                             </Button>
                         </Box>
                     </Stack>

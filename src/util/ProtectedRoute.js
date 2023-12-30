@@ -1,11 +1,13 @@
 import React, { useEffect, useCallback, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getAgencySettings } from "../services/agencyServices";
 import { isTokenValid } from "./JWTUtil";
 
 export const SettingsContext = React.createContext();
 
 const ProtectedRoute = (props) => {
+    const { contractId } = useParams();
+    console.log("Paramas", contractId);
     const navigate = useNavigate();
     const [agencySettings, setAgencySettings] = useState(null);
     const [loading, setLoading] = useState(true);  // <-- Added this loading state
@@ -15,9 +17,20 @@ const ProtectedRoute = (props) => {
         const userToken = localStorage.getItem('user-token');
         console.log("Is token valid? : " + isTokenValid(userToken));
         if (!userToken ||userToken === 'undefined' ) { 
+            if (!!contractId) { 
+                console.log("Navigating puss");
+                navigate(`/login?redirect=${contractId}`);
+                return false;
+
+            }
             navigate('/login');
+            return false;
         }
         if (!isTokenValid(userToken)) {
+            if (!!contractId) { 
+                console.log("Navigating puss");
+                navigate(`/login?redirect=${contractId}&reason=expired`);
+            }
             navigate('/login?reason=expired');
             return false;
         }

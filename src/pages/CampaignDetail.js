@@ -154,12 +154,13 @@ const InfluencerCampaignDetail = () => {
                                             aria-label="lab API tabs example"
                                         >
                                             <Tab label="Campaign Details" value="1" />
+                                            <Tab label="Drafts" value="4" />
                                             <Tab label="Talent" value="5" />
                                             <Tab label="Managers" value="6" />
                                             <Tab label="Tasks" value="2" />
                                             <Tab label="Attachments" value="3" />
                                             <Tab label="Invoices" value="7" />
-                                            <Tab label="Drafts" value="4" />
+
                                         </TabList>
                                     </Box>
                                     <TabPanel value="1">
@@ -167,6 +168,12 @@ const InfluencerCampaignDetail = () => {
                                             contract={contract}
                                             refresh={handleRefresh}
                                         />
+                                    </TabPanel>
+                                    <TabPanel value="4">
+                                        <InfluencerDraftsSidebar
+                                            dashboardOpen={handleOpenDashboard}
+                                            uploadOpen={handleOpenDraftUpload}
+                                            contract={contract} />
                                     </TabPanel>
                                     <TabPanel value="2">
                                         <TasksTab
@@ -195,12 +202,7 @@ const InfluencerCampaignDetail = () => {
                                             handleOpen={() => setOpenAttachmentUpload(true)}
                                         />
                                     </TabPanel>
-                                    <TabPanel value="4">
-                                        <InfluencerDraftsSidebar
-                                            dashboardOpen={handleOpenDashboard}
-                                            uploadOpen={handleOpenDraftUpload}
-                                            contract={contract} />
-                                    </TabPanel>
+
 
                                     <TabPanel value="5">
                                         <InfluencerUserProfile contract={contract} />
@@ -409,9 +411,9 @@ const AdminCampaignDetail = () => {
                                     <TabPanel value="4">
                                         <DraftsSidebar
                                             dashboardOpen={handleOpenDashboard}
-                                            contract={contract} 
+                                            contract={contract}
                                             uploadOpen={handleOpenDraftUpload}
-                                            />
+                                        />
                                     </TabPanel>
                                     <TabPanel value="5">
                                         <UserProfile contract={contract} />

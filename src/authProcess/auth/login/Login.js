@@ -20,6 +20,7 @@ export default function Login() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const reason = queryParams.get('reason');
+  const campaignId = queryParams.get('redirect');
 
 
   console.log("Enetered login userToken", localStorage.getItem('user-token'));
@@ -48,9 +49,14 @@ export default function Login() {
       localStorage.setItem('user-token', response.data);
       const userType = await getUserType();
       localStorage.setItem("user-type", userType);
-      console.log("LOGINTOKENEEN", localStorage.getItem('user-token'));
+
       setTimeout(() => {
-        navigate('/home');
+        if (campaignId) {
+          navigate(`/campaign/${campaignId}`);
+
+        } else {
+          navigate('/home');
+        }
       }, 500);
     } catch (error) {
       setError(true)
@@ -74,7 +80,7 @@ export default function Login() {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-       
+
         <Box component="form" onSubmit={handleLogin} noValidate sx={{ mt: 1 }}>
           <TextField
             margin="normal"
@@ -97,9 +103,9 @@ export default function Login() {
             autoComplete="current-password"
           />
           {error && (<Typography component="p" variant="caption2">Incorrect Username or Password</Typography>)}
-          {reason == "expired" && ( 
-          <Typography>Session Expired. Please sign in again.</Typography>
-        )}
+          {reason == "expired" && (
+            <Typography>Session Expired. Please sign in again.</Typography>
+          )}
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
