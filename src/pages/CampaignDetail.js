@@ -1,9 +1,9 @@
 import { useParams } from "react-router";
 import UploadAttachmentModal from "../components/modals/UploadAttachmentModal";
-import DraftDashboardModal from "../components/modals/DraftDashboardModal";
 import { Box, Grid, Tab, Tabs } from "@mui/material";
 import SocionHeader from "../components/headers/SocionHeader";
 import CampaignSummary from "../components/campaignDetails/CampaignSummary";
+import { useNavigate } from "react-router";
 import { EditTab, InvoicesTab, TasksTab } from "../components/accordians/CampaignAccordian";
 import UserProfile from "../components/campaignDetails/UserProfile";
 import DraftsSidebar from "../components/avatar/DraftsSidebar";
@@ -31,12 +31,12 @@ const InfluencerCampaignDetail = () => {
     const { contractId } = useParams();
     const [contract, setContract] = useState(null);
     const [influencerId, setInfluencerId] = useState(null);
-    const [openDraftDashboard, setOpenDraftDashboard] = useState(false);
     const [openDraftUpload, setOpenDraftUpload] = useState(false);
     const [openAttachmentUpload, setOpenAttachmentUpload] = useState(false);
     const [refresh, setRefresh] = useState(false);
     const [value, setValue] = React.useState('1');
 
+    const navigate = useNavigate();
 
 
     const handleChange = (event, newValue) => {
@@ -61,11 +61,11 @@ const InfluencerCampaignDetail = () => {
     }
 
     const handleOpenDashboard = () => {
-        setOpenDraftDashboard(true);
+        navigate('/campaign/' + contractId + '/draftDashboard');
     }
 
     const handleCloseDashboard = () => {
-        setOpenDraftDashboard(false);
+        navigate('/campaign/' + contractId);
     }
 
     const completeContract = async () => {
@@ -122,13 +122,6 @@ const InfluencerCampaignDetail = () => {
                 contractId={contractId}
                 refresh={handleRefresh}
                 influencer={influencerId}
-            />
-            <DraftDashboardModal
-                open={openDraftDashboard}
-                handleClose={handleCloseDashboard}
-                drafts={contract.drafts}
-                contractId={contractId}
-                refresh={handleRefresh}
             />
             <Box sx={{ p: 1, m: 1 }}>
                 <SocionHeader showButton={false} />
@@ -223,12 +216,13 @@ const InfluencerCampaignDetail = () => {
 const AdminCampaignDetail = () => {
     const { contractId } = useParams();
     const [contract, setContract] = useState(null);
-    const [openDraftDashboard, setOpenDraftDashboard] = useState(false);
     const [openAttachmentUpload, setOpenAttachmentUpload] = useState(false);
     const [openDraftUpload, setOpenDraftUpload] = useState(false);
     const [influencerId, setInfluencerId] = useState(null);
     const [openInvoiceUpload, setOpenInvoiceUpload] = useState(false);
     const [refresh, setRefresh] = useState(false);
+
+    const navigate = useNavigate();
 
     const [value, setValue] = React.useState('1');
 
@@ -259,11 +253,11 @@ const AdminCampaignDetail = () => {
     }
 
     const handleOpenDashboard = () => {
-        setOpenDraftDashboard(true);
+        navigate('/campaign/' + contractId + '/draftDashboard');
     }
 
     const handleCloseDashboard = () => {
-        setOpenDraftDashboard(false);
+        navigate('/campaign/' + contractId);
     }
 
     React.useEffect(() => {
@@ -332,13 +326,6 @@ const AdminCampaignDetail = () => {
 
                 }
                 contractId={contractId}
-            />
-            <DraftDashboardModal
-                open={openDraftDashboard}
-                handleClose={handleCloseDashboard}
-                drafts={contract.drafts}
-                contractId={contractId}
-                refresh={handleRefresh}
             />
             <Box sx={{ p: 1, m: 1 }}>
                 <SocionHeader showButton={false} />

@@ -18,6 +18,8 @@ import AdminSettings from "./pages/agencySettings/adminSettings";
 import ErrorBoundary from "./components/ErrorBoundary";
 import InviteSignUp from "./pages/InviteSignUp";
 import CampaignSettings from "./pages/agencySettings/adminSettings";
+import VideoPlayer from "./components/videoPlayer/VideoPlayer";
+import DraftDashboard from "./components/modals/DraftDashboard";
 
 
 function App() {
@@ -93,6 +95,11 @@ function App() {
                     <Route path='campaign/:contractId' element={
                         <ProtectedRoute>
                             <CampaignDetail />
+                        </ProtectedRoute>
+                    } />
+                    <Route path='campaign/:contractId/draftDashboard' element={
+                        <ProtectedRoute>
+                            <DraftDashboard/>
                         </ProtectedRoute>
                     } />
                     <Route path='registerInvite/:inviteToken' element={

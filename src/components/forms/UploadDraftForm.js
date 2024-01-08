@@ -18,7 +18,7 @@ export default function UploadDraftForm({ influencerEmail, contractId, refresh, 
     const [loading, setLoading] = React.useState(false);
     const [loadingProgress, setLoadingProgress] = React.useState(0);
 
-    const onProgress = (newProgress) => { 
+    const onProgress = (newProgress) => {
         console.log("Setting new progress to: " + newProgress);
         setLoadingProgress(newProgress);
     }
@@ -31,6 +31,7 @@ export default function UploadDraftForm({ influencerEmail, contractId, refresh, 
         initialValues: {
             draftName: "",
             reference: "",
+            description: ""
         },
         validationSchema: formValidation,
         validateOnChange: true,
@@ -42,10 +43,11 @@ export default function UploadDraftForm({ influencerEmail, contractId, refresh, 
                 draftName: values.draftName,
                 contractId: contractId,
                 submittedByEmail: influencerEmail,
-                reference: videoPreview
+                reference: videoPreview,
+                description: values.description
             }
             const response = await addDraftToCampaign(draftDTO);
-            
+
             if (response) {
                 refresh();
                 handleClose();
@@ -58,20 +60,59 @@ export default function UploadDraftForm({ influencerEmail, contractId, refresh, 
         <Container maxWidth="sm">
             <Paper elevation={3} style={{ padding: "2em", marginTop: "2em" }}>
                 <Typography variant="h4" align="center" gutterBottom>Create New Draft</Typography>
-                <Grid container spacing={3}>
-                    <Grid item xs={12}>
-                        <TextField
-                            required
-                            fullWidth
-                            label="Draft Name"
-                            name="draftName"
-                            value={myForm.values.draftName}
-                            onChange={myForm.handleChange}
-                            error={!!myForm.errors.draftName}
-                            helperText={myForm.errors.draftName}
-                        />
-                    </Grid>
+                {loading ?
 
+                    (
+                        <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <LinearWithValueLabel progress={loadingProgress} />
+                        </Box>
+                    )
+
+
+                    :
+
+                    (
+                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 2 }}>
+                            <label htmlFor="upload-video">
+                                <Button
+                                    variant="outlined"
+                                    color="primary" component="span">
+                                    {videoPreview ? "Change Video" : "Upload Video"}
+                                </Button>
+                            </label>
+                        </Box>)
+
+                }
+                <Grid container spacing={3}>
+                    {videoPreview && (
+                        <>
+                            <Grid item xs={12}>
+                                <TextField
+                                    required
+                                    fullWidth
+                                    label="Draft Name"
+                                    name="draftName"
+                                    value={myForm.values.draftName}
+                                    onChange={myForm.handleChange}
+                                    error={!!myForm.errors.draftName}
+                                    helperText={myForm.errors.draftName}
+                                />
+                            </Grid>
+
+                            <Grid item xs={12}>
+                                <TextField
+                                    value={myForm.description}
+                                    name='description'
+                                    label='Draft Description'
+                                    onChange={myForm.handleChange}
+                                    error={!!myForm.errors.description}
+                                    helperText={myForm.errors.description}
+                                    inputProps={{ maxLength: 1000 }}
+                                    multiline
+                                    fullWidth
+                                />
+                            </Grid>
+                        </>)}
                     <Grid item xs={12}>
                         <Input
                             ref={uploadInputRef}
@@ -79,6 +120,7 @@ export default function UploadDraftForm({ influencerEmail, contractId, refresh, 
                             accept="video/mp4,video/x-m4v,video/*"
                             id="upload-video"
                             onChange={async (event) => {
+                                setVideoPreview(null);
                                 setLoading(true);
                                 const unique_id = uuid();
                                 const file = event.target.files[0];
@@ -88,23 +130,6 @@ export default function UploadDraftForm({ influencerEmail, contractId, refresh, 
                             }}
                         />
 
-                        {loading ?
-
-                            (
-                                <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                    <LinearWithValueLabel progress={loadingProgress}/>
-                                </Box>
-                            )
-
-
-                            :
-                            (<label htmlFor="upload-video">
-                                <Button variant="outlined" color="primary" component="span">
-                                    Upload Video
-                                </Button>
-                            </label>)
-
-                        }
 
 
                         {videoPreview &&
@@ -114,6 +139,10 @@ export default function UploadDraftForm({ influencerEmail, contractId, refresh, 
                             </video>
                         }
                     </Grid>
+
+
+
+
 
                     <Grid item xs={12}>
                         <Button

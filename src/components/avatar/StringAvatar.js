@@ -1,5 +1,6 @@
 import Avatar from '@mui/material/Avatar';
 import * as React from 'react';
+import '../../App.css';
 
 function stringToColor(string) {
   let hash = 0;
@@ -23,8 +24,8 @@ function stringToColor(string) {
 
 function stringAvatar(name, size) {
   const nameParts = name.split(' ');
-const firstInitial = nameParts[0] ? nameParts[0][0] : '';
-const secondInitial = nameParts[1] ? nameParts[1][0] : '';
+const firstInitial = (nameParts[0] ? nameParts[0][0] : '').toUpperCase();
+const secondInitial = (nameParts[1] ? nameParts[1][0] : '').toUpperCase();
   if (size) {
     const fontSize = size/2;
     return {

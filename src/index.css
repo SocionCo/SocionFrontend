@@ -17,3 +17,16 @@ code {
   color: black !important;
   -webkit-text-fill-color:black !important;
 }
+
+.orange { 
+  color: orange !important;
+}
+
+.green { 
+  color: green !important;
+}
+
+.red { 
+  color: red !important;
+}
+

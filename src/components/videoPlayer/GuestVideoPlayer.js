@@ -1,14 +1,20 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Container, Box, Grid, Paper, Toolbar, MenuItem, Select, IconButton, ThemeProvider, createTheme, Typography, List, ListItem, setRef, Slide, CircularProgress, Modal } from '@mui/material';
+import { Container, Box, Grid, Paper, Toolbar, MenuItem, Select, Switch, IconButton, ThemeProvider, createTheme, Typography, List, ListItem, setRef, Slide, CircularProgress, Modal, useMediaQuery } from '@mui/material';
 import ShareIcon from '@mui/icons-material/Share';
 import ReactPlayer from 'react-player';
 import { Stack } from '@mui/system';
 import TextField from '@mui/material/TextField/TextField';
 import SendIcon from '@mui/icons-material/Send';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import Checkbox from '@mui/material/Checkbox/Checkbox';
 import StringAvatar from '../avatar/StringAvatar';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ListItemText from '@mui/material/ListItemText/ListItemText';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
+import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 import ListItemAvatar from '@mui/material/ListItemAvatar/ListItemAvatar';
+import CircleIcon from '@mui/icons-material/Circle';
 import LinearProgress from '@mui/material/LinearProgress/LinearProgress';
 import styled from '@emotion/styled';
 import { addCommentToDraft, addGuestCommentToDraft, deleteCommentFromDraft, generateReviewalLinkForDraft, getDraftInformationWithGuestToken, replyToComment, reviewDraft } from '../../services/draftServices';
@@ -20,6 +26,11 @@ import Button from '@mui/material/Button';
 import Popover from '@mui/material/Popover';
 import Error404 from '../../util/errorPage';
 import { useParams } from 'react-router-dom';
+import LightModeIcon from '@mui/icons-material/LightMode';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
+
+
+
 
 
 
@@ -52,7 +63,36 @@ export const theme = createTheme({
     },
 });
 
-export const CommentSticker = ({ contractId, videoPlayer, comment, currentTime, refresh, draftId }) => {
+
+const lightTheme = createTheme({
+    palette: {
+        primary: {
+            main: 'rgb(0,0,0)',
+        },
+        background: {
+            default: 'rgb(255,255,255)', // White 
+            secondary: 'rgb(228,228,228)',
+            commentBox: 'rgb(228,228,228)',
+            offWhite: '#FAFAFA'
+        },
+    },
+});
+
+const darkTheme = createTheme({
+    palette: {
+        primary: {
+            main: 'rgb(255,255,255)', // Dark 
+            secondary: 'rgb(34,37,48)'
+        },
+        background: {
+            default: 'rgb(32,34,43)', // Lighter dark
+            secondary: 'rgb(20,22,28)', // Dark 
+            commentBox: 'rgb(47,53,68)'
+        },
+    },
+});
+
+export const CommentSticker = ({ contractId, videoPlayer, comment, currentTime, refresh, draftId, darkMode }) => {
     var commenterName = "";
     if (!comment.commenter) {
         commenterName = comment.brandName + ": " + comment.displayName;
@@ -70,19 +110,23 @@ export const CommentSticker = ({ contractId, videoPlayer, comment, currentTime, 
         setCurrentText(event.target.value);
     }
 
+
     return (
-        <Box>
+        <Box sx={{ width: '100%', backgroundColor: darkMode ? darkTheme.palette.background.secondary : lightTheme.palette.background.secondary }}>
             <ListItem
-                selected={Math.abs(currentTime - comment.timeStamp) < 2 && currentTime > 0}
-                alignItems="flex-start"
+                divider={false}
+                selected={Math.abs(currentTime - comment.timeStamp) < 1 && currentTime > 0}
                 sx={{
                     '&:hover': {
-                        backgroundColor: 'rgba(0, 161, 82, 0.1)'
+                        backgroundColor: 'rgba(0, 161, 82, 0.2)'
                     },
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
-                    overflow: 'hidden'
+                    justifyContent: 'space-between',
+                    backgroundColor: darkMode ? darkTheme.palette.background.secondary : lightTheme.palette.background.secondary,
+                    borderBottom: '1px solid black'
+
 
                 }}
                 onClick={() => videoPlayer.current.seekTo(comment.timeStamp, 'seconds')}
@@ -93,10 +137,10 @@ export const CommentSticker = ({ contractId, videoPlayer, comment, currentTime, 
                     <StringAvatar name={comment.displayName} />
                 </ListItemAvatar>
 
-                <Stack>
+                <Stack sx={{ width: '100%' }}>
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <ListItemText
-
+                            sx={{ color: 'rgb(157,166,179)' }}
                             primary={
                                 <>
                                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -112,23 +156,28 @@ export const CommentSticker = ({ contractId, videoPlayer, comment, currentTime, 
 
                                 </>
 
-                            }
+                            } xr
                             secondary={
                                 <Box>
-                                    <Box>
+                                    <Box >
                                         <Typography
-                                            sx={{ wordBreak: 'break-word' }}
 
+                                            sx={{ wordBreak: 'break-word', maxWidth: '100%', color: 'rgb(157,166,179)' }}
                                         >{comment.comment}</Typography>
                                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                                             <Typography onClick={(e) => {
                                                 e.stopPropagation();
                                                 setShowRepliesMode(false);
                                                 setReplyMode(!replyMode);
-                                            }} variant='caption'>Reply</Typography>
+                                            }}
+                                                variant='caption'
+                                                sx={{ color: 'rgb(157,166,179)' }}
+                                            >Reply</Typography>
                                             {(comment.replies && comment.replies.length > 0 && !showRepliesMode) &&
                                                 (<Typography
-                                                    onClick={() => {
+                                                    sx={{ color: 'rgb(157,166,179)' }}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
                                                         setReplyMode(false);
                                                         setShowRepliesMode(!showRepliesMode);
                                                     }}
@@ -138,7 +187,9 @@ export const CommentSticker = ({ contractId, videoPlayer, comment, currentTime, 
                                             }
                                             {(comment.replies && comment.replies.length > 0 && showRepliesMode) &&
                                                 (<Typography
-                                                    onClick={() => {
+                                                    sx={{ color: 'rgb(157,166,179)' }}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
                                                         setReplyMode(false);
                                                         setShowRepliesMode(!showRepliesMode);
                                                     }}
@@ -158,13 +209,15 @@ export const CommentSticker = ({ contractId, videoPlayer, comment, currentTime, 
                                                     width: '80%'
                                                 }}
                                             />
-                                            <IconButton onClick={async () => {
+                                            <IconButton onClick={async (e) => {
                                                 await replyToComment(contractId, draftId, currentText, null, comment.id);
                                                 setReplyMode(false);
                                                 setShowRepliesMode(true);
                                                 refresh();
                                             }}>
-                                                <SendIcon />
+                                                <SendIcon
+                                                    sx={{ color: 'rgb(157,166,179)' }}
+                                                />
                                             </IconButton>
                                         </Box>
 
@@ -174,12 +227,28 @@ export const CommentSticker = ({ contractId, videoPlayer, comment, currentTime, 
                             }
 
                         />
-                    </Box>
 
+
+
+                    </Box>
                 </Stack>
+                < IconButton
+                    onClick={async (event) => {
+                        event.stopPropagation();
+                        await deleteCommentFromDraft(comment.id);
+                        refresh();
+                    }}>
+                    <DeleteIcon />
+                </IconButton >
+
             </ListItem >
             {showRepliesMode && (
-                <Box sx={{ marginLeft: 4 }}>  {/* Add some margin to indicate these are replies */}
+                <Box
+                    sx={{
+                        paddingLeft: 4,
+                        backgroundColor: darkMode ? darkTheme.palette.background.default : lightTheme.palette.background.default
+                    }}
+                >
                     {
                         comment.replies.map((element) => {
                             return (
@@ -191,6 +260,7 @@ export const CommentSticker = ({ contractId, videoPlayer, comment, currentTime, 
                                     key={element.id}
                                     refresh={refresh}
                                     draftId={draftId}
+                                    darkMode={darkMode}
                                 />
                             );
                         })
@@ -211,11 +281,49 @@ export default function GuestVideoPlayer({ isForAdmin = false, contractId }) {
     const [textFieldContains, setTextFieldContains] = useState('');
     const [useTimeStamp, setUseTimeStamp] = useState(true);
     const [currentTime, setCurrentTime] = useState(0);
-    const [updateDrafts, setUpdatedDrafts] = useState(null);
     const { inviteToken } = useParams();
     const [brandName, setBrandName] = useState(localStorage.getItem("brandName"));
     const [firstName, setFirstName] = useState(localStorage.getItem("firstName"));
     const [lastName, setLastName] = useState(localStorage.getItem("lastName"));
+    const [videosLeftToLoad, setVideosLeftToLoad] = useState(null);
+    const [videoDurations, setVideoDurations] = useState({});
+    const [darkMode, setDarkMode] = useState(true);
+    const [shelfOpen, setShelfOpen] = useState(false);
+
+
+
+
+    const isLargeScreen = useMediaQuery((darkMode ? darkTheme : lightTheme).breakpoints.up('lg'));
+    const isMediumScreen = useMediaQuery((darkMode ? darkTheme : lightTheme).breakpoints.between('md', 'lg'));
+    const isSmallScreen = useMediaQuery((darkMode ? darkTheme : lightTheme).breakpoints.between('sm', 'md'));
+
+    let screenSize = '';
+    if (isLargeScreen) {
+        screenSize = 'lg';
+    } else if (isMediumScreen) {
+        screenSize = 'md';
+    } else if (isSmallScreen) {
+        screenSize = 'sm';
+    } else {
+        screenSize = 'xs';
+    }
+
+
+    const handleDarkModeToggle = () => {
+        setDarkMode(!darkMode);
+        console.log("Dark Mode: ", darkMode);
+    }
+
+
+
+    const handleVideoDuration = (url, duration) => {
+        setVideoDurations((prevDurations) => ({
+            ...prevDurations,
+            [url]: duration,
+        }));
+    };
+
+
 
     const [open, setOpen] = useState((!brandName || !firstName || !lastName));
 
@@ -230,11 +338,6 @@ export default function GuestVideoPlayer({ isForAdmin = false, contractId }) {
             alert("Please fill out all fields before closing.");
         }
     };
-
-
-
-
-
 
     useEffect(() => {
         async function setPage() {
@@ -269,11 +372,6 @@ export default function GuestVideoPlayer({ isForAdmin = false, contractId }) {
     }
 
 
-    const handleDraftChange = (event) => {
-        const selectedDraft = updateDrafts.find(draft => draft.id === event.target.value);
-        setActiveDraft(selectedDraft);
-    };
-
     const handleDuration = (d) => {
         setDuration(d);
     };
@@ -285,10 +383,9 @@ export default function GuestVideoPlayer({ isForAdmin = false, contractId }) {
     }
 
 
-
-    return (
-        <ThemeProvider theme={theme} >
-            <Box sx={{ height: '100vh'}} >
+    if (screenSize === "sm" || screenSize ==="xs") {
+        return (
+            <Box>
                 <Modal
                     open={open}
                     onClose={handleClose}
@@ -338,125 +435,395 @@ export default function GuestVideoPlayer({ isForAdmin = false, contractId }) {
                         </Button>
                     </Box>
                 </Modal>
-                <SolidBackground p={3}>
-                    <Grid container spacing={3}>
-                        <Grid item xs={12} md={8}>
-                            <Paper elevation={3} square style={{ backgroundColor: '#f1f1f1' }}>
-                                <Toolbar>
-                                    <Select
-                                        value={activeDraft?.approvalStatus || ''}
-                                        variant="outlined"
-                                        style={{ minWidth: '120px', height: '40px', borderRadius: '4px' }}
-                                        onChange={handleUpdateDraftReview}
-                                    >
-                                        <MenuItem value="UNREVIEWED">Unreviewed</MenuItem>
-                                        <MenuItem value="APPROVED">Approved</MenuItem>
-                                        <MenuItem value="REJECTED">Rejected</MenuItem>
-                                    </Select>
-                                    <div style={{ flexGrow: 1 }} />
-                                    <ShareButton
-                                        draftId={activeDraft.id}
-                                        contractId={contractId}
-                                    />
-                                </Toolbar>
-                            </Paper>
 
-                            {/* Video Player */}
-                            <Stack>
-                                <Box elevation={3} style={{ padding: 10, backgroundColor: '#e1e1e1', height: '90%' }}>
-                                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                        <ReactPlayer
-                                            controls
-                                            width='100%'
-                                            height='70vh'
-                                            url={activeDraft?.reference}
-                                            onDuration={handleDuration}
-                                            onProgress={({ playedSeconds }) => setCurrentTime(playedSeconds)}
-                                            ref={playerRef}
-                                            progressInterval={100}
+                <Grid container width={'100%'} height={'100vh'} sx={{ backgroundColor: darkMode ? darkTheme.palette.background.default : lightTheme.palette.background.default }}>
+                    <Box sx={{ padding: 0, width: '100%' }}>
+                        <ToolBar
+                            darkMode={darkMode}
+                            activeDraft={activeDraft}
+                            handleDarkModeToggle={handleDarkModeToggle}
+                            contractId={contractId}
+                            handleClose={handleClose}
+                            handleUpdateDraftReview={handleUpdateDraftReview}
+                            compact={true}
+                        />
+                    </Box>
+                    <Box>
+                        <Box>
+                            <ReactPlayer
+                                controls
+                                width='100%'
+                                height={shelfOpen ? '30vh' : '60vh'}
+                                url={activeDraft?.reference}
+                                onDuration={handleDuration}
+                                onProgress={({ playedSeconds }) => setCurrentTime(playedSeconds)}
+                                ref={playerRef}
+                                progressInterval={100}
+                                style={{ backgroundColor: darkMode ? darkTheme.palette.background.default : lightTheme.palette.background.offWhite, padding: 0, margin: 0 }}
 
-                                        />
-                                        {duration && (
-                                            <LinearProgress
-                                                value={(currentTime / duration) * 100}
-                                                sx={{ borderRadius: 2, marginTop: 1, backgroundColor: 'rgba(0, 161, 82, 0.5)' }}
-                                                color="secondary"
-                                            />
-                                        )}
-                                    </Box>
+                            />
+                        </Box>
+                        <Box sx={{ backgroundColor: darkMode ? darkTheme.palette.background.default : lightTheme.palette.background.default }}>
+                            <Box
+                                sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', backgroundColor: darkMode ? darkTheme.palette.background.default : lightTheme.palette.background.default }}
+                            >
+                                <IconButton
+                                    onClick={() => setShelfOpen(!shelfOpen)}
+                                >
+                                    {!shelfOpen ? (
+                                        <KeyboardDoubleArrowUpIcon />
+                                    ) : (
+                                        <KeyboardDoubleArrowDownIcon />
+                                    )
+                                    }
+                                </IconButton>
+                            </Box>
 
+                            <Box>
 
-
-
-                                    {duration && (
-                                        <Box
-                                            sx={{
-                                                height: '60px',
-                                                width: '100%',
-                                                position: 'relative',
-                                                borderBottom: '1px solid black',
-                                                marginBottom: 1
-                                            }}
-                                        >
-                                            {activeDraft && activeDraft.videoComments && activeDraft.videoComments.length > 0 && (
-                                                activeDraft.videoComments.map((comment, index) => {
-                                                    const position = (comment.timeStamp / duration) * 100;
-                                                    return (
-                                                        <Box
-                                                            key={index}
-                                                            onClick={() => playerRef.current.seekTo(comment.timeStamp, 'seconds')}
-                                                            style={{
-                                                                position: 'absolute',
-                                                                left: `${position}%`,
-                                                                bottom: '10px',
-                                                                backgroundColor: 'blue',
-                                                                height: '40px',
-                                                                width: '40px',
-                                                                borderRadius: '50%',
-                                                                cursor: 'pointer'
-                                                            }}
-                                                        >
-                                                            <StringAvatar
-                                                                name={comment.displayName}
-                                                            ></StringAvatar>
-                                                        </Box>
-                                                    );
-                                                })
-                                            )}
-
-
-                                        </Box>)}
-
-
-
-
-
-                                    {(duration) && (< Stack >
+                                {(duration) && (
+                                    < Stack sx={{ backgroundColor: darkMode ? darkTheme.palette.background.default : lightTheme.palette.background.default, paddingBottom: 1 }}>
                                         <Box elevation={3} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                            <TextField onChange={(event) => setTextFieldContains(event.target.value)} variant="outlined" value={textFieldContains} sx={{ flexGrow: 10, marginX: 1 }} placeholder="Write a comment..." />
-                                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                                <Typography sx={{ flexGrow: 1 }}>{timeConvert(playerRef.current.getCurrentTime())}</Typography>
-                                                <Checkbox checked={useTimeStamp}
-                                                    sx={{ flexGrow: 1 }}
-                                                    onChange={(event) => setUseTimeStamp(event.target.checked)}
-                                                />
+                                            <Box sx={{
+                                                padding: 2,
+                                                margin: 'auto',
+                                                backgroundColor: darkMode ? darkTheme.palette.background.commentBox : lightTheme.palette.background.commentBox,
+                                                borderRadius: '10px',
+                                                width: '75%',
+                                            }}>
+
+                                                <Box sx={{
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                    marginBottom: 2
+                                                }}>
+                                                    <StringAvatar
+                                                        name={firstName + " " + lastName}
+                                                    />
+                                                    <TextField
+                                                        onChange={(event) => setTextFieldContains(event.target.value)}
+                                                        variant="outlined"
+                                                        value={textFieldContains}
+                                                        width='75%'
+                                                        sx={{ flexGrow: 10, marginX: 1 }}
+                                                        placeholder="Leave a comment..." />
+                                                </Box>
+
+                                                <Box sx={{
+                                                    width: '100%',
+                                                    display: 'flex',
+                                                    justifyContent: 'space-between',
+                                                    alignItems: 'center',
+                                                }}>
+                                                    <Box sx={{
+                                                        display: 'flex',
+                                                        justifyContent: 'center',
+                                                        alignItems: 'center',
+                                                        borderRadius: '10%',
+                                                        backgroundColor: darkMode ? darkTheme.palette.primary.secondary : lightTheme.palette.background.offW
+                                                    }}>
+                                                        <AccessTimeIcon sx={{
+                                                            marginX: 1,
+                                                            color: darkMode ? darkTheme.palette.primary.main : lightTheme.palette.primary.main
+                                                        }} />
+                                                        <Typography
+                                                            sx={{ color: darkMode ? darkTheme.palette.primary.main : lightTheme.palette.primary.main }}
+                                                        >{timeConvert(playerRef.current.getCurrentTime())}</Typography>
+                                                        <Checkbox
+                                                            checked={useTimeStamp}
+                                                            sx={{ color: darkMode ? darkTheme.palette.primary.main : lightTheme.palette.primary.main }}
+                                                            onChange={(event) => setUseTimeStamp(event.target.checked)}
+                                                        />
+                                                    </Box>
+                                                    <Box>
+                                                        <IconButton
+                                                            onClick={handleSendComment}
+                                                            sx={{ color: darkMode ? darkTheme.palette.primary.main : lightTheme.palette.primary.main }}
+                                                            disabled={textFieldContains.length === 0}
+                                                        >
+                                                            <SendIcon />
+                                                        </IconButton>
+                                                    </Box>
+                                                </Box>
                                             </Box>
-                                            <Box sx={{ flexGrow: 1 }}>
-                                                <IconButton onClick={handleSendComment}>
-                                                    <SendIcon />
-                                                </IconButton>
+                                        </Box>
+                                    </Stack>
+
+                                )}
+
+                                <Paper elevation={5} square style={{ backgroundColor: darkMode ? darkTheme.palette.background.secondary : lightTheme.palette.background.secondary, overflow: 'auto', maxHeight: 600 }}>
+                                    <div style={{ maxHeight: shelfOpen ? '40vh' : '10vh', overflowY: 'auto' }}>
+                                        <List sx={{ width: '100%', margin: 0, backgroundColor: darkMode ? darkTheme.palette.background.secondary : lightTheme.palette.background.secondary }}>
+                                            {
+                                                activeDraft && activeDraft.videoComments && activeDraft.videoComments.length === 0 ?
+                                                    (
+                                                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                            <Typography>No Comments Yet!</Typography>
+                                                        </Box>
+                                                    )
+                                                    :
+                                                    (playerRef && activeDraft && activeDraft.videoComments) && (activeDraft.videoComments.map(element => {
+                                                        return (
+                                                            <CommentSticker
+                                                                darkMode={darkMode}
+                                                                contractId={contractId}
+                                                                comment={element}
+                                                                currentTime={currentTime}
+                                                                videoPlayer={playerRef}
+                                                                key={element.id}
+                                                                refresh={refresh}
+                                                                draftId={activeDraft.id}
+                                                            />
+                                                        );
+                                                    }))
+                                            }
+                                        </List>
+                                    </div>
+                                </Paper>
+
+                            </Box>
+                        </Box>
+                    </Box>
+                </Grid>
+            </Box>
+
+        );
+
+    }
+
+
+    return (
+        <Box sx={{ height: '100vh' }} >
+            <Modal
+                open={open}
+                onClose={handleClose}
+            >
+
+                <Box
+                    sx={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        bgcolor: 'background.paper',
+                        border: '2px solid #000',
+                        boxShadow: 24,
+                        p: 4,
+                    }}
+                >
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <Typography variant='h4'>Sign in For Guest Commenting</Typography>
+                    </Box>
+                    <TextField
+                        label="Brand Name"
+                        variant="outlined"
+                        value={brandName}
+                        onChange={(e) => setBrandName(e.target.value)}
+                        fullWidth
+                        margin="normal"
+                    />
+                    <TextField
+                        label="First Name"
+                        variant="outlined"
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
+                        fullWidth
+                        margin="normal"
+                    />
+                    <TextField
+                        label="Last Name"
+                        variant="outlined"
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                        fullWidth
+                        margin="normal"
+                    />
+                    <Button onClick={handleClose} fullWidth variant="contained">
+                        Submit
+                    </Button>
+                </Box>
+            </Modal>
+            <ThemeProvider theme={darkMode ? lightTheme : darkTheme}>
+                <Grid container sx={{ height: '100vh', overflow: 'hidden' }}>
+                    <ToolBar
+                        darkMode={darkMode}
+                        activeDraft={activeDraft}
+                        handleDarkModeToggle={handleDarkModeToggle}
+                        contractId={contractId}
+                        handleClose={handleClose}
+                        handleUpdateDraftReview={handleUpdateDraftReview}
+                    />
+                    <Grid item xs={12} md={4} sx={{ backgroundColor: darkMode ? darkTheme.palette.background.default : lightTheme.palette.background.default, borderBottom: '2.5px solid black' }}>
+                        <Box>
+
+                        </Box>
+                    </Grid>
+                    <Grid item xs={12} md={8}>
+
+                        {/* Video Player */}
+                        <Stack>
+                            <Box>
+                                <ReactPlayer
+                                    controls
+                                    width='100%'
+                                    height='70vh'
+                                    url={activeDraft?.reference}
+                                    onDuration={handleDuration}
+                                    onProgress={({ playedSeconds }) => setCurrentTime(playedSeconds)}
+                                    ref={playerRef}
+                                    progressInterval={100}
+                                    style={{ backgroundColor: darkMode ? darkTheme.palette.background.default : lightTheme.palette.background.offWhite }}
+
+                                />
+
+
+
+                                {duration && (
+                                    <Box
+                                        sx={{
+                                            height: '60px',
+                                            width: '100%',
+                                            position: 'relative',
+                                            marginTop: -1,
+                                            overflow: 'hidden',
+                                            backgroundColor: darkMode ? darkTheme.palette.background.default : lightTheme.palette.background.default,
+
+                                        }}
+                                    >
+                                        {activeDraft && activeDraft.videoComments && activeDraft.videoComments.length > 0 && (
+                                            activeDraft.videoComments.map((comment, index) => {
+                                                const position = (comment.timeStamp / duration) * 100;
+                                                var adjustedPosition = position > 98 ? 98 : position;
+                                                adjustedPosition = position < 3 ? 3 : position;
+                                                return (
+                                                    <Box
+                                                        key={index}
+                                                        onClick={() => playerRef.current.seekTo(comment.timeStamp, 'seconds')}
+                                                        style={{
+                                                            position: 'absolute',
+                                                            left: `${adjustedPosition}%`,
+                                                            bottom: '10px',
+                                                            backgroundColor: 'blue',
+                                                            transform: 'translateX(-50%)',
+                                                            height: '40px',
+                                                            width: '40px',
+                                                            borderRadius: '50%',
+                                                            cursor: 'pointer'
+                                                        }}
+                                                    >
+                                                        <StringAvatar
+                                                            name={comment.displayName}
+                                                        ></StringAvatar>
+                                                    </Box>
+                                                );
+                                            })
+                                        )}
+
+
+                                    </Box>)}
+
+
+
+                                {(duration) && (
+                                    < Stack sx={{ backgroundColor: darkMode ? darkTheme.palette.background.default : lightTheme.palette.background.default, paddingBottom: 10 }}>
+                                        <Box elevation={3} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                            <Box sx={{
+                                                padding: 2,
+                                                margin: 'auto',
+                                                backgroundColor: darkMode ? darkTheme.palette.background.commentBox : lightTheme.palette.background.commentBox,
+                                                borderRadius: '10px',
+                                                width: '75%',
+                                            }}>
+
+                                                <Box sx={{
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                    marginBottom: 2
+                                                }}>
+                                                    <StringAvatar
+                                                        name={firstName + " " + lastName}
+                                                    />
+                                                    <TextField
+                                                        onChange={(event) => setTextFieldContains(event.target.value)}
+                                                        variant="outlined"
+                                                        value={textFieldContains}
+                                                        width='75%'
+                                                        sx={{ flexGrow: 10, marginX: 1 }}
+                                                        placeholder="Leave a comment..." />
+                                                </Box>
+
+                                                <Box sx={{
+                                                    width: '100%',
+                                                    display: 'flex',
+                                                    justifyContent: 'space-between',
+                                                    alignItems: 'center',
+                                                }}>
+                                                    <Box sx={{
+                                                        display: 'flex',
+                                                        justifyContent: 'center',
+                                                        alignItems: 'center',
+                                                        borderRadius: '10%',
+                                                        backgroundColor: darkMode ? darkTheme.palette.primary.secondary : lightTheme.palette.background.offW
+                                                    }}>
+                                                        <AccessTimeIcon sx={{
+                                                            marginX: 1,
+                                                            color: darkMode ? darkTheme.palette.primary.main : lightTheme.palette.primary.main
+                                                        }} />
+                                                        <Typography
+                                                            sx={{ color: darkMode ? darkTheme.palette.primary.main : lightTheme.palette.primary.main }}
+                                                        >{timeConvert(playerRef.current.getCurrentTime())}</Typography>
+                                                        <Checkbox
+                                                            checked={useTimeStamp}
+                                                            sx={{ color: darkMode ? darkTheme.palette.primary.main : lightTheme.palette.primary.main }}
+                                                            onChange={(event) => setUseTimeStamp(event.target.checked)}
+                                                        />
+                                                    </Box>
+                                                    <Box>
+                                                        <IconButton
+                                                            onClick={handleSendComment}
+                                                            sx={{ color: darkMode ? darkTheme.palette.primary.main : lightTheme.palette.primary.main }}
+                                                            disabled={textFieldContains.length === 0}
+                                                        >
+                                                            <SendIcon />
+                                                        </IconButton>
+                                                    </Box>
+                                                </Box>
                                             </Box>
 
                                         </Box>
                                     </Stack >)}
-                                </Box >
-                            </Stack >
-                        </Grid >
+                            </Box >
+                        </Stack >
+                    </Grid >
 
 
-                        <Grid item xs={12} md={4}>
-                            <Paper elevation={5} square style={{ backgroundColor: '#e9e9e9', overflow: 'auto', maxHeight: 600 }}>
-                                <List sx={{ width: '100%' }}>
+                    <Grid item xs={12} md={4} sx={{ borderBottom: darkMode ? "2px solid black" : "2px solid black", borderLeft: darkMode ? "2px solid black" : "2px solid black", backgroundColor: darkMode ? darkTheme.palette.background.default : lightTheme.palette.background.offWhite, paddingTop: 2 }}>
+                        <Box sx={{ borderBottom: darkMode ? "2px solid black" : '', paddingBottom: 2 }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', backgroundColor: darkMode ? darkTheme.palette.background.default : lightTheme.palette.background.offWhite }}>
+                                <Typography
+                                    sx={{ color: darkMode ? darkTheme.palette.primary.main : lightTheme.palette.primary.main, marginX: 3 }}
+                                    variant='h6'
+                                >{activeDraft.fullName}</Typography>
+                                <Typography
+                                    sx={{ color: 'grey', marginX: 1 }}
+                                    variant='caption'
+                                >{"Uploaded: " + activeDraft.dateCreated}</Typography>
+                            </Box>
+                            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', backgroundColor: darkMode ? darkTheme.palette.background.default : lightTheme.palette.background.offWhite, }}>
+                                <Typography
+                                    sx={{
+                                        color: darkMode ? darkTheme.palette.primary.main : lightTheme.palette.primary.main,
+                                        marginX: 3
+                                    }}
+                                >{activeDraft.description}</Typography>
+                            </Box>
+                        </Box>
+                        <Box sx={{ m: 1 }}>
+                            <Paper elevation={5} square style={{ backgroundColor: darkMode ? darkTheme.palette.background.secondary : lightTheme.palette.background.secondary, overflow: 'auto', maxHeight: 600 }}>
+
+                                <List sx={{ width: '100%', backgroundColor: darkMode ? darkTheme.palette.background.secondary : lightTheme.palette.background.secondary }}>
                                     {
                                         activeDraft && activeDraft.videoComments && activeDraft.videoComments.length === 0 ?
                                             (
@@ -468,6 +835,7 @@ export default function GuestVideoPlayer({ isForAdmin = false, contractId }) {
                                             (playerRef && activeDraft && activeDraft.videoComments) && (activeDraft.videoComments.map(element => {
                                                 return (
                                                     <CommentSticker
+                                                        darkMode={darkMode}
                                                         contractId={contractId}
                                                         comment={element}
                                                         currentTime={currentTime}
@@ -481,15 +849,126 @@ export default function GuestVideoPlayer({ isForAdmin = false, contractId }) {
                                     }
                                 </List>
                             </Paper>
-                        </Grid>
+                        </Box>
                     </Grid>
-                </SolidBackground>
-            </Box>
-        </ThemeProvider >
+                </Grid>
+            </ThemeProvider>
+        </Box>
     );
 }
 
-const ShareButton = ({ draftId, contractId }) => {
+const ToolBar = ({ darkMode, activeDraft, handleDarkModeToggle, contractId, handleClose, handleUpdateDraftReview, compact = false }) => {
+    return (
+        <>
+            <Grid item xs={12} md={8} sx={{ backgroundColor: darkMode ? darkTheme.palette.background.default : lightTheme.palette.background.default, borderBottom: '2.5px solid black' }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <IconButton onClick={handleClose} sx={{ marginRight: compact ? .5 : 2 }}>
+
+                        </IconButton>
+                    </Box>
+
+                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <Select
+                            variant='standard'
+                            disableUnderline
+                            sx={{
+                                marginX: compact ? .5 : 2,
+                                color: darkMode ? darkTheme.palette.primary.main : lightTheme.palette.primary.main,
+                                '& .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: darkMode ? darkTheme.palette.primary.main : lightTheme.palette.primary.main,
+                                },
+                                '& .MuiSvgIcon-root, & .circle-icon': {
+                                    color: darkMode ? darkTheme.palette.primary.main : lightTheme.palette.primary.main,
+                                }
+                            }}
+                            value={activeDraft?.approvalStatus || ''}
+                            style={{ minWidth: '120px', height: '40px', borderRadius: '4px', color: darkMode ? darkTheme.palette.primary.main : lightTheme.palette.primary.main }}
+                            onChange={handleUpdateDraftReview}
+                        >
+                            <MenuItem value="UNREVIEWED">
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    {!compact && (<CircleIcon className="orange" sx={{ marginRight: 1 }} />)}
+                                    <Typography>Unreviewed</Typography>
+                                </div>
+                            </MenuItem>
+                            <MenuItem value="APPROVED">
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    {!compact && (<CircleIcon className="green" sx={{ marginRight: 1 }} />)}
+                                    <Typography>Approved</Typography>
+                                </div>
+                            </MenuItem>
+                            <MenuItem value="REJECTED">
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    {!compact && (<CircleIcon className="red" sx={{ marginRight: 1 }} />)}
+                                    <Typography>Rejected</Typography>
+                                </div></MenuItem>
+                        </Select>
+
+                        <MoreIcon
+                            handleDarkModeToggle={handleDarkModeToggle}
+                            darkMode={darkMode}
+                            compact={compact}
+                        />
+
+                    </Box>
+
+                </Box>
+            </Grid>
+        </>
+    );
+}
+
+const MoreIcon = ({ handleDarkModeToggle, darkMode, compact = false }) => {
+    const [anchorEl, setAnchorEl] = useState(null);
+    const textRef = useRef(null);
+    const [loading, setLoading] = useState(false);
+
+    const open = Boolean(anchorEl);
+    const id = open ? 'simple-popover' : undefined;
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    const handleClick = async (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+
+    return (
+
+        <div>
+            <IconButton onClick={handleClick} sx={{ marginLeft: compact ? 1 : 2 }}>
+                <MoreHorizIcon sx={{ color: darkMode ? darkTheme.palette.primary.main : lightTheme.palette.primary.main }} />
+            </IconButton>
+            <Popover
+                id={id}
+                open={open}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'center',
+                }}
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'center',
+                }}
+            >
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: 2 }}>
+                    <LightModeIcon />
+                    <Switch checked={darkMode} color='default' onClick={handleDarkModeToggle} />
+                    <DarkModeIcon />
+                </Box>
+            </Popover>
+        </div>
+
+    );
+}
+
+
+const ShareButton = ({ draftId, contractId, darkMode, compact = false }) => {
     const [anchorEl, setAnchorEl] = useState(null);
     const [link, setLink] = useState('');
     const textRef = useRef(null);
@@ -508,10 +987,10 @@ const ShareButton = ({ draftId, contractId }) => {
         setAnchorEl(null);
     };
 
-    const copyLink = async () => {
+    const copyLink = () => {
         if (textRef.current) {
             textRef.current.select();
-            await navigator.clipboard.writeText(textRef.value);
+            document.execCommand('copy');
             handleClose();
         }
     };
@@ -519,13 +998,13 @@ const ShareButton = ({ draftId, contractId }) => {
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;
 
+    const center = { display: 'flex', justifyContent: 'center', alignItems: 'center' }
+
     return (
         <div>
-
             <IconButton onClick={handleClick}>
                 <ShareIcon
-                    sx={{ color: 'green' }}
-
+                    sx={{ color: darkMode ? darkTheme.palette.primary.main : lightTheme.palette.primary.main }}
                 />
             </IconButton>
             <Popover
@@ -544,22 +1023,52 @@ const ShareButton = ({ draftId, contractId }) => {
             >
 
                 {loading ? (<div style={{ padding: '16px' }}>
-                    <CircularProgress sx={{ marginX: 3 }} /></div>) :
-                    <div style={{ padding: '16px' }}>
-                        <TextField
-                            fullWidth
-                            value={link}
-                            inputRef={textRef}
-                            variant="outlined"
-                            InputProps={{
-                                endAdornment: (
-                                    <IconButton onClick={copyLink}>
-                                        <CopyIcon />
-                                    </IconButton>
-                                ),
-                            }}
-                        />
-                    </div>
+                    <CircularProgress sx={{ marginX: compact ? 1 : 3 }} /></div>) :
+                    <Box sx={{ width: '500px', paddingBottom: 3 }}>
+                        <Grid container>
+                            <Grid item xs={12}>
+                                <Box sx={{ m: 1, p: 1 }}>
+                                    <Typography>Share</Typography>
+                                </Box>
+                            </Grid>
+                            <Grid item xs={4} sx={center}>
+
+                                <Button
+                                    variant='contained'
+                                    sx={{ borderRadius: '10px', color: 'black' }}
+                                    onClick={() => { navigator.clipboard.writeText(link) }}
+
+                                >Copy Link</Button>
+                            </Grid>
+                            <Grid item xs={8} sx={center}>
+                                <TextField
+                                    value={link}
+                                    inputRef={textRef}
+                                    variant="outlined"
+                                    sx={{ width: '300px' }}
+                                />
+                            </Grid>
+                            <Grid item xs={4} sx={{ ...center, marginTop: 3 }} >
+
+                                <Button
+                                    variant='contained'
+                                    sx={{ borderRadius: '10px', color: 'black' }}
+                                    onClick={() => { navigator.clipboard.writeText("'s draft from the " + "campaign is waiting for you to review it. Access the dashboard here: " + link) }}
+
+                                >Copy Message</Button>
+                            </Grid>
+                            <Grid item xs={8} sx={{ ...center, marginTop: 3 }}>
+                                <TextField
+                                    value={"'s draft from the " + "campaign is waiting for you to review it. Access the dashboard here: " + link}
+                                    multiline
+                                    inputRef={textRef}
+                                    variant="outlined"
+                                    sx={{ width: '300px' }}
+                                />
+                            </Grid>
+
+                        </Grid>
+                    </Box>
 
                 }
             </Popover>
