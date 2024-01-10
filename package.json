@@ -42,10 +42,11 @@
     "yup": "^1.2.0"
   },
   "scripts": {
-    "start": "vite", 
+    "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview --port 3000" 
-  },
+    "preview": "vite preview",
+    "start": "serve dist -s"
+},
   "eslintConfig": {
     "extends": [
       "react-app",
