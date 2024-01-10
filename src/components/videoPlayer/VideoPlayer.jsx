@@ -298,7 +298,7 @@ export default function VideoPlayer({ isForAdmin = false, contractId, refreshOut
         };
 
         getUserInfo();
-    },[]);
+    }, []);
 
     const handleVideoDuration = (url, duration) => {
         setVideoDurations((prevDurations) => ({
@@ -535,9 +535,15 @@ export default function VideoPlayer({ isForAdmin = false, contractId, refreshOut
                                 onClick={() => setShelfOpen(!shelfOpen)}
                             >
                                 {!shelfOpen ? (
-                                    <KeyboardDoubleArrowUpIcon />
+                                    <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                                        <Typography sx={{ color: darkMode ? 'white' : '', marginRight: 1}}>See Comments</Typography>
+                                        <KeyboardDoubleArrowUpIcon sx={{ color: darkMode ? 'white' : '' }} />
+                                    </Box>
                                 ) : (
-                                    <KeyboardDoubleArrowDownIcon />
+                                    <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                                        <Typography sx={{ color: darkMode ? 'white' : '', marginRight: 1 }}>Hide Comments</Typography>
+                                        <KeyboardDoubleArrowDownIcon sx={{ color: darkMode ? 'white' : '' }} />
+                                    </Box>
                                 )
                                 }
                             </IconButton>
@@ -545,8 +551,40 @@ export default function VideoPlayer({ isForAdmin = false, contractId, refreshOut
 
                         <Box>
 
+
+
+                            <Box elevation={5} square style={{ backgroundColor: darkMode ? darkTheme.palette.background.secondary : lightTheme.palette.background.secondary, overflow: 'auto', maxHeight: 600, }}>
+                                <div style={{ maxHeight: shelfOpen ? '40vh' : '10vh', overflowY: 'auto' }}>
+                                    <List sx={{ width: '100%', margin: 0, backgroundColor: darkMode ? darkTheme.palette.background.default : lightTheme.palette.background.default }}>
+                                        {
+                                            activeDraft && activeDraft.videoComments && activeDraft.videoComments.length === 0 ?
+                                                (
+                                                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                        <Typography>No Comments Yet!</Typography>
+                                                    </Box>
+                                                )
+                                                :
+                                                (playerRef && activeDraft && activeDraft.videoComments) && (activeDraft.videoComments.map(element => {
+                                                    return (
+                                                        <CommentSticker
+                                                            darkMode={darkMode}
+                                                            contractId={contractId}
+                                                            comment={element}
+                                                            currentTime={currentTime}
+                                                            videoPlayer={playerRef}
+                                                            key={element.id}
+                                                            refresh={refresh}
+                                                            draftId={activeDraft.id}
+                                                        />
+                                                    );
+                                                }))
+                                        }
+                                    </List>
+                                </div>
+                            </Box>
+
                             {(duration) && (
-                                < Stack sx={{ backgroundColor: darkMode ? darkTheme.palette.background.default : lightTheme.palette.background.default, paddingBottom: 1 }}>
+                                < Stack sx={{ backgroundColor: darkMode ? darkTheme.palette.background.default : lightTheme.palette.background.default, paddingBottom: 1, marginTop: 1.5 }}>
                                     <Box elevation={3} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                                         <Box sx={{
                                             padding: 2,
@@ -614,36 +652,6 @@ export default function VideoPlayer({ isForAdmin = false, contractId, refreshOut
                                     </Box>
                                 </Stack>
                             )}
-
-                            <Paper elevation={5} square style={{ backgroundColor: darkMode ? darkTheme.palette.background.secondary : lightTheme.palette.background.secondary, overflow: 'auto', maxHeight: 600 }}>
-                                <div style={{ maxHeight: shelfOpen ? '40vh' : '10vh', overflowY: 'auto' }}>
-                                    <List sx={{ width: '100%', margin: 0, backgroundColor: darkMode ? darkTheme.palette.background.secondary : lightTheme.palette.background.secondary }}>
-                                        {
-                                            activeDraft && activeDraft.videoComments && activeDraft.videoComments.length === 0 ?
-                                                (
-                                                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                                        <Typography>No Comments Yet!</Typography>
-                                                    </Box>
-                                                )
-                                                :
-                                                (playerRef && activeDraft && activeDraft.videoComments) && (activeDraft.videoComments.map(element => {
-                                                    return (
-                                                        <CommentSticker
-                                                            darkMode={darkMode}
-                                                            contractId={contractId}
-                                                            comment={element}
-                                                            currentTime={currentTime}
-                                                            videoPlayer={playerRef}
-                                                            key={element.id}
-                                                            refresh={refresh}
-                                                            draftId={activeDraft.id}
-                                                        />
-                                                    );
-                                                }))
-                                        }
-                                    </List>
-                                </div>
-                            </Paper>
 
                         </Box>
                     </Box>
@@ -834,7 +842,7 @@ export default function VideoPlayer({ isForAdmin = false, contractId, refreshOut
                             >{activeDraft.description}</Typography>
                         </Box>
                     </Box>
-                    <Box sx={{m: 1}}>
+                    <Box sx={{ m: 1 }}>
                         <Paper elevation={5} square style={{ backgroundColor: darkMode ? darkTheme.palette.background.secondary : lightTheme.palette.background.secondary, overflow: 'auto', maxHeight: 600 }}>
 
                             <List sx={{ width: '100%', backgroundColor: darkMode ? darkTheme.palette.background.secondary : lightTheme.palette.background.secondary }}>
@@ -1080,8 +1088,8 @@ const ShareButton = ({ draftId, contractId, darkMode, compact = false }) => {
 
                                 <Button
                                     variant='contained'
-                                    sx={{ borderRadius: '10px'}}
-                                    onClick={() => {navigator.clipboard.writeText(link)}}
+                                    sx={{ borderRadius: '10px' }}
+                                    onClick={() => { navigator.clipboard.writeText(link) }}
 
                                 >Copy Link</Button>
                             </Grid>
@@ -1097,8 +1105,8 @@ const ShareButton = ({ draftId, contractId, darkMode, compact = false }) => {
 
                                 <Button
                                     variant='contained'
-                                    sx={{ borderRadius: '10px'}}
-                                    onClick={() => {navigator.clipboard.writeText("'s draft from the " + "campaign is waiting for you to review it. Access the dashboard here: " + link)}}
+                                    sx={{ borderRadius: '10px' }}
+                                    onClick={() => { navigator.clipboard.writeText("'s draft from the " + "campaign is waiting for you to review it. Access the dashboard here: " + link) }}
 
                                 >Copy Message</Button>
                             </Grid>
