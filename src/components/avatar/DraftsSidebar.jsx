@@ -1,6 +1,6 @@
 import { Badge, Box, Button, Link, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material';
 import Paper from '@mui/material/Paper';
-import StringAvatar from '../avatar/StringAvatar';
+import StringAvatar from './StringAvatar';
 import InfluencerDraftReviewModal from '../modals/InfluencerDraftReviewModal';
 import React from 'react';
 

@@ -4,7 +4,7 @@ import ContractSticker from "../components/avatar/ContractSticker";
 import SocionHeader from "../components/headers/SocionHeader";
 import TalentSearchBar from "../components/headers/TalentSearchBar";
 import NewCampaignModal from "../components/modals/NewCampaignModal";
-import InfluencerSidebar from "../components/navigation/InfluencerSidebar.js";
+import InfluencerSidebar from "../components/navigation/InfluencerSidebar.jsx";
 import Sidebar from "../components/navigation/Sidebar";
 import { getAllAgencyContractsForCurrentUser } from "../services/agencyServices";
 import { getUserInformation } from "../services/influencerServices";

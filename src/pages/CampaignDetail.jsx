@@ -15,7 +15,7 @@ import { getUserInformation } from "../services/influencerServices";
 import InfluencerUserProfile from "../components/campaignDetails/InfluencerUserProfile";
 import InfluencerDraftsSidebar from "../components/campaignDetails/InfluencerDraftsSidebar";
 import LoadingIcon from "../components/loadingIcon/LoadingIcon";
-import Sidebar from "../components/navigation/Sidebar.js";
+import Sidebar from "../components/navigation/Sidebar.jsx";
 import InfluencerSidebar from "../components/navigation/InfluencerSidebar";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { AttachmentsTab } from "../components/accordians/CampaignAccordian";

@@ -9,7 +9,7 @@ import SocionHeader from "../components/headers/SocionHeader";
 import EditCampaignModal from "../components/modals/EditCampaingModal";
 import NewCampaignModal from "../components/modals/NewCampaignModal";
 import UploadDraftModal from "../components/modals/UploadDraftModal";
-import InfluencerSidebar from "../components/navigation/InfluencerSidebar.js";
+import InfluencerSidebar from "../components/navigation/InfluencerSidebar.jsx";
 import Sidebar from "../components/navigation/Sidebar";
 import EnhancedTable from "../components/tables/EnhancedTable";
 import api from "../services/api";
