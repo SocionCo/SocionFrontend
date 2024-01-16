@@ -1,4 +1,4 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, Button, Checkbox, TextField, Typography } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -7,8 +7,9 @@ import * as React from 'react';
 import * as Yup from "yup";
 import { getAgencyIDForInviteToken, registerNewAgencyAndAccount, registerNewInfluencer, registerNewTalentManager } from "../services/agencyServices";
 import { useNavigate } from "react-router";
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { CenterFocusStrong } from "@mui/icons-material";
+import { PrivacyPolicyLink, TermsLink } from "../services/apiString";
 
 const InviteSignUp = () => {
     console.log("Entered");
@@ -20,9 +21,15 @@ const InviteSignUp = () => {
     const [isTalentManager, setIsTalentManager] = React.useState(false);
     const [inviteUsed, setInviteUsed] = React.useState(false);
     const [apiError, setApiError] = React.useState(false);
+    const [acceptedTerms, setAcceptedTerms] = React.useState(false);
     const [regComplete, setRegComplete] = React.useState(false);
 
     const navigate = useNavigate();
+
+
+    const privacyPolicyLink = PrivacyPolicyLink;
+
+    const termsLink = TermsLink;
 
 
     const formValidation = Yup.object().shape({
@@ -218,17 +225,35 @@ const InviteSignUp = () => {
                         flexDirection: 'column'
                     }}>
 
+                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <Checkbox
+                                style={{ color: 'green' }}
+                                value={acceptedTerms}
+                                onClick={() => setAcceptedTerms(!acceptedTerms)}
+
+                            />
+                            <Typography>By checking this box, I am agreeing to the  <Link to={termsLink} target="_blank">Terms of Service</Link> and <Link to={privacyPolicyLink} target="_blank">Privacy Policy</Link></Typography>
+
+                        </Box>
+
 
                         {error && (<Typography component='h6' variant="caption" >Error submitting the form. Make sure user email is not already in use.</Typography>)}
                         {apiError && (
                             <Box>
-                                <h4>{"User already exists. Please reset your password if you forgot it, or user a different email."}</h4>
+                                <h4>{"User already exists. Please reset your password if you forgot it, or use a different email."}</h4>
                             </Box>
                         )}
                         <Button
-                            disabled={!myForm.isValid || !isFormValid}
+                            disabled={!myForm.isValid || !isFormValid || !acceptedTerms}
                             onClick={myForm.submitForm}
                             variant="contained"
+                            sx={{
+                                backgroundColor: '#4CAF50', // Green button background
+                                color: '#ffffff', // White text
+                                '&:hover': {
+                                    backgroundColor: '#45a049', // Darker green on hover
+                                },
+                            }}
                         >
                             Join Agency
                         </Button>

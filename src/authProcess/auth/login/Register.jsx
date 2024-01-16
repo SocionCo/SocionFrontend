@@ -1,4 +1,4 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, Button, Checkbox, Switch, TextField, Typography } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -7,6 +7,9 @@ import * as React from 'react';
 import * as Yup from "yup";
 import { registerNewAgencyAndAccount } from "../../../services/agencyServices";
 import { useNavigate } from "react-router";
+import { PrivacyPolicyLink, TermsLink } from "../../../services/apiString";
+import { Link } from "react-router-dom";
+import { CheckBox } from "@mui/icons-material";
 
 
 
@@ -17,12 +20,17 @@ export default function Register() {
 
     const [isFormValid, setIsFormValid] = React.useState(false);
     const [error, setError] = React.useState(false);
+    const [acceptedTerms, setAcceptedTerms] = React.useState(false);
 
     const navigate = useNavigate();
 
 
-    
+    const privacyPolicyLink = PrivacyPolicyLink;
 
+    const termsLink = TermsLink;
+
+
+    console.log(termsLink);
 
 
     const formValidation = Yup.object().shape({
@@ -85,7 +93,8 @@ export default function Register() {
                 boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)', // Light shadow
             }}
         >
-            <Typography variant="h4" sx={{ color: '#4CAF50', marginBottom: '20px' }}>
+
+            <Typography variant="h4" sx={{ color: '#4CAF50', marginBottom: '20px' }} onClick={() => console.log(acceptedTerms)}>
                 Register
             </Typography>
             <Typography variant="caption" sx={{ color: '#4CAF50', marginBottom: '20px' }}>
@@ -101,7 +110,7 @@ export default function Register() {
                 onChange={myForm.handleChange}
                 error={!!myForm.errors.firstName}
                 helperText={myForm.errors.firstName}
-                sx={{width: '50%'}}
+                sx={{ width: '50%' }}
             />
 
             <TextField
@@ -112,7 +121,7 @@ export default function Register() {
                 onChange={myForm.handleChange}
                 error={!!myForm.errors.lastName}
                 helperText={myForm.errors.lastName}
-                sx={{width: '50%'}}
+                sx={{ width: '50%' }}
             />
 
             <TextField
@@ -123,7 +132,7 @@ export default function Register() {
                 onChange={myForm.handleChange}
                 error={!!myForm.errors.email}
                 helperText={myForm.errors.email}
-                sx={{width: '50%'}}
+                sx={{ width: '50%' }}
             />
 
             <TextField
@@ -134,7 +143,7 @@ export default function Register() {
                 onChange={myForm.handleChange}
                 error={!!myForm.errors.agencyName}
                 helperText={myForm.errors.agencyName}
-                sx={{width: '50%'}}
+                sx={{ width: '50%' }}
             />
 
             <TextField
@@ -146,7 +155,7 @@ export default function Register() {
                 onChange={myForm.handleChange}
                 error={!!myForm.errors.password}
                 helperText={myForm.errors.password}
-                sx={{width: '50%'}}
+                sx={{ width: '50%' }}
             />
 
             <TextField
@@ -161,9 +170,19 @@ export default function Register() {
                 sx={{ width: '50%', marginBottom: '20px' }}
             />
 
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Checkbox
+                    style={{ color: 'green' }}
+                    value={acceptedTerms}
+                    onClick={() => setAcceptedTerms(!acceptedTerms)}
+                    
+                />
+                <Typography>By checking this box, I am agreeing to the  <Link to={termsLink} target="_blank">Terms of Service</Link> and <Link to={privacyPolicyLink} target="_blank">Privacy Policy</Link></Typography>
+
+            </Box>
             {/* Form Submission */}
             <Button
-                disabled={!myForm.isValid}
+                disabled={!myForm.isValid || !acceptedTerms}
                 onClick={myForm.handleSubmit}
                 variant="contained"
                 sx={{
@@ -176,6 +195,8 @@ export default function Register() {
             >
                 Create Agency
             </Button>
+
+
 
             {/* Error Message */}
             {error && (
