@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import AdminDashboard from "./pages/AdminDashboard";
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, HashRouter, Route, Routes } from 'react-router-dom';
 import Login from './authProcess/auth/login/Login';
 import Auth from './authProcess/auth/Auth';
 import ProtectedRoute from './util/ProtectedRoute';
@@ -43,7 +43,7 @@ function App() {
     }, [isLoggedIn]);
 
     return (
-        <BrowserRouter basename={''}>
+        <HashRouter basename={''}>
             <ErrorBoundary>
                 <Routes>
                     <Route path='campaigns' element={
@@ -121,7 +121,7 @@ function App() {
                     </Route>
                 </Routes>
             </ErrorBoundary>
-        </BrowserRouter>
+        </HashRouter>
     );
 }
 export default App;
