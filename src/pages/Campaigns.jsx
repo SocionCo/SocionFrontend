@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Paper, Typography, Tab, TextField, InputAdornment, IconButton } from "@mui/material";
+import { Box, Button, Grid, Paper, Typography, Tab, TextField, InputAdornment, IconButton, LinearProgress } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import ContractSticker from "../components/avatar/ContractSticker";
 import SocionHeader from "../components/headers/SocionHeader";
@@ -158,14 +158,16 @@ const Campaigns = () => {
 
                         </Grid>
 
+                        {loading ? (<LinearProgress />) :
 
-                        {
-                            contracts.length == 0 ? (
-                                <Box sx={{width: '100%', 
-                                display: 'flex', 
-                                justifyContent: 'center', 
-                                alignItems: 'center',
-                                marginTop: 2}}>
+                            (contracts.length == 0) ? (
+                                <Box sx={{
+                                    width: '100%',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    marginTop: 2
+                                }}>
                                     <Typography variant='h6' component={'h6'}>No campaigns yet! Add one by clicking the + button.</Typography>
                                 </Box>
 
