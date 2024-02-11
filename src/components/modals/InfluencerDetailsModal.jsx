@@ -15,6 +15,7 @@ import SocialTable from '../tables/SocialTable';
 import AddTalentManagerModal from './AddTalentManagerModal';
 import ConfirmActionDialogue from './ConfirmActionDialogue';
 import { useState } from 'react';
+import { updateInfluencerSettings } from '../../services/userServices';
 
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -45,6 +46,8 @@ export default function InfluencerDetailsModal({ open, handleClose, user }) {
     const handleSetEditMode = () => {
         setEditMode(true);
     }
+
+
 
 
 
@@ -87,11 +90,40 @@ export default function InfluencerDetailsModal({ open, handleClose, user }) {
         },
     ]
 
-    const otherRows = {
+    const [otherRows, setOtherRows] = React.useState({
         instagram: user.instagramUsername,
         tiktok: user.tiktokUsername,
         youtube: user.youtubeUsername,
         facebook: user.facebookUsername
+    });
+
+    const handleInputChange = (row, newValue) => {
+        setOtherRows(prevState => ({
+            ...prevState,
+            [row]: newValue
+        }));
+    }
+
+    const handleSave = async () => {
+        const influencerDTO = {
+            email: user.email,
+            instagramUsername: otherRows['instagram'],
+            youtubeUsername: otherRows['youtube'],
+            tiktokUsername: otherRows['tiktok'],
+            facebookUsername: otherRows['facebook']
+        }
+        const response = await updateInfluencerSettings(influencerDTO);
+        setEditMode(false);
+    }
+
+    const handleCancel = () => {
+        setOtherRows({
+            instagram: user.instagramUsername,
+            tiktok: user.tiktokUsername,
+            youtube: user.youtubeUsername,
+            facebook: user.facebookUsername
+        })
+        setEditMode(false);
     }
 
     React.useEffect(() => {
@@ -162,23 +194,24 @@ export default function InfluencerDetailsModal({ open, handleClose, user }) {
                                 >Edit</Button>) : (
                                     <Button
                                         variant='contained'
-                                        sx={{m : .5}}
+                                        sx={{ m: .5 }}
+                                        onClick={handleSave}
                                     >Save
 
 
                                     </Button>
                                 )
-                                
+
                                 }
                                 {!editMode ? (<Button sx={{ m: .5 }} variant='outlined' onClick={handleDialogueOpen}>Remove</Button>) : (
                                     <Button
-                                        sx={{m: .5}}
+                                        sx={{ m: .5 }}
                                         variant='outlined'
-                                        onClick={() => setEditMode(false)}
+                                        onClick={handleCancel}
                                     >Cancel</Button>
                                 )
-                                
-                            }
+
+                                }
                             </Stack>
                         </Box>
                     </Paper>
@@ -190,7 +223,7 @@ export default function InfluencerDetailsModal({ open, handleClose, user }) {
                 </Grid>
                 <Grid xs={4}>
                     <Box sx={{ marginX: 3, marginY: 1 }}>
-                        <SocialTable editMode={editMode} rows={otherRows} />
+                        <SocialTable editMode={editMode} rows={otherRows} handleInputChange={handleInputChange} />
                     </Box>
                 </Grid>
                 <Grid xs={4} >

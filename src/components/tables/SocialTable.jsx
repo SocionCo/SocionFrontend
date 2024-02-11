@@ -23,8 +23,7 @@ const TikTokIcon = ({ color = "#000000" }) => {
         </svg>
     );
 };
-
-export default function SocialTable({ rows, editMode }) {
+export default function SocialTable({ rows, editMode, handleInputChange }) {
     return (
         <TableContainer component={Paper}>
             <Table aria-label="simple table">
@@ -39,14 +38,15 @@ export default function SocialTable({ rows, editMode }) {
                         </TableCell>
                         {
                             !editMode ? (<TableCell align="center">{rows.instagram ? rows.instagram : "Not Added"}</TableCell>) : (
-                                <TableCell sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                                <TableCell sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                     <TextField
-                                        sx={{maxWidth: '100px'}}
+                                        sx={{ maxWidth: '100px' }}
                                         value={rows.instagram ? rows.instagram : ""}
+                                        onChange={(e) => handleInputChange('instagram', e.target.value)}
                                     />
                                 </TableCell>
                             )
-                        
+
                         }
                     </TableRow>
                     <TableRow
@@ -57,7 +57,18 @@ export default function SocialTable({ rows, editMode }) {
                                 <Typography>Youtube</Typography>
                             </Stack>
                         </TableCell>
-                        <TableCell align="center">{rows.youtube ? rows.youtube : "Not Added"}</TableCell>
+                        {
+                            !editMode ? (<TableCell align="center">{rows.youtube ? rows.youtube : "Not Added"}</TableCell>) : (
+                                <TableCell sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                    <TextField
+                                        sx={{ maxWidth: '100px' }}
+                                        value={rows.youtube ? rows.youtube : ""}
+                                        onChange={(e) => handleInputChange('youtube', e.target.value)}
+                                    />
+                                </TableCell>
+                            )
+
+                        }
                     </TableRow>
                     <TableRow
 
@@ -68,7 +79,18 @@ export default function SocialTable({ rows, editMode }) {
                                 <Typography>TikTok</Typography>
                             </Stack>
                         </TableCell>
-                        <TableCell align="center">{rows.tiktok ? rows.tiktok : "Not Added"}</TableCell>
+                        {
+                            !editMode ? (<TableCell align="center">{rows.tiktok ? rows.tiktok : "Not Added"}</TableCell>) : (
+                                <TableCell sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                    <TextField
+                                        sx={{ maxWidth: '100px' }}
+                                        value={rows.tiktok ? rows.tiktok : ""}
+                                        onChange={(e) => handleInputChange('tiktok', e.target.value)}
+                                    />
+                                </TableCell>
+                            )
+
+                        }
                     </TableRow>
                     <TableRow
                         key={rows.instagram}
@@ -79,7 +101,18 @@ export default function SocialTable({ rows, editMode }) {
                                 <Typography>Facebook</Typography>
                             </Stack>
                         </TableCell>
-                        <TableCell align="center">{rows.facebook ? rows.facebook : "Not Added"}</TableCell>
+                        {
+                            !editMode ? (<TableCell align="center">{rows.facebook ? rows.facebook : "Not Added"}</TableCell>) : (
+                                <TableCell sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                    <TextField
+                                        sx={{ maxWidth: '100px' }}
+                                        value={rows.facebook ? rows.facebook : ""}
+                                        onChange={(e) => handleInputChange('facebook', e.target.value)}
+                                    />
+                                </TableCell>
+                            )
+
+                        }
                     </TableRow>
                 </TableBody>
             </Table>

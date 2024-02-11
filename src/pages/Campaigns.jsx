@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Paper, Typography, Tab, TextField, InputAdornment, IconButton, LinearProgress } from "@mui/material";
+import { Box, Button, Grid, Paper, Typography, Tab, TextField, InputAdornment, IconButton, LinearProgress, CircularProgress } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import ContractSticker from "../components/avatar/ContractSticker";
 import SocionHeader from "../components/headers/SocionHeader";
@@ -158,7 +158,12 @@ const Campaigns = () => {
 
                         </Grid>
 
-                        {loading ? (<LinearProgress />) :
+                        {loading ? (
+                            <Box sx={{width: '100%',display: 'flex', justifyContent: 'center'}}>
+                                <CircularProgress/>
+                            </Box>
+
+                        ) :
 
                             (contracts.length == 0) ? (
                                 <Box sx={{
