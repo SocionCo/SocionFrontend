@@ -15,6 +15,7 @@ import { Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { act } from 'react-dom/test-utils';
 import BusinessIcon from '@mui/icons-material/Business';
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 
 export default function AgencySettingsSidebar({active}) {
     const userType = localStorage.getItem("user-type");
@@ -40,6 +41,11 @@ export default function AgencySettingsSidebar({active}) {
         {
             name: 'Campaign Settings',
             icon: <CampaignIcon/>,
+            path: '/agencySettings/campaign',
+        },
+        {
+            name: 'Oboarding Settings',
+            icon: <PeopleAltIcon/>,
             path: '/agencySettings/campaign',
         },
 

@@ -145,9 +145,8 @@ export default function App( { agencyId, refresh } ) {
                 marginBottom : 1
             }}>
                 <DropdownSelect
-                        required
                         options = {influencers}
-                        label = "Influencers *"
+                        label = "Influencers"
                         onSelectionChange={onSelectionChange}
                 />
             </Box>

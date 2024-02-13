@@ -94,7 +94,7 @@ export default function AgencySettings() {
                         <Typography variant='h6' gutterBottom>My Profile</Typography>
                         <Box sx={{ display: 'flex', alignItems: 'center' }}>
                             <StringAvatar
-                                name={"Demo Name"}
+                                name={userDetails.fullName}
                                 size={100}
                             />
                             <Box sx={{ ml: 2 }}>
