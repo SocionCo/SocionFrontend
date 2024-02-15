@@ -7,6 +7,7 @@ import StringAvatar from '../avatar/StringAvatar';
 import AddInfluencerModal from '../modals/AddInfluencerModal';
 import ConfirmActionDialogue from '../modals/ConfirmActionDialogue';
 import InfluencerDetailsModal from '../modals/InfluencerDetailsModal';
+import InviteInfluencerModal from '../modals/InviteInfluencerModal';
 
 const label = "Are you sure you want to remove this talent?";
 
@@ -17,12 +18,18 @@ const description = "This action is not reversible.";
 const UserProfile = ({ contract }) => {
 
 
-    const { influencers } = contract;
+    const { influencers, id } = contract;
     const [open, setOpen] = useState(false);
     const [deleteInfluencerDialogue, setDeleteInfluencerDialogue] = useState(false);
     const [selectedInfluencer, setSelectedInfluencer] = useState(null);
     const [detailViewOpen, setDetailViewOpen] = useState(false);
     const [detailViewInfluencer, setDetailViewInflunecer] = useState(null);
+    const [inviteTalentOpen, setInviteTalentOpen] = useState(false);
+
+
+    const handleInviteTalentClose = () => { 
+        setInviteTalentOpen(false);
+    }
 
     const handleDetailViewClose = () => {
         setDetailViewOpen(false);
@@ -52,6 +59,7 @@ const UserProfile = ({ contract }) => {
         window.location.reload();
     }
 
+
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
             {detailViewInfluencer &&
@@ -61,6 +69,14 @@ const UserProfile = ({ contract }) => {
                     user={detailViewInfluencer}
                 />)
             }
+            <InviteInfluencerModal 
+            open={inviteTalentOpen} 
+            handleClose={handleInviteTalentClose}
+            contractId={id}
+            >
+
+            
+            </InviteInfluencerModal>
             <ConfirmActionDialogue
                 open={deleteInfluencerDialogue}
                 handleClose={handleDialogueClose}
@@ -109,15 +125,26 @@ const UserProfile = ({ contract }) => {
 
                 </List>
             </Box>
-            <Box sx={{display: 'flex', justifyContent: 'flex-end'}}>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <Button variant='contained'
                     sx={{
                         color: 'grey',
                         backgroundColor: 'white',
                         alignSelf: 'center',
+                        marginRight: 1.5
                     }}
                     onClick={() => setOpen(true)}
                 >Manage Talent</Button>
+                <Button
+                    variant='contained'
+                    sx={{
+                        color: 'grey',
+                        backgroundColor: 'white',
+                        alignSelf: 'center'
+                    }}
+                    onClick={() => setInviteTalentOpen(true)}
+                >Invite Talent</Button>
+
             </Box>
         </Box>
     );

@@ -7,7 +7,7 @@ import * as React from 'react';
 import * as Yup from "yup";
 import { getAgencyIDForInviteToken, registerNewAgencyAndAccount, registerNewInfluencer, registerNewTalentManager } from "../services/agencyServices";
 import { useNavigate } from "react-router";
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useLocation } from 'react-router-dom';
 import { CenterFocusStrong } from "@mui/icons-material";
 import { PrivacyPolicyLink, TermsLink } from "../services/apiString";
 
@@ -23,6 +23,11 @@ const InviteSignUp = () => {
     const [apiError, setApiError] = React.useState(false);
     const [acceptedTerms, setAcceptedTerms] = React.useState(false);
     const [regComplete, setRegComplete] = React.useState(false);
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const campaignId = queryParams.get('redirect');
+
+    console.log("Campaign ID, ", campaignId);
 
     const navigate = useNavigate();
 
@@ -71,7 +76,7 @@ const InviteSignUp = () => {
                 }
 
             } else {
-                response = await registerNewInfluencer(agencyId, userDTO);
+                response = await registerNewInfluencer(agencyId, userDTO, campaignId);
                 if (!response.data) {
                     setApiError(true)
                 }
@@ -80,7 +85,12 @@ const InviteSignUp = () => {
             if (response.data || response.status === 201) {
                 setRegComplete(true);
                 setTimeout(() => {
-                    navigate("/login");
+                    if (campaignId) {
+
+                        navigate("/login?redirect=" + campaignId);
+                    } else {
+                        navigate("/login");
+                    }
                 }, 1000)
 
             }

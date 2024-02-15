@@ -2,7 +2,7 @@ import { Box, Modal } from "@mui/material";
 import * as React from 'react';
 import InviteInfluencerForm from "../forms/InviteInfluencerForm";
 
-const InviteInfluencerModal = ( {open, handleClose } ) => { 
+const InviteInfluencerModal = ( {open, handleClose, contractId } ) => { 
 
   const style = {
     position: 'absolute',
@@ -16,7 +16,7 @@ const InviteInfluencerModal = ( {open, handleClose } ) => {
     p: 4,
   };
 
-
+    
     return (
         <Modal
         open={open}
@@ -25,7 +25,10 @@ const InviteInfluencerModal = ( {open, handleClose } ) => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <InviteInfluencerForm onClose={handleClose}/>
+          <InviteInfluencerForm 
+          onClose={handleClose}
+          contractId={contractId}
+          />
         </Box>
       </Modal>
     );

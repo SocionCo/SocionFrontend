@@ -1,6 +1,7 @@
 import api from "./api";
 
-export async function inviteInfluencerToAgency (email) { 
+export async function inviteInfluencerToAgency (email, contractId) { 
+        const adress = contractId ? "/api/inviteInfluencer/" + contractId : "/api/inviteInfluencer/-1"
 
     const userDTO = { 
         email: email
@@ -9,7 +10,7 @@ export async function inviteInfluencerToAgency (email) {
     try {
         const token = localStorage.getItem('user-token');
         const headers = { 'Authorization': 'Bearer ' + token };
-        const response = await api.post('/api/inviteInfluencer', userDTO, { headers });
+        const response = await api.post(adress, userDTO, { headers });
     } catch (error) {
         console.log(error);
     }
@@ -266,13 +267,27 @@ export async function registerNewTalentManager(agencyId, userDTO) {
 
 }
 
-export async function registerNewInfluencer(agencyId, userDTO) { 
-    const registerWrapper = { 
-        userDTO : userDTO,
-        agencyDTO : { 
-            id : agencyId
+export async function registerNewInfluencer(agencyId, userDTO, campaignId) { 
+    var registerWrapper = {};
+    if (campaignId) { 
+        registerWrapper = { 
+            userDTO : userDTO,
+            agencyDTO : { 
+                id : agencyId
+            },
+            contractDTO : { 
+                id : campaignId
+            }
+        }
+    } else { 
+        registerWrapper = {
+            userDTO: userDTO,
+            agencyDTO : { 
+                id: agencyId
+            }
         }
     }
+    
 
     try {
         const response = await api.post('/api/joinAgency' , registerWrapper);

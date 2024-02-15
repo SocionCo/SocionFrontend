@@ -5,7 +5,7 @@ import * as Yup from "yup";
 import EmailSentPopup from "../modals/EmailSentPopup";
 import { inviteInfluencerToAgency } from "../../services/agencyServices";
 
-const InviteInfluencerForm = ({onClose}) => {
+const InviteInfluencerForm = ({onClose, contractId}) => {
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
@@ -29,7 +29,12 @@ const InviteInfluencerForm = ({onClose}) => {
         validateOnChange: true,
         validateOnBlur: true,
         onSubmit: async (values) => {
-            inviteInfluencerToAgency(values.email);
+            if (contractId) { 
+                console.log("Inviting with Contract ID, ", contractId);
+            } else { 
+                console.log("Inviting without contractID, ", contractId);
+            }
+            inviteInfluencerToAgency(values.email, contractId);
             handleClickOpen();
 
         }
